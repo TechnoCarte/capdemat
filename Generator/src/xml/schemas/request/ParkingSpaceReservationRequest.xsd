@@ -68,6 +68,7 @@
 		  Première Adresse
                 </xs:documentation>
                 <xs:appinfo>
+                  <model namespace="users" isTiedToRequest="true" />
                   <common>
                     <step name="reservation" />
                   </common>
@@ -100,6 +101,7 @@
 		  Première Adresse
                 </xs:documentation>
                 <xs:appinfo>
+                  <model namespace="users" isTiedToRequest="true" />
                   <common>
                     <step name="reservation" />
                   </common>
@@ -148,7 +150,7 @@
               </xs:annotation>
             </xs:element>
 
-            <xs:element name="Duration" type="cvq:LocalReferentialDataType" minOccurs="1">
+            <xs:element name="Duration" type="cvq:LocalReferentialDataType" minOccurs="1" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
 		  Durée de la réservation
@@ -157,6 +159,7 @@
 		  Durée 
                 </xs:documentation>
                 <xs:appinfo>
+                  <model namespace="request" isTiedToRequest="true" />
                   <common>
                     <step name="reservation" />
                   </common>

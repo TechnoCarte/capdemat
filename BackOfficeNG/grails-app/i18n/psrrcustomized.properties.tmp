@@ -1,0 +1,44 @@
+psrr.duration.value =
+
+psrr.step.requester.label =
+psrr.step.requester.desc =
+
+psrr.step.reservation.label =
+psrr.step.reservation.desc =
+
+psrr.step.complement.label =
+psrr.step.complement.desc =
+
+
+psrr.property.requesterFirstAddressKind.help =
+psrr.property.requesterFirstAddressKind.validationError =
+
+
+psrr.property.requesterFirstAddress.help =
+psrr.property.requesterFirstAddress.validationError =
+
+
+psrr.property.requesterOtherAddressKind.help =
+psrr.property.requesterOtherAddressKind.validationError =
+
+
+psrr.property.requesterOtherAddress.help =
+psrr.property.requesterOtherAddress.validationError =
+
+
+psrr.property.furnitureLift.help =
+psrr.property.furnitureLift.validationError =
+
+
+psrr.property.startDate.help =
+psrr.property.startDate.validationError =
+
+
+psrr.property.duration.help =
+psrr.property.duration.validationError =
+
+
+psrr.property.voiePietonne.help =
+psrr.property.voiePietonne.validationError =
+
+
