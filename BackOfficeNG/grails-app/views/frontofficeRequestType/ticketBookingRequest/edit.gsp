@@ -50,9 +50,9 @@
     </g:if>
     
     <g:render template="/frontofficeRequestType/cancelPanel" />
-    <g:if test="${session.currentEcitizen && !isEdition}">
-      <g:render template="/frontofficeRequestType/draftPanel" />
-    </g:if>
+%{--    <g:if test="${session.currentEcitizen && !isEdition}">--}%
+%{--      <g:render template="/frontofficeRequestType/draftPanel" />--}%
+%{--    </g:if>--}%
     
     <g:set var="requestTypeInfo" value="${requestTypeInfo.encodeAsHTML()}" />
     

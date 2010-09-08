@@ -34,7 +34,6 @@
       </dl>
       
     
-      
       <dl>
         <dt><g:message code="tbr.property.subscriberFirstName.label" /></dt><dd>${rqt.subscriberFirstName?.toString()}</dd>
 
@@ -47,9 +46,30 @@
 
       </dl>
       
-    
-  
-
+      <h4>${message(code:'tbr.header.cart')}</h4>
+      <g:each var="ticket" in="${rqt?.tbrTicket}" status="index">
+        <dl>
+          <dt>
+            ${ticket.eventName}
+            (<g:formatDate formatName='format.fullDate' date='${ticket.eventDate}'/>)
+          </dt>
+          <dd>
+            <strong><g:formatNumber number="${ticket.price}" type="number" format="#####.##" /> €</strong>
+            : ${ticket.placeNumber} tickets (${ticket.placeCategory} / ${ticket.fareType})
+          </dd>
+        </dl>
+      </g:each>
+      <dl>
+        <dt>${message(code:'tbr.property.totalPrice.label')}</dt>
+        <dd>
+          <g:if test="${rqt?.tbrTicket}">
+            <strong>${rqt?.totalPrice}</strong>
+          </g:if>
+          <g:else>
+            ${message(code:'tbr.message.cartIsEmpty')}
+          </g:else>
+        </dd>
+      </dl>
   
     <h3><g:message code="tbr.step.rules.label" /></h3>
     

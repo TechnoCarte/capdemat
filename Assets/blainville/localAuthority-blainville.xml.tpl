@@ -7,7 +7,7 @@
     class="fr.cg95.cvq.service.authority.LocalAuthorityConfigurationBean"
     init-method="init">
     <property name="name" value="blainville"/>
-    <property name="defaultServerName" value="10.4.250.221"/>
+    <property name="defaultServerName" value="localhost"/>
     <property name="displayTutorsInAccountCreation" value="false" />
     <property name="sessionFactory">
       <ref bean="sessionFactory_blainville" />
@@ -36,30 +36,6 @@
       <map>
         <entry>
           <key>
-            <ref bean="capwebctPaymentModuleExternalService" />
-          </key>
-          <bean class="fr.cg95.cvq.external.ExternalServiceBean">
-            <property name="requestTypes">
-              <list>
-                <value>VO Card</value>
-                <value>Home Folder Modification</value>
-                <value>Perischool Activity Registration</value>
-              </list>
-            </property>
-            <property name="supportAccountsByHomeFolder">
-              <value>true</value>
-            </property>
-            <property name="supportAccountsByRequest">
-              <value>false</value>
-            </property>
-            <property name="password">
-              <value>blainvillepwd</value>
-            </property>
-          </bean>
-        </entry>
-<!--
-        <entry>
-          <key>
             <ref bean="fakeExternalService" />
           </key>
           <bean class="fr.cg95.cvq.external.ExternalServiceBean">
@@ -78,7 +54,6 @@
             </property>
           </bean>
         </entry>
--->
       </map>
     </property>
     <property name="ecitizenCreationNotifications">
@@ -144,7 +119,7 @@
       <value>capdemat</value>
     </property>
     <property name="password">
-      <value>capdemat</value>
+      <value>capdematpass</value>
     </property>
     <property name="acquireIncrement" value="3" />
     <property name="initialPoolSize" value="0" />
