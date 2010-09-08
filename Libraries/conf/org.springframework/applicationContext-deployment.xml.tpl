@@ -61,6 +61,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <value>fr/cg95/cvq/business/request/urbanism/AlignmentCertificateRequestData.hbm.xml</value>
         <value>fr/cg95/cvq/business/request/urbanism/SewerConnectionRequestData.hbm.xml</value>
         <value>fr/cg95/cvq/business/request/urbanism/AlignmentNumberingConnectionRequestData.hbm.xml</value>
+        <value>fr/cg95/cvq/business/request/urbanism/ParkingSpaceReservationRequestData.hbm.xml</value>
         <value>fr/cg95/cvq/business/request/ecitizen/VoCardRequestData.hbm.xml</value>
         <value>fr/cg95/cvq/business/request/ecitizen/HomeFolderModificationRequestData.hbm.xml</value>
         <value>fr/cg95/cvq/business/request/localpolice/HolidaySecurityRequestData.hbm.xml</value>

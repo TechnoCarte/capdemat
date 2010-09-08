@@ -598,6 +598,15 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     <property name="defaultDisplayGroup" value="technical" />
   </bean>
 
+  <bean id="parkingSpaceReservationRequestService"
+    class="fr.cg95.cvq.service.request.urbanism.impl.ParkingSpaceReservationRequestService"
+    parent="requestService">
+    <property name="label" value="Parking Space Reservation" />
+    <property name="localReferentialFilename" value="local_referential_psrr"/>
+    <property name="subjectPolicy" value="SUBJECT_POLICY_NONE" />
+    <property name="defaultDisplayGroup" value="urbanism" />
+  </bean>
+
   <bean id="paymentFilterAspect"
     class="fr.cg95.cvq.service.payment.aspect.PaymentFilterAspect" />
 
