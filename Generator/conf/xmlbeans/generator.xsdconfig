@@ -148,4 +148,8 @@
     <xb:package>fr.cg95.cvq.xml.request.reservation</xb:package>
   </xb:namespace>
 
+  <!-- -->
+  <xb:namespace uri="http://www.cg95.fr/cvq/schema/psrr">
+    <xb:package>fr.cg95.cvq.xml.request.urbanism</xb:package>
+  </xb:namespace>
 </xb:config>

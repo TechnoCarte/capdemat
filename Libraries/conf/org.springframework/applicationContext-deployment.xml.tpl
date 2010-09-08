@@ -141,7 +141,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
           <value>capdemat</value>
         </property>
         <property name="password">
-          <value>capdematpass</value>
+          <value>capdemat</value>
         </property>
         <property name="acquireIncrement" value="0" />
         <property name="initialPoolSize" value="1" />
