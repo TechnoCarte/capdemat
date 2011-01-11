@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 
 import fr.cg95.cvq.exception.CvqConfigurationException;
 import fr.cg95.cvq.external.ExternalServiceBean;
+import fr.cg95.cvq.external.ExternalServiceConfigurationBean;
 import fr.cg95.cvq.external.IExternalProviderService;
 import fr.cg95.cvq.service.payment.IPaymentProviderService;
 import fr.cg95.cvq.service.payment.PaymentServiceBean;
@@ -26,14 +27,13 @@ public final class LocalAuthorityConfigurationBean {
 
     private static Logger logger = Logger.getLogger(LocalAuthorityConfigurationBean.class);
 
-    private String name;
     private String defaultServerName;
     
     private SessionFactory sessionFactory;
     
     private Map<IPaymentProviderService, PaymentServiceBean> paymentServices;
-    private Map<IExternalProviderService, ExternalServiceBean> externalProviderServices;
-    
+    private ExternalServiceConfigurationBean escb;
+
     private Map<String, String> ecitizenCreationNotifications;
     private Map<String, Map<String, String>> ecitizenValidationNotifications;
     private Map<String, Map<String, String>> agentNotifications;
@@ -45,8 +45,7 @@ public final class LocalAuthorityConfigurationBean {
     public LocalAuthorityConfigurationBean() {
         paymentServices =
             new HashMap<IPaymentProviderService, PaymentServiceBean>();
-        externalProviderServices =
-            new HashMap<IExternalProviderService, ExternalServiceBean>();
+        escb = new ExternalServiceConfigurationBean();
         ecitizenCreationNotifications = new HashMap<String, String>();
         ecitizenValidationNotifications =
             new HashMap<String, Map<String, String>>();
@@ -166,14 +165,6 @@ public final class LocalAuthorityConfigurationBean {
                 service.checkConfiguration(paymentServices.get(service));
             }
         }
-
-        // FIXME : this should be done by the external service
-        if (externalProviderServices != null && externalProviderServices.size() > 0) {
-            for (IExternalProviderService service : externalProviderServices.keySet()) {
-                logger.debug("init() Looking at " + service.getClass());
-                service.checkConfiguration(externalProviderServices.get(service), name);
-            }
-        }
     }
     
     /**
@@ -224,23 +215,15 @@ public final class LocalAuthorityConfigurationBean {
     }
 
     public boolean supportsActivitiesTab() {
-        if (externalProviderServices == null) {
-            return false;
-        }
-        for (IExternalProviderService s : externalProviderServices.keySet()) {
-            if (s.supportsConsumptions()) {
-                return true;
-            }
-        }
-        return false;
+        return escb.supportsActivitiesTab();
     }
 
     public void setName(final String name) {
-        this.name = name;
+        escb.setName(name);
     }
 
     public String getName() {
-        return this.name;
+        return escb.getName();
     }
 
     public String getDefaultServerName() {
@@ -268,33 +251,24 @@ public final class LocalAuthorityConfigurationBean {
     }
 
     public void setExternalServices(final Map<IExternalProviderService, ExternalServiceBean> externalProviderServices) {
-        this.externalProviderServices = externalProviderServices;
+        escb.setExternalServices(externalProviderServices);
     }
 
     public Map<IExternalProviderService, ExternalServiceBean> getExternalServices() {
-        return externalProviderServices;
+        return escb.getExternalServices();
     }
     
     public void registerExternalService(IExternalProviderService service, ExternalServiceBean esb) 
         throws CvqConfigurationException {
-        
-        service.checkConfiguration(esb, name);
-        externalProviderServices.put(service, esb);
+        escb.registerExternalService(service, esb);
     }
 
     public ExternalServiceBean getBeanForExternalService(String externalServiceLabel) {
-
-        if (externalProviderServices != null && !externalProviderServices.isEmpty()) {
-            for (IExternalProviderService service : externalProviderServices.keySet()) {
-                if (service.getLabel().equals(externalServiceLabel))
-                    return externalProviderServices.get(service);
-            }
-        }
-        return null;
+        return escb.getBeanForExternalService(externalServiceLabel);
     }
     
     public void unregisterExternalService(IExternalProviderService service) {
-        externalProviderServices.remove(service);
+        escb.unregisterExternalService(service);
     }
     
     public void setEcitizenValidationNotifications(Map<String, Map<String, String>> ecitizenValidationNotifications) {
