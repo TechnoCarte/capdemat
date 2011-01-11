@@ -57,6 +57,7 @@
       <include name="RemoteSupportRequest.xsd" />
       <include name="SchoolCanteenRegistrationRequest.xsd" />
       <include name="SchoolRegistrationRequest.xsd" />
+      <include name="SchoolTransportRegistrationRequest.xsd" />
       <include name="SmsNotificationRequest.xsd" />
       <include name="SewerConnectionRequest.xsd" />
       <include name="StudyGrantRequest.xsd" />
