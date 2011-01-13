@@ -465,6 +465,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="isOfRegistrationKind" value="true"/>
     <property name="defaultDisplayGroup" value="school" />
     <property name="filingDelay" value="12"/>
+    <property name="supportUnregisteredCreation" value="true" />
   </bean>
 
   <bean id="globalSchoolRegistrationRequestService" 
@@ -476,6 +477,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="isOfRegistrationKind" value="true"/>
     <property name="defaultDisplayGroup" value="school" />
     <property name="filingDelay" value="12"/>
+    <property name="supportUnregisteredCreation" value="true" />
   </bean>
 
   <bean id="perischoolActivityRegistrationRequestService" 
@@ -534,6 +536,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="isOfRegistrationKind" value="true"/>
     <property name="defaultDisplayGroup" value="school" />
     <property name="filingDelay" value="12"/>
+    <property name="supportUnregisteredCreation" value="true" />
   </bean>
   
   <bean id="homeEmergencyRegistrationRequestService" 
@@ -544,6 +547,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="defaultDisplayGroup" value="school" />
     <property name="filingDelay" value="12"/>
     <property name="supportMultiple" value="true" />
+    <property name="supportUnregisteredCreation" value="true" />
   </bean>
   
   <bean id="dayCareCenterRegistrationRequestService" 
@@ -554,6 +558,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="isOfRegistrationKind" value="true"/>
     <property name="defaultDisplayGroup" value="school" />
     <property name="filingDelay" value="12"/>
+    <property name="supportUnregisteredCreation" value="true" />
   </bean>
 
   <bean id="bafaGrantRequestService"
