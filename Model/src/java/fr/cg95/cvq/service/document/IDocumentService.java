@@ -185,7 +185,7 @@ public interface IDocumentService {
      */
     Integer searchCount(Hashtable<String,Object> searchParams);
 
-    void mergeDocumentBinary(Document document) throws CvqException;
+    void mergeDocumentBinary(@IsDocument Document document) throws CvqException;
     
     PDDocument byteToPDDocument(byte[] data) throws CvqException;
 

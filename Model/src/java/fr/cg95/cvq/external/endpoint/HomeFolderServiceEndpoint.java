@@ -25,21 +25,19 @@ public class HomeFolderServiceEndpoint extends AbstractMarshallingPayloadEndpoin
 
     private IHomeFolderService homeFolderService;
     private IRequestSearchService requestSearchService;
-    
+
     public HomeFolderServiceEndpoint(Marshaller marshaller) {
         super(marshaller);
     }
 
     @Override
     protected Object invokeInternal(Object request) throws Exception {
-       
+
        GetHomeFoldersResponseDocument responseDocument =
             GetHomeFoldersResponseDocument.Factory.newInstance();
-       GetHomeFoldersResponse response = 
+       GetHomeFoldersResponse response =
             responseDocument.addNewGetHomeFoldersResponse();
-        //Switch to admin context to be able to call services without permission exceptions
-        String currentExternalService = SecurityContext.getCurrentExternalService();
-        SecurityContext.setCurrentContext(SecurityContext.ADMIN_CONTEXT);
+
         List<HomeFolder> homeFolders = homeFolderService.getAll(true, true);
         for (HomeFolder homeFolder : homeFolders) {
             List<Request> voCardRequests =
@@ -70,10 +68,6 @@ public class HomeFolderServiceEndpoint extends AbstractMarshallingPayloadEndpoin
                 }
             }
         }
-
-       // Reset to original context
-       SecurityContext.setCurrentContext(SecurityContext.BACK_OFFICE_CONTEXT);
-       SecurityContext.setCurrentExternalService(currentExternalService);
 
        return response;
     }

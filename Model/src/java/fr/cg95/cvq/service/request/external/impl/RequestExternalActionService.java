@@ -9,7 +9,6 @@ import fr.cg95.cvq.dao.request.external.IRequestExternalActionDAO;
 import fr.cg95.cvq.security.annotation.Context;
 import fr.cg95.cvq.security.annotation.ContextPrivilege;
 import fr.cg95.cvq.security.annotation.ContextType;
-import fr.cg95.cvq.service.request.annotation.RequestFilter;
 import fr.cg95.cvq.service.request.external.IRequestExternalActionService;
 import fr.cg95.cvq.util.Critere;
 
@@ -18,7 +17,7 @@ public class RequestExternalActionService implements IRequestExternalActionServi
     private IRequestExternalActionDAO requestExternalActionDAO;
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.AGENT, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
     public Long addTrace(RequestExternalAction trace) {
         trace.setDate(new Date());
         return requestExternalActionDAO.create(trace);
@@ -32,7 +31,8 @@ public class RequestExternalActionService implements IRequestExternalActionServi
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE},
+            privilege = ContextPrivilege.READ)
     public Long getTracesCount(Set<Critere> criteriaSet) {
         return requestExternalActionDAO.getCount(criteriaSet, false);
     }

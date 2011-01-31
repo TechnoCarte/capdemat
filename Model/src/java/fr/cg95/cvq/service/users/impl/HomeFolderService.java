@@ -215,7 +215,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE},
+            privilege = ContextPrivilege.READ)
     public final HomeFolder getById(final Long id)
         throws CvqObjectNotFoundException {
         return (HomeFolder) homeFolderDAO.findById(HomeFolder.class, id);
@@ -240,7 +241,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE},
+            privilege = ContextPrivilege.READ)
     public List<Individual> getExternalIndividuals(final Long homeFolderId) {
         Set<Individual> externalIndividuals = new HashSet<Individual>();
         externalIndividuals.addAll(individualDAO.listByHomeFolderRoles(homeFolderId, RoleType.allRoleTypes, true));
@@ -372,20 +374,21 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE},
+            privilege = ContextPrivilege.READ)
     public boolean hasHomeFolderRole(Long ownerId, Long homeFolderId, RoleType role)
             throws CvqObjectNotFoundException {
-        
+
         Individual owner = individualService.getById(ownerId);
         if (owner.getIndividualRoles() == null)
             return false;
-        
+
         for (IndividualRole individualRole : owner.getIndividualRoles()) {
             if (individualRole.getRole().equals(role)
                     && homeFolderId.equals(individualRole.getHomeFolderId()))
                 return true;
         }
-        
+
         return false;
     }
 
