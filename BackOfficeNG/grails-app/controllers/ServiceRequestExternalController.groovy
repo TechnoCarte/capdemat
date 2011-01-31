@@ -39,7 +39,7 @@ class ServiceRequestExternalController {
 
     def requestDocuments = {
         try {
-            render(text:requestDocumentService.getAssociatedFullDocuments(params.long('requestId')), 
+            render(text:requestDocumentService.getAssociatedFullDocuments(params.long('requestId')),
                 contentType:"text/xml",encoding:"UTF-8", status: 200)
         } catch (CvqObjectNotFoundException confe) {
             render(text: "", status: 404)
@@ -49,19 +49,19 @@ class ServiceRequestExternalController {
 
         return false
     }
-    
-    def requestDocument = {
-            try {
-                render(text:requestDocumentService.getAssociatedDocument(params.long('requestId'),
-                    params.long('documentId'), params.mergeDocument ? true : false), 
-                    contentType:"text/xml",encoding:"UTF-8", status: 200)
-            } catch (CvqObjectNotFoundException confe) {
-                render(text: "", status: 404)
-            } catch (PermissionException pe) {
-                render(text: "", status: 403)
-            }
 
-            return false
+    def requestDocument = {
+        try {
+            render(text:requestDocumentService.getAssociatedDocument(params.long('requestId'),
+                params.long('documentId'), params.mergeDocument ? true : false),
+                contentType:"text/xml",encoding:"UTF-8", status: 200)
+        } catch (CvqObjectNotFoundException confe) {
+            render(text: "", status: 404)
+        } catch (PermissionException pe) {
+            render(text: "", status: 403)
+        }
+
+        return false
     }
 
     def requestState = {// handling POST; be careful : non idempotent operation
