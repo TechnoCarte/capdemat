@@ -5,22 +5,19 @@ import fr.cg95.cvq.schema.ximport.HomeFolderImportDocument
 import fr.cg95.cvq.service.users.IHomeFolderService
 import fr.cg95.cvq.service.users.IIndividualService
 import fr.cg95.cvq.util.Critere
-import fr.cg95.cvq.business.users.Individual
-import fr.cg95.cvq.business.users.ActorState
+import fr.cg95.cvq.business.users.*
 import fr.cg95.cvq.security.SecurityContext
-import fr.cg95.cvq.business.users.Child
-import fr.cg95.cvq.business.users.RoleType
 import fr.cg95.cvq.service.request.IRequestSearchService
 import fr.cg95.cvq.service.payment.IPaymentService
 import fr.cg95.cvq.service.users.IMeansOfContactService
 import fr.cg95.cvq.service.users.external.IExternalHomeFolderService
-import fr.cg95.cvq.business.users.HomeFolder
 import fr.cg95.cvq.business.payment.Payment
-import fr.cg95.cvq.business.users.Adult
 
-import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlError
 import org.apache.xmlbeans.XmlException
-import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.XmlOptions
+
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 
 class BackofficeHomeFolderController {
 
@@ -71,7 +68,9 @@ class BackofficeHomeFolderController {
         HomeFolder homeFolder = this.homeFolderService.getById(Long.parseLong(params.id))
         Adult adult = homeFolderService.getHomeFolderResponsible(homeFolder.id)
         
-        result.adults = this.homeFolderService.getAdults(Long.parseLong(params.id))
+        result.homeFolder = homeFolder
+        result.homeFolderResponsible = adult
+        result.adults = this.homeFolderService.getAdults(Long.parseLong(params.id)).findAll { it.id != adult.id }
         result.children = this.homeFolderService.getChildren(Long.parseLong(params.id))
         result.homeFolderState = homeFolder.state.toString().toLowerCase()
         result.homeFolderStatus = homeFolder.enabled ? 'enable' : 'disable'
@@ -92,6 +91,53 @@ class BackofficeHomeFolderController {
                 ] }
             ] }
         return result
+    }
+
+    def adult = {
+        def adult = individualService.getAdultById(Long.valueOf(params.id))
+        def mode = params.mode
+        if (request.post) {
+            bind(adult)
+            mode = 'static'
+        }
+        render(template: mode + '/' + params.template, model:['adult': adult])
+    }
+
+    def child = {
+        def child = individualService.getChildById(Long.valueOf(params.id))
+        def mode = params.mode
+        if (request.post) {
+            bind(child)
+            mode = 'static'
+            if (child.id)
+                homeFolderService.removeRolesOnSubject(child.homeFolder.id, child.id)
+            params.roles.each {
+                if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
+                    homeFolderService.addRole(individualService.getById(Long.valueOf(it.value.owner)),
+                        child, child.homeFolder.id, RoleType.forString(it.value.type))
+                }
+            }
+        }
+        render(template: mode + '/' + params.template, model:[
+            'child': child,
+            'adults': homeFolderService.getAdults(child.homeFolder.id),
+            'roleOwners' : homeFolderService.getBySubjectRoles(child.id,
+                [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[])
+        ])
+    }
+
+    def homeFolder = {
+        def homeFolder = homeFolderService.getById(Long.valueOf(params.id))
+        def mode = params.mode
+        if (request.post) {
+            bind(homeFolder)
+            mode = 'static'
+        }
+        render(template: mode + '/' + params.template, model:['homeFolder': homeFolder])
+    }
+
+    def actions = {
+      return []
     }
 
     def mapping = {
@@ -121,6 +167,7 @@ class BackofficeHomeFolderController {
         }
     }
 
+    // TODO : move in request module
     def requests = {
         def result = [requests:[]]
         def homeFolderRequests =
@@ -133,6 +180,7 @@ class BackofficeHomeFolderController {
         return result
     }
     
+    // TODO : move in payment module
     def payments = {
         def result = [payments:[]]
         
