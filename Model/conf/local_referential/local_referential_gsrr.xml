@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LocalReferential xmlns="http://www.cg95.fr/cvq/schema/referential">
     <request>GlobalSchoolRegistrationRequest</request>
-    <data name="EcoleDerogation">
-        <label lang="fr">Ecole</label>
-    </data>
     <data name="MotifsDerogation">
         <label lang="fr">Le ou les motif(s) de votre demande de dérogation</label>
         <label lang="fr">Le ou les motif(s) de votre demande de dérogation</label>
-    </data>
-    <data name="EcoleSecteur">
-        <label lang="fr">Ecole de secteur</label>
     </data>
     <data name="RegimeAlimentaire">
         <label lang="fr">Régime alimentaire de votre enfant</label>

@@ -36,6 +36,8 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
 
     public SchoolTransportRegistrationRequestData() {
       
+        acceptationReglementInterieur = Boolean.valueOf(false);
+      
     }
 
     @Override
@@ -59,7 +61,25 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
         
           
             
+        result.setIdLigne(idLigne);
+      
+          
+        
+          
+            
+        result.setAcceptationReglementInterieur(acceptationReglementInterieur);
+      
+          
+        
+          
+            
         result.setFrereOuSoeurEcole(frereOuSoeurEcole);
+      
+          
+        
+          
+            
+        result.setIdArret(idArret);
       
           
         
@@ -81,21 +101,13 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
         
           
             
-        List<fr.cg95.cvq.business.request.LocalReferentialData> arretList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : arret) {
-            arretList.add(object.clone());
-        }
-        result.setArret(arretList);
+        result.setLabelArret(labelArret);
       
           
         
           
             
-        List<fr.cg95.cvq.business.request.LocalReferentialData> ligneList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : ligne) {
-            ligneList.add(object.clone());
-        }
-        result.setLigne(ligneList);
+        result.setLabelLigne(labelLigne);
       
           
         
@@ -219,6 +231,63 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
       @NotNull(
         
         
+        profiles = {"enfant"},
+        message = "idLigne"
+      )
+    
+      @NotBlank(
+        
+        
+        profiles = {"enfant"},
+        message = "idLigne"
+      )
+    
+    private String idLigne;
+
+    public final void setIdLigne(final String idLigne) {
+        this.idLigne = idLigne;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="id_ligne"
+        
+      
+    */
+    public final String getIdLigne() {
+        return this.idLigne;
+    }
+  
+    
+      @NotNull(
+        
+        
+        profiles = {"reglements"},
+        message = "acceptationReglementInterieur"
+      )
+    
+    private Boolean acceptationReglementInterieur;
+
+    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
+        this.acceptationReglementInterieur = acceptationReglementInterieur;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="acceptation_reglement_interieur"
+        
+      
+    */
+    public final Boolean getAcceptationReglementInterieur() {
+        return this.acceptationReglementInterieur;
+    }
+  
+    
+      @NotNull(
+        
+        
           when = "groovy:def active = true;" +
           
             
@@ -263,6 +332,38 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
     */
     public final String getFrereOuSoeurEcole() {
         return this.frereOuSoeurEcole;
+    }
+  
+    
+      @NotNull(
+        
+        
+        profiles = {"enfant"},
+        message = "idArret"
+      )
+    
+      @NotBlank(
+        
+        
+        profiles = {"enfant"},
+        message = "idArret"
+      )
+    
+    private String idArret;
+
+    public final void setIdArret(final String idArret) {
+        this.idArret = idArret;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="id_arret"
+        
+      
+    */
+    public final String getIdArret() {
+        return this.idArret;
     }
   
     
@@ -393,89 +494,67 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
     }
   
     
-      @LocalReferential(
+      @NotNull(
         
         
         profiles = {"enfant"},
-        message = "arret"
+        message = "labelArret"
       )
     
-      @MinSize(
-        
-          value = 1,
+      @NotBlank(
         
         
         profiles = {"enfant"},
-        message = "arret"
+        message = "labelArret"
       )
     
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> arret;
+    private String labelArret;
 
-    public final void setArret(final List<fr.cg95.cvq.business.request.LocalReferentialData> arret) {
-        this.arret = arret;
+    public final void setLabelArret(final String labelArret) {
+        this.labelArret = labelArret;
     }
 
     /**
  
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="school_transport_registration_request_arret"
-        * @hibernate.key
-        *  column="school_transport_registration_request_id"
-        * @hibernate.list-index
-        *  column="arret_index"
-        * @hibernate.many-to-many
-        *  column="arret_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
+        * @hibernate.property
+        *  column="label_arret"
+        
       
     */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getArret() {
-        return this.arret;
+    public final String getLabelArret() {
+        return this.labelArret;
     }
   
     
-      @LocalReferential(
+      @NotNull(
         
         
         profiles = {"enfant"},
-        message = "ligne"
+        message = "labelLigne"
       )
     
-      @MinSize(
-        
-          value = 1,
+      @NotBlank(
         
         
         profiles = {"enfant"},
-        message = "ligne"
+        message = "labelLigne"
       )
     
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> ligne;
+    private String labelLigne;
 
-    public final void setLigne(final List<fr.cg95.cvq.business.request.LocalReferentialData> ligne) {
-        this.ligne = ligne;
+    public final void setLabelLigne(final String labelLigne) {
+        this.labelLigne = labelLigne;
     }
 
     /**
  
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="school_transport_registration_request_ligne"
-        * @hibernate.key
-        *  column="school_transport_registration_request_id"
-        * @hibernate.list-index
-        *  column="ligne_index"
-        * @hibernate.many-to-many
-        *  column="ligne_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
+        * @hibernate.property
+        *  column="label_ligne"
+        
       
     */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getLigne() {
-        return this.ligne;
+    public final String getLabelLigne() {
+        return this.labelLigne;
     }
   
     

@@ -21,14 +21,15 @@
       
     
       
+      <h4><g:message code="gsrr.property.ecoleDerogation.label" /></h4>
       <dl>
-        <dt><g:message code="gsrr.property.ecoleDerogation.label" /></dt>
-          <dd>
-          <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'ecoleDerogation', 'lrEntries': lrTypes.ecoleDerogation.entries, 'depth':0]" />
-          </dd>
-          
+        
+          <dt><g:message code="gsrr.property.idEcoleDerog.label" /></dt><dd>${rqt.idEcoleDerog?.toString()}</dd>
 
+        
+          <dt><g:message code="gsrr.property.labelEcoleDerog.label" /></dt><dd>${rqt.labelEcoleDerog?.toString()}</dd>
+
+        
       </dl>
       
     
@@ -59,14 +60,15 @@
       
     
       
+      <h4><g:message code="gsrr.property.ecoleSecteur.label" /></h4>
       <dl>
-        <dt><g:message code="gsrr.property.ecoleSecteur.label" /></dt>
-          <dd>
-          <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'ecoleSecteur', 'lrEntries': lrTypes.ecoleSecteur.entries, 'depth':0]" />
-          </dd>
-          
+        
+          <dt><g:message code="gsrr.property.idEcoleSecteur.label" /></dt><dd>${rqt.idEcoleSecteur?.toString()}</dd>
 
+        
+          <dt><g:message code="gsrr.property.labelEcoleSecteur.label" /></dt><dd>${rqt.labelEcoleSecteur?.toString()}</dd>
+
+        
       </dl>
       
     
@@ -105,6 +107,20 @@
       <dl>
         <dt><g:message code="gsrr.property.estPeriscolaire.label" /></dt>
           <dd><g:message code="message.${rqt.estPeriscolaire ? 'yes' : 'no'}" /></dd>
+          
+
+      </dl>
+      
+    
+  
+
+  
+    <h3><g:message code="gsrr.step.reglements.label" /></h3>
+    
+      
+      <dl>
+        <dt><g:message code="gsrr.property.acceptationReglementInterieur.label" /></dt>
+          <dd><g:message code="message.${rqt.acceptationReglementInterieur ? 'yes' : 'no'}" /></dd>
           
 
       </dl>

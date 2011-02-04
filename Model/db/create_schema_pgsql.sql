@@ -119,18 +119,6 @@
     alter table forms 
         drop constraint FK5D18C2FD06E9C28;
 
-    alter table global_school_registration_request_ecole_derogation 
-        drop constraint FKF70FA0889F06E472;
-
-    alter table global_school_registration_request_ecole_derogation 
-        drop constraint FKF70FA08885DE12C2;
-
-    alter table global_school_registration_request_ecole_secteur 
-        drop constraint FK90F208394E67F29;
-
-    alter table global_school_registration_request_ecole_secteur 
-        drop constraint FK90F208385DE12C2;
-
     alter table global_school_registration_request_motifs_derogation 
         drop constraint FK2AEE7D4011E068CC;
 
@@ -542,10 +530,6 @@
     drop table global_request_type_configuration;
 
     drop table global_school_registration_request;
-
-    drop table global_school_registration_request_ecole_derogation;
-
-    drop table global_school_registration_request_ecole_secteur;
 
     drop table global_school_registration_request_motifs_derogation;
 
@@ -1250,26 +1234,16 @@
 
     create table global_school_registration_request (
         id int8 not null,
+        label_ecole_derog varchar(255),
+        id_ecole_secteur varchar(255),
         motif_autre_precision varchar(255),
+        id_ecole_derog varchar(255),
         est_derogation bool,
+        label_ecole_secteur varchar(255),
         informations_complementaires_derogation varchar(1024),
         est_restauration bool,
         est_periscolaire bool,
         primary key (id)
-    );
-
-    create table global_school_registration_request_ecole_derogation (
-        global_school_registration_request_id int8 not null,
-        ecole_derogation_id int8 not null,
-        ecole_derogation_index int4 not null,
-        primary key (global_school_registration_request_id, ecole_derogation_index)
-    );
-
-    create table global_school_registration_request_ecole_secteur (
-        global_school_registration_request_id int8 not null,
-        ecole_secteur_id int8 not null,
-        ecole_secteur_index int4 not null,
-        primary key (global_school_registration_request_id, ecole_secteur_index)
     );
 
     create table global_school_registration_request_motifs_derogation (
@@ -2816,26 +2790,6 @@
         add constraint FK5D18C2FD06E9C28 
         foreign key (request_form_id) 
         references request_form;
-
-    alter table global_school_registration_request_ecole_derogation 
-        add constraint FKF70FA0889F06E472 
-        foreign key (ecole_derogation_id) 
-        references local_referential_data;
-
-    alter table global_school_registration_request_ecole_derogation 
-        add constraint FKF70FA08885DE12C2 
-        foreign key (global_school_registration_request_id) 
-        references global_school_registration_request;
-
-    alter table global_school_registration_request_ecole_secteur 
-        add constraint FK90F208394E67F29 
-        foreign key (ecole_secteur_id) 
-        references local_referential_data;
-
-    alter table global_school_registration_request_ecole_secteur 
-        add constraint FK90F208385DE12C2 
-        foreign key (global_school_registration_request_id) 
-        references global_school_registration_request;
 
     alter table global_school_registration_request_motifs_derogation 
         add constraint FK2AEE7D4011E068CC 

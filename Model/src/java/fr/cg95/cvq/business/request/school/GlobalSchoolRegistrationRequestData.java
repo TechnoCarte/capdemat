@@ -36,6 +36,8 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
 
     public GlobalSchoolRegistrationRequestData() {
       
+        acceptationReglementInterieur = Boolean.valueOf(false);
+      
         estDerogation = Boolean.valueOf(false);
       
         estRestauration = Boolean.valueOf(false);
@@ -50,17 +52,25 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
         
           
             
+        result.setLabelEcoleDerog(labelEcoleDerog);
+      
+          
+        
+          
+            
+        result.setIdEcoleSecteur(idEcoleSecteur);
+      
+          
+        
+          
+            
         result.setMotifAutrePrecision(motifAutrePrecision);
       
           
         
           
             
-        List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleSecteurList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : ecoleSecteur) {
-            ecoleSecteurList.add(object.clone());
-        }
-        result.setEcoleSecteur(ecoleSecteurList);
+        result.setIdEcoleDerog(idEcoleDerog);
       
           
         
@@ -76,7 +86,19 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
         
           
             
+        result.setAcceptationReglementInterieur(acceptationReglementInterieur);
+      
+          
+        
+          
+            
         result.setEstDerogation(estDerogation);
+      
+          
+        
+          
+            
+        result.setLabelEcoleSecteur(labelEcoleSecteur);
       
           
         
@@ -108,16 +130,6 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
       
           
         
-          
-            
-        List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleDerogationList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : ecoleDerogation) {
-            ecoleDerogationList.add(object.clone());
-        }
-        result.setEcoleDerogation(ecoleDerogationList);
-      
-          
-        
         return result;
     }
 
@@ -134,6 +146,106 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
         return this.id;
     }
 
+  
+    
+      @NotNull(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "labelEcoleDerog"
+      )
+    
+      @NotBlank(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "labelEcoleDerog"
+      )
+    
+    private String labelEcoleDerog;
+
+    public final void setLabelEcoleDerog(final String labelEcoleDerog) {
+        this.labelEcoleDerog = labelEcoleDerog;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="label_ecole_derog"
+        
+      
+    */
+    public final String getLabelEcoleDerog() {
+        return this.labelEcoleDerog;
+    }
+  
+    
+      @NotNull(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "idEcoleSecteur"
+      )
+    
+      @NotBlank(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "idEcoleSecteur"
+      )
+    
+    private String idEcoleSecteur;
+
+    public final void setIdEcoleSecteur(final String idEcoleSecteur) {
+        this.idEcoleSecteur = idEcoleSecteur;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="id_ecole_secteur"
+        
+      
+    */
+    public final String getIdEcoleSecteur() {
+        return this.idEcoleSecteur;
+    }
   
     
       @NotNull(
@@ -186,64 +298,53 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
     }
   
     
-      @LocalReferential(
+      @NotNull(
         
         
           when = "groovy:def active = true;" +
           
-            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+            
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
                 
               
-            
             
             "return active",
         
         profiles = {"enfant"},
-        message = "ecoleSecteur"
+        message = "idEcoleDerog"
       )
     
-      @MinSize(
-        
-          value = 1,
+      @NotBlank(
         
         
           when = "groovy:def active = true;" +
           
-            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+            
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
                 
               
-            
             
             "return active",
         
         profiles = {"enfant"},
-        message = "ecoleSecteur"
+        message = "idEcoleDerog"
       )
     
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleSecteur;
+    private String idEcoleDerog;
 
-    public final void setEcoleSecteur(final List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleSecteur) {
-        this.ecoleSecteur = ecoleSecteur;
+    public final void setIdEcoleDerog(final String idEcoleDerog) {
+        this.idEcoleDerog = idEcoleDerog;
     }
 
     /**
  
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="global_school_registration_request_ecole_secteur"
-        * @hibernate.key
-        *  column="global_school_registration_request_id"
-        * @hibernate.list-index
-        *  column="ecole_secteur_index"
-        * @hibernate.many-to-many
-        *  column="ecole_secteur_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
+        * @hibernate.property
+        *  column="id_ecole_derog"
+        
       
     */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getEcoleSecteur() {
-        return this.ecoleSecteur;
+    public final String getIdEcoleDerog() {
+        return this.idEcoleDerog;
     }
   
     
@@ -311,6 +412,31 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
       @NotNull(
         
         
+        profiles = {"reglements"},
+        message = "acceptationReglementInterieur"
+      )
+    
+    private Boolean acceptationReglementInterieur;
+
+    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
+        this.acceptationReglementInterieur = acceptationReglementInterieur;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="acceptation_reglement_interieur"
+        
+      
+    */
+    public final Boolean getAcceptationReglementInterieur() {
+        return this.acceptationReglementInterieur;
+    }
+  
+    
+      @NotNull(
+        
+        
         profiles = {"enfant"},
         message = "estDerogation"
       )
@@ -330,6 +456,56 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
     */
     public final Boolean getEstDerogation() {
         return this.estDerogation;
+    }
+  
+    
+      @NotNull(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "labelEcoleSecteur"
+      )
+    
+      @NotBlank(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= !_this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "labelEcoleSecteur"
+      )
+    
+    private String labelEcoleSecteur;
+
+    public final void setLabelEcoleSecteur(final String labelEcoleSecteur) {
+        this.labelEcoleSecteur = labelEcoleSecteur;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="label_ecole_secteur"
+        
+      
+    */
+    public final String getLabelEcoleSecteur() {
+        return this.labelEcoleSecteur;
     }
   
     
@@ -495,67 +671,6 @@ public class GlobalSchoolRegistrationRequestData implements Serializable {
     */
     public final List<fr.cg95.cvq.business.request.LocalReferentialData> getRegimeAlimentaire() {
         return this.regimeAlimentaire;
-    }
-  
-    
-      @LocalReferential(
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "ecoleDerogation"
-      )
-    
-      @MinSize(
-        
-          value = 1,
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "ecoleDerogation"
-      )
-    
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleDerogation;
-
-    public final void setEcoleDerogation(final List<fr.cg95.cvq.business.request.LocalReferentialData> ecoleDerogation) {
-        this.ecoleDerogation = ecoleDerogation;
-    }
-
-    /**
- 
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="global_school_registration_request_ecole_derogation"
-        * @hibernate.key
-        *  column="global_school_registration_request_id"
-        * @hibernate.list-index
-        *  column="ecole_derogation_index"
-        * @hibernate.many-to-many
-        *  column="ecole_derogation_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
-      
-    */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getEcoleDerogation() {
-        return this.ecoleDerogation;
     }
   
 }

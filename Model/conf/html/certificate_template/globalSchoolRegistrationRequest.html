@@ -77,12 +77,16 @@
     
   
     
-      <p class="label">${i18n.translate('gsrr.property.ecoleDerogation.label')}</p>
-          <div class="response choice">
-            <% localReferentialWidget(rqt, 'ecoleDerogation', lrTypes.ecoleDerogation.entries, 0) %>
-          </div>
-          
+      <h3>${i18n.translate('gsrr.property.ecoleDerogation.label')}</h3>
+      <div class="complex">
+        
+          <p class="label">${i18n.translate('gsrr.property.idEcoleDerog.label')}</p><div class="response">${StringUtils.defaultString(rqt.idEcoleDerog?.toString())}</div>
 
+        
+          <p class="label">${i18n.translate('gsrr.property.labelEcoleDerog.label')}</p><div class="response">${StringUtils.defaultString(rqt.labelEcoleDerog?.toString())}</div>
+
+        
+      </div>
     
   
     
@@ -105,12 +109,16 @@
     
   
     
-      <p class="label">${i18n.translate('gsrr.property.ecoleSecteur.label')}</p>
-          <div class="response choice">
-            <% localReferentialWidget(rqt, 'ecoleSecteur', lrTypes.ecoleSecteur.entries, 0) %>
-          </div>
-          
+      <h3>${i18n.translate('gsrr.property.ecoleSecteur.label')}</h3>
+      <div class="complex">
+        
+          <p class="label">${i18n.translate('gsrr.property.idEcoleSecteur.label')}</p><div class="response">${StringUtils.defaultString(rqt.idEcoleSecteur?.toString())}</div>
 
+        
+          <p class="label">${i18n.translate('gsrr.property.labelEcoleSecteur.label')}</p><div class="response">${StringUtils.defaultString(rqt.labelEcoleSecteur?.toString())}</div>
+
+        
+      </div>
     
   
 
@@ -149,6 +157,24 @@
           <div class="response choice">
             <% [true,false].each { %>
               <span ${it == rqt.estPeriscolaire ? 'class="checked"': ''}>
+                ${i18n.translate('message.' + (it ? 'yes' : 'no'))}
+              </span>
+              ${it ? ' / ' : ''}
+            <% } %>
+          </div>
+          
+
+    
+  
+
+  
+  <h2>${i18n.translate('gsrr.step.reglements.label')}</h2>
+  
+    
+      <p class="label">${i18n.translate('gsrr.property.acceptationReglementInterieur.label')}</p>
+          <div class="response choice">
+            <% [true,false].each { %>
+              <span ${it == rqt.acceptationReglementInterieur ? 'class="checked"': ''}>
                 ${i18n.translate('message.' + (it ? 'yes' : 'no'))}
               </span>
               ${it ? ' / ' : ''}

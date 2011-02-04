@@ -1,11 +1,42 @@
 package fr.cg95.cvq.service.request.school.impl;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.soap.Fault;
+import org.apache.soap.rpc.Call;
+import org.apache.soap.rpc.Parameter;
+import org.apache.soap.rpc.Response;
+import org.apache.xmlbeans.XmlException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import fr.capwebct.capdemat.EcoleDerogType;
+import fr.capwebct.capdemat.EcoleSecteurType;
+import fr.capwebct.capdemat.ListeEcoleDocument;
 import fr.cg95.cvq.business.request.Request;
 import fr.cg95.cvq.business.request.school.GlobalSchoolRegistrationRequest;
+import fr.cg95.cvq.business.users.Individual;
+import fr.cg95.cvq.exception.CvqObjectNotFoundException;
 import fr.cg95.cvq.service.request.condition.EqualityChecker;
 import fr.cg95.cvq.service.request.impl.RequestService;
+import fr.cg95.cvq.service.request.school.IGlobalSchoolRegistrationRequestService;
+import fr.cg95.cvq.service.users.IIndividualService;
+import fr.cg95.cvq.service.users.external.IExternalHomeFolderService;
 
-public final class GlobalSchoolRegistrationRequestService extends RequestService {
+public final class GlobalSchoolRegistrationRequestService extends RequestService implements IGlobalSchoolRegistrationRequestService {
+
+    private static String urlws = "http://193.253.39.123:8081/formation/kiosque/web_methode/web_methode.php";
+    private static String externalServiceLabel = "Technocarte";
+    private static Logger logger = Logger.getLogger(GlobalSchoolRegistrationRequestService.class);
+
+    @Autowired
+    private IIndividualService individualService;
+    @Autowired
+    private IExternalHomeFolderService externalHomeFolderService;
 
     @Override
     public void init() {
@@ -30,17 +61,16 @@ public final class GlobalSchoolRegistrationRequestService extends RequestService
 
         // get child info
         Individual child = individualService.getById(childId);
-        String chId = externalHomeFolderService.getIndividualMapping(externalServiceLabel, child).getExternalCapDematId();
-        logger.debug("Get externalCapDematId for " + child.getFullName() + " - " + chId);
-        String streetNumber = child.getAddress().getStreetNumber();
-        String rivoliCode = child.getAddress().getStreetRivoliCode();
-        String postalCode = child.getAddress().getPostalCode();
+        String externalChildId = "";
+        if (externalHomeFolderService.getIndividualMapping(child, externalServiceLabel) != null)
+            externalChildId = externalHomeFolderService.getIndividualMapping(child, externalServiceLabel).getExternalCapDematId();
+        logger.debug("Get externalCapDematId for " + child.getFullName() + " - " + externalChildId);
 
         Vector<Parameter> parameters = new Vector<Parameter>();
-        parameters.addElement(new Parameter("idenfantexterne", String.class, chId, null));
-        parameters.addElement(new Parameter("nrue", String.class, streetNumber, null));
-        parameters.addElement(new Parameter("rivoli", String.class, rivoliCode, null));
-        parameters.addElement(new Parameter("cp", String.class, postalCode, null));
+        parameters.addElement(new Parameter("idenfantexterne", String.class, externalChildId, null));
+        parameters.addElement(new Parameter("nrue", String.class, child.getAddress().getStreetNumber(), null));
+        parameters.addElement(new Parameter("rivoli", String.class, child.getAddress().getStreetRivoliCode(), null));
+        parameters.addElement(new Parameter("cp", String.class, child.getAddress().getPostalCode(), null));
         parameters.addElement(new Parameter("codeappli", String.class, "Capdemat", null));
         try {
             Call call = new Call();
@@ -58,10 +88,9 @@ public final class GlobalSchoolRegistrationRequestService extends RequestService
             } else {
                 Parameter soap_result = soap_response.getReturnValue();
                 // add a header to xml return 'xmlns="http://www.capwebct.fr/capdemat"'
-                String xmlresult = soap_result.getValue().toString();
-                int index = xmlresult.indexOf("<ListeEcole") + "<ListeEcole".length();
-                xmlresult = xmlresult.substring(0, index) + " xmlns=\"http://www.capwebct.fr/capdemat\"" + xmlresult.substring(index);
-                logger.debug("Get soap response for child " + chId + " and rivoli code " + rivoliCode);
+                String xmlresult = soap_result.getValue().toString()
+                    .replaceFirst("<ListeEcole>", "<ListeEcole xmlns=\"http://www.capwebct.fr/capdemat\">");
+                logger.debug("Get soap response for child " + externalChildId + " and rivoli code " + child.getAddress().getStreetRivoliCode());
                 // start treatment
                 logger.debug("Parse : " + xmlresult);
                 ListeEcoleDocument document = ListeEcoleDocument.Factory.parse(xmlresult);
@@ -79,10 +108,10 @@ public final class GlobalSchoolRegistrationRequestService extends RequestService
                 schools.put("schoolDerogs", schoolDerogs);
                 return schools;
             }
-        } catch (XmlException xe) {
-            logger.error("XmlException : " + xe.getMessage() + " : ");
-            xe.printStackTrace();
-        }catch (Exception e) {
+        } catch (XmlException e) {
+            logger.error("XmlException : " + e.getMessage() + " : ");
+            e.printStackTrace();
+        } catch (Exception e) {
             logger.error("Exception : " + e.getMessage());
             e.printStackTrace();
         }

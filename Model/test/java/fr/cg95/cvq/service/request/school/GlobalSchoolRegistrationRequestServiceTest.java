@@ -44,6 +44,20 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
           
             
+               request.setLabelEcoleDerog("LabelEcoleDerog");
+            
+          
+        
+          
+          
+            
+               request.setIdEcoleSecteur("IdEcoleSecteur");
+            
+          
+        
+          
+          
+            
                request.setMotifAutrePrecision("MotifAutrePrecision");
             
           
@@ -51,6 +65,7 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
           
             
+               request.setIdEcoleDerog("IdEcoleDerog");
             
           
         
@@ -58,11 +73,23 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
             
             
+          
+        
+          
+          
+               request.setAcceptationReglementInterieur(Boolean.valueOf(true));
           
         
           
           
                request.setEstDerogation(Boolean.valueOf(true));
+          
+        
+          
+          
+            
+               request.setLabelEcoleSecteur("LabelEcoleSecteur");
+            
           
         
           
@@ -83,12 +110,6 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
           
                request.setEstPeriscolaire(Boolean.valueOf(true));
-          
-        
-          
-          
-            
-            
           
         
           

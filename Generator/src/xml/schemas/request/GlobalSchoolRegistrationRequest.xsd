@@ -36,8 +36,9 @@
                 </conditions>
             </step>
             <step index="2" name="periscolaire" />
-            <step index="3" ref="document" />
-            <step index="4" ref="validation" />
+            <step index="3" name="reglements" />
+            <step index="4" ref="document" />
+            <step index="5" ref="validation" />
           </steps>
         </common>
       </xs:appinfo>
@@ -68,7 +69,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="EcoleDerogation" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="EcoleDerogation" type="gsrr:EcoleDerogType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
                   Ecole
@@ -77,7 +78,6 @@
                   Ecole
                 </xs:documentation>
                 <xs:appinfo>
-                  <model namespace="request" isTiedToRequest="true" />
                   <common>
                     <step name="enfant" />
                     <conditions>
@@ -165,7 +165,7 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
-            <xs:element name="EcoleSecteur" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="EcoleSecteur" type="gsrr:EcoleSecteurType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
                   Ecole de secteur
@@ -174,7 +174,6 @@
                   Ecole de secteur
                 </xs:documentation>
                 <xs:appinfo>
-                  <model namespace="request" isTiedToRequest="true" />
                   <common>
                     <step name="enfant" />
                     <conditions>
@@ -233,14 +232,32 @@
             <xs:element name="EstPeriscolaire" type="xs:boolean" default="false">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
-                  Souhaitez-vous inscrire votre enfant aux activités périscolaire de l'école ?
+                  Souhaitez-vous inscrire votre enfant à l'accueil périscolaire de l'école ?
                 </xs:documentation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
-                  Souhaitez-vous inscrire votre enfant aux activités périscolaire de l'école ?
+                  Souhaitez-vous inscrire votre enfant à l'accueil périscolaire de l'école ?
                 </xs:documentation>
                 <xs:appinfo>
                   <common>
                     <step name="periscolaire" />
+                  </common>
+                  <fo />
+                  <bo column="1" />
+                 <pdf />
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="AcceptationReglementInterieur" type="cvq:AcceptanceType" default="false">
+              <xs:annotation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+                  J'accepte et je m'engage à respecter le règlement
+                </xs:documentation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+                  J'accepte et je m'engage à respecter le règlement
+                </xs:documentation>
+                <xs:appinfo>
+                  <common>
+                    <step name="reglements" />
                   </common>
                   <fo />
                   <bo column="1" />
@@ -253,4 +270,85 @@
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
+  
+  <xs:complexType name="EcoleSecteurType">
+    <xs:sequence>
+      <xs:element name="IdEcoleSecteur" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+            Identifiant de l'école
+          </xs:documentation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Identifiant de l'école
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LabelEcoleSecteur" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+            Label de l'école
+          </xs:documentation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Label de l'école
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EcoleDerogType">
+    <xs:sequence>
+      <xs:element name="IdEcoleDerog" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+            Identifiant de l'école
+          </xs:documentation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Identifiant de l'école
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LabelEcoleDerog" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+            Label de l'école
+          </xs:documentation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Label de l'école
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>

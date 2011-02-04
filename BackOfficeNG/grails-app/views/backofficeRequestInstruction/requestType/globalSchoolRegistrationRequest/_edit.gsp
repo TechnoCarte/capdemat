@@ -16,6 +16,10 @@
       <a href="#page2"><em><g:message code="gsrr.step.periscolaire.label" /></em></a>
     </li>
   
+    <li class="">
+      <a href="#page3"><em><g:message code="gsrr.step.reglements.label" /></em></a>
+    </li>
+  
   </ul>
    
   <div class="yui-content">
@@ -47,13 +51,13 @@
               
             
               
-              <dl>
-                <dt class="required condition-estDerogation-filled"><g:message code="gsrr.property.ecoleDerogation.label" /> * : </dt><dd id="ecoleDerogation" class="action-editField validate-localReferentialData required-true i18n-gsrr.property.ecoleDerogation data-localReferentialData" >
-           <g:render template="/backofficeRequestInstruction/widget/localReferentialDataStatic" 
-                     model="['javaName':'ecoleDerogation', 'lrEntries': lrTypes.ecoleDerogation?.entries, 
-                             'rqt':rqt, 'isMultiple':lrTypes.ecoleDerogation?.entriesSupportMultiple, 'depth':0]" />
- 
-          </dd>
+              <h3><g:message code="gsrr.property.ecoleDerogation.label" /></h3>
+              <dl class="required condition-estDerogation-filled">
+                
+                  <dt class="required"><g:message code="gsrr.property.idEcoleDerog.label" /> * : </dt><dd id="idEcoleDerog" class="action-editField validate-string required-true i18n-gsrr.property.idEcoleDerog" ><span>${rqt?.idEcoleDerog}</span></dd>
+                
+                  <dt class="required"><g:message code="gsrr.property.labelEcoleDerog.label" /> * : </dt><dd id="labelEcoleDerog" class="action-editField validate-string required-true i18n-gsrr.property.labelEcoleDerog" ><span>${rqt?.labelEcoleDerog}</span></dd>
+                
               </dl>
               
             
@@ -87,13 +91,13 @@
           <div class="yui-u">
             
               
-              <dl>
-                <dt class="required condition-estDerogation-unfilled"><g:message code="gsrr.property.ecoleSecteur.label" /> * : </dt><dd id="ecoleSecteur" class="action-editField validate-localReferentialData required-true i18n-gsrr.property.ecoleSecteur data-localReferentialData" >
-           <g:render template="/backofficeRequestInstruction/widget/localReferentialDataStatic" 
-                     model="['javaName':'ecoleSecteur', 'lrEntries': lrTypes.ecoleSecteur?.entries, 
-                             'rqt':rqt, 'isMultiple':lrTypes.ecoleSecteur?.entriesSupportMultiple, 'depth':0]" />
- 
-          </dd>
+              <h3><g:message code="gsrr.property.ecoleSecteur.label" /></h3>
+              <dl class="required condition-estDerogation-unfilled">
+                
+                  <dt class="required"><g:message code="gsrr.property.idEcoleSecteur.label" /> * : </dt><dd id="idEcoleSecteur" class="action-editField validate-string required-true i18n-gsrr.property.idEcoleSecteur" ><span>${rqt?.idEcoleSecteur}</span></dd>
+                
+                  <dt class="required"><g:message code="gsrr.property.labelEcoleSecteur.label" /> * : </dt><dd id="labelEcoleSecteur" class="action-editField validate-string required-true i18n-gsrr.property.labelEcoleSecteur" ><span>${rqt?.labelEcoleSecteur}</span></dd>
+                
               </dl>
               
             
@@ -161,6 +165,37 @@
               
               <dl>
                 <dt class="required"><g:message code="gsrr.property.estPeriscolaire.label" /> * : </dt><dd id="estPeriscolaire" class="action-editField validate-boolean required-true i18n-gsrr.property.estPeriscolaire" ><span class="value-${rqt?.estPeriscolaire}"><g:message code="message.${rqt?.estPeriscolaire ? 'yes' : 'no'}" /></span></dd>
+              </dl>
+              
+            
+          </div>
+          <!-- column end -->
+          
+          <!-- column start -->
+          <div class="yui-u">
+            
+          </div>
+          <!-- column end -->
+          
+        </div>
+        <!-- data step  end -->
+      </div>
+      <!-- step end -->
+      
+      <!-- step start -->
+      <div id="page3">
+        <h2><g:message code="property.form" />
+          <span><g:message code="gsrr.step.reglements.label" /></span>
+        </h2>
+        <div class="yui-g">
+          
+          
+          <!-- column start -->
+          <div class="yui-u first">
+            
+              
+              <dl>
+                <dt class="required"><g:message code="gsrr.property.acceptationReglementInterieur.label" /> * : </dt><dd id="acceptationReglementInterieur" class="action-editField validate-acceptance required-true i18n-gsrr.property.acceptationReglementInterieur" ><span class="value-${rqt?.acceptationReglementInterieur}"><g:message code="message.${rqt?.acceptationReglementInterieur ? 'yes' : 'no'}" /></span></dd>
               </dl>
               
             
