@@ -459,7 +459,6 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
   <bean id="schoolTransportRegistrationRequestService" 
     class="fr.cg95.cvq.service.request.school.impl.SchoolTransportRegistrationRequestService" 
     parent="requestService">
-    <property name="localReferentialFilename" value="local_referential_strr"/>
     <property name="label" value="School Transport Registration"/>
     <property name="subjectPolicy" value="SUBJECT_POLICY_CHILD" />
     <property name="isOfRegistrationKind" value="true"/>

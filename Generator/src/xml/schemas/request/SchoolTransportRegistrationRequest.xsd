@@ -32,8 +32,9 @@
                     <condition name="autoriseFrereOuSoeur" />
                 </conditions>
             </step>
-            <step index="2" ref="document" />
-            <step index="3" ref="validation" />
+            <step index="2" name="reglements" />
+            <step index="3" ref="document" />
+            <step index="4" ref="validation" />
           </steps>
         </common>
       </xs:appinfo>
@@ -42,8 +43,7 @@
       <xs:complexContent>
         <xs:extension base="cvq:RequestType">
           <xs:sequence>
-          
-             <xs:element name="Ligne" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+             <xs:element name="Ligne" type="strr:LigneType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
                   Ligne de bus
@@ -52,7 +52,6 @@
                   Ligne de bus
                 </xs:documentation>
                 <xs:appinfo>
-                  <model namespace="request" isTiedToRequest="true" />
                   <common>
                     <step ref="enfant" />
                   </common>
@@ -62,16 +61,15 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="Arret" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="Arret" type="strr:ArretType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
                   Arrêt de montée et descente de l'enfant
                 </xs:documentation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
-                  Arrêt de montée et descente de l'enfant'
+                  Arrêt de montée et descente de l'enfant
                 </xs:documentation>
                 <xs:appinfo>
-                  <model namespace="request" isTiedToRequest="true" />
                   <common>
                     <step name="enfant" />
                   </common>
@@ -141,6 +139,24 @@
                   </common>
                   <fo />
                   <bo column="2" />
+                 <pdf />
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="AcceptationReglementInterieur" type="cvq:AcceptanceType" default="false">
+              <xs:annotation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+                  J'accepte et je m'engage à respecter le règlement
+                </xs:documentation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+                  J'accepte et je m'engage à respecter le règlement
+                </xs:documentation>
+                <xs:appinfo>
+                  <common>
+                    <step name="reglements" />
+                  </common>
+                  <fo />
+                  <bo column="1" />
                  <pdf />
                 </xs:appinfo>
               </xs:annotation>
@@ -286,4 +302,75 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:complexType name="LigneType">
+    <xs:sequence>
+      <xs:element name="IdLigne" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Identifiant
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LabelLigne" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Label
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ArretType">
+    <xs:sequence>
+      <xs:element name="IdArret" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Identifiant
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LabelArret" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+            Label
+          </xs:documentation>
+          <xs:appinfo>
+            <common>
+              <step name="enfant" />
+            </common>
+            <fo />
+            <bo />
+            <pdf />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>

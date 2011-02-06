@@ -63,21 +63,29 @@
     
   
     
-      <p class="label">${i18n.translate('strr.property.ligne.label')}</p>
-          <div class="response choice">
-            <% localReferentialWidget(rqt, 'ligne', lrTypes.ligne.entries, 0) %>
-          </div>
-          
+      <h3>${i18n.translate('strr.property.ligne.label')}</h3>
+      <div class="complex">
+        
+          <p class="label">${i18n.translate('strr.property.idLigne.label')}</p><div class="response">${StringUtils.defaultString(rqt.idLigne?.toString())}</div>
 
+        
+          <p class="label">${i18n.translate('strr.property.labelLigne.label')}</p><div class="response">${StringUtils.defaultString(rqt.labelLigne?.toString())}</div>
+
+        
+      </div>
     
   
     
-      <p class="label">${i18n.translate('strr.property.arret.label')}</p>
-          <div class="response choice">
-            <% localReferentialWidget(rqt, 'arret', lrTypes.arret.entries, 0) %>
-          </div>
-          
+      <h3>${i18n.translate('strr.property.arret.label')}</h3>
+      <div class="complex">
+        
+          <p class="label">${i18n.translate('strr.property.idArret.label')}</p><div class="response">${StringUtils.defaultString(rqt.idArret?.toString())}</div>
 
+        
+          <p class="label">${i18n.translate('strr.property.labelArret.label')}</p><div class="response">${StringUtils.defaultString(rqt.labelArret?.toString())}</div>
+
+        
+      </div>
     
   
 
@@ -130,6 +138,24 @@
 
         
       </div>
+    
+  
+
+  
+  <h2>${i18n.translate('strr.step.reglements.label')}</h2>
+  
+    
+      <p class="label">${i18n.translate('strr.property.acceptationReglementInterieur.label')}</p>
+          <div class="response choice">
+            <% [true,false].each { %>
+              <span ${it == rqt.acceptationReglementInterieur ? 'class="checked"': ''}>
+                ${i18n.translate('message.' + (it ? 'yes' : 'no'))}
+              </span>
+              ${it ? ' / ' : ''}
+            <% } %>
+          </div>
+          
+
     
   
 

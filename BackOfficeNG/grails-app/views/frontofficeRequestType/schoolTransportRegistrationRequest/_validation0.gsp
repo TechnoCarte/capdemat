@@ -12,26 +12,28 @@
       
     
       
+      <h4><g:message code="strr.property.ligne.label" /></h4>
       <dl>
-        <dt><g:message code="strr.property.ligne.label" /></dt>
-          <dd>
-          <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'ligne', 'lrEntries': lrTypes.ligne.entries, 'depth':0]" />
-          </dd>
-          
+        
+          <dt><g:message code="strr.property.idLigne.label" /></dt><dd>${rqt.idLigne?.toString()}</dd>
 
+        
+          <dt><g:message code="strr.property.labelLigne.label" /></dt><dd>${rqt.labelLigne?.toString()}</dd>
+
+        
       </dl>
       
     
       
+      <h4><g:message code="strr.property.arret.label" /></h4>
       <dl>
-        <dt><g:message code="strr.property.arret.label" /></dt>
-          <dd>
-          <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'arret', 'lrEntries': lrTypes.arret.entries, 'depth':0]" />
-          </dd>
-          
+        
+          <dt><g:message code="strr.property.idArret.label" /></dt><dd>${rqt.idArret?.toString()}</dd>
 
+        
+          <dt><g:message code="strr.property.labelArret.label" /></dt><dd>${rqt.labelArret?.toString()}</dd>
+
+        
       </dl>
       
     
@@ -87,6 +89,20 @@
           <dt><g:message code="strr.property.frereOuSoeurClasse.label" /></dt><dd>${rqt.frereOuSoeurClasse?.toString()}</dd>
 
         
+      </dl>
+      
+    
+  
+
+  
+    <h3><g:message code="strr.step.reglements.label" /></h3>
+    
+      
+      <dl>
+        <dt><g:message code="strr.property.acceptationReglementInterieur.label" /></dt>
+          <dd><g:message code="message.${rqt.acceptationReglementInterieur ? 'yes' : 'no'}" /></dd>
+          
+
       </dl>
       
     

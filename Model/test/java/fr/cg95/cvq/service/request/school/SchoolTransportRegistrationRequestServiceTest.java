@@ -61,7 +61,26 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
           
           
             
+               request.setIdLigne("IdLigne");
+            
+          
+        
+          
+          
+               request.setAcceptationReglementInterieur(Boolean.valueOf(true));
+          
+        
+          
+          
+            
                request.setFrereOuSoeurEcole("FrereOuSoeurEcole");
+            
+          
+        
+          
+          
+            
+               request.setIdArret("IdArret");
             
           
         
@@ -84,12 +103,14 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
           
           
             
+               request.setLabelArret("LabelArret");
             
           
         
           
           
             
+               request.setLabelLigne("LabelLigne");
             
           
         

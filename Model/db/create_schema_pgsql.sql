@@ -350,9 +350,6 @@
     alter table request_document 
         drop constraint FK712980CBD7FE2713;
 
-    alter table request_external_action_complementary_data 
-        drop constraint FKB088082C294C4979;
-
     alter table request_note 
         drop constraint FK4DABB7A2D7FE2713;
 
@@ -388,18 +385,6 @@
 
     alter table school_registration_request 
         drop constraint FK7BDFE8F420540B7;
-
-    alter table school_transport_registration_request_arret 
-        drop constraint FK2C4CECDB9DDC24C3;
-
-    alter table school_transport_registration_request_arret 
-        drop constraint FK2C4CECDB89395924;
-
-    alter table school_transport_registration_request_ligne 
-        drop constraint FK2CE3AFCC89395924;
-
-    alter table school_transport_registration_request_ligne 
-        drop constraint FK2CE3AFCC2623B032;
 
     alter table sewer_connection_request 
         drop constraint FK50B057BB1F88D72E;
@@ -651,8 +636,6 @@
 
     drop table request_external_action;
 
-    drop table request_external_action_complementary_data;
-
     drop table request_form;
 
     drop table request_lock;
@@ -676,10 +659,6 @@
     drop table school_registration_request;
 
     drop table school_transport_registration_request;
-
-    drop table school_transport_registration_request_arret;
-
-    drop table school_transport_registration_request_ligne;
 
     drop table sewer_connection_request;
 
@@ -751,7 +730,6 @@
         profession varchar(255),
         question varchar(255),
         answer varchar(255),
-        login varchar(255) unique,
         password varchar(255),
         primary key (id)
     );
@@ -882,8 +860,9 @@
 
     create table child (
         id int8 not null,
+        note varchar(255),
+        badge_number varchar(255),
         born bool,
-        sex varchar(8),
         primary key (id)
     );
 
@@ -1238,6 +1217,7 @@
         id_ecole_secteur varchar(255),
         motif_autre_precision varchar(255),
         id_ecole_derog varchar(255),
+        acceptation_reglement_interieur bool,
         est_derogation bool,
         label_ecole_secteur varchar(255),
         informations_complementaires_derogation varchar(1024),
@@ -1808,6 +1788,9 @@
 
     create table individual (
         id int8 not null,
+        version int4 not null,
+        login varchar(255) unique,
+        public_key varchar(50) unique,
         federation_key varchar(64) unique,
         last_name varchar(38),
         first_name varchar(38),
@@ -1817,6 +1800,7 @@
         birth_country varchar(255),
         birth_city varchar(32),
         birth_postal_code varchar(5),
+        sex varchar(8),
         creation_date timestamp,
         last_modification_date timestamp,
         state varchar(16) not null,
@@ -2239,14 +2223,8 @@
         message varchar(255),
         name varchar(255),
         status varchar(255),
+        subkey varchar(255),
         primary key (id)
-    );
-
-    create table request_external_action_complementary_data (
-        id int8 not null,
-        value bytea,
-        key varchar(255) not null,
-        primary key (id, key)
     );
 
     create table request_form (
@@ -2360,24 +2338,15 @@
         id int8 not null,
         frere_ou_soeur_nom varchar(38),
         autorisation varchar(255),
+        id_ligne varchar(255),
+        acceptation_reglement_interieur bool,
         frere_ou_soeur_ecole varchar(255),
+        id_arret varchar(255),
         frere_ou_soeur_prenom varchar(38),
+        label_arret varchar(255),
+        label_ligne varchar(255),
         frere_ou_soeur_classe varchar(255),
         primary key (id)
-    );
-
-    create table school_transport_registration_request_arret (
-        school_transport_registration_request_id int8 not null,
-        arret_id int8 not null,
-        arret_index int4 not null,
-        primary key (school_transport_registration_request_id, arret_index)
-    );
-
-    create table school_transport_registration_request_ligne (
-        school_transport_registration_request_id int8 not null,
-        ligne_id int8 not null,
-        ligne_index int4 not null,
-        primary key (school_transport_registration_request_id, ligne_index)
     );
 
     create table sewer_connection_request (
@@ -3176,11 +3145,6 @@
         foreign key (request_id) 
         references request;
 
-    alter table request_external_action_complementary_data 
-        add constraint FKB088082C294C4979 
-        foreign key (id) 
-        references request_external_action;
-
     alter table request_note 
         add constraint FK4DABB7A2D7FE2713 
         foreign key (request_id) 
@@ -3240,26 +3204,6 @@
         add constraint FK7BDFE8F420540B7 
         foreign key (school_id) 
         references school;
-
-    alter table school_transport_registration_request_arret 
-        add constraint FK2C4CECDB9DDC24C3 
-        foreign key (arret_id) 
-        references local_referential_data;
-
-    alter table school_transport_registration_request_arret 
-        add constraint FK2C4CECDB89395924 
-        foreign key (school_transport_registration_request_id) 
-        references school_transport_registration_request;
-
-    alter table school_transport_registration_request_ligne 
-        add constraint FK2CE3AFCC89395924 
-        foreign key (school_transport_registration_request_id) 
-        references school_transport_registration_request;
-
-    alter table school_transport_registration_request_ligne 
-        add constraint FK2CE3AFCC2623B032 
-        foreign key (ligne_id) 
-        references local_referential_data;
 
     alter table sewer_connection_request 
         add constraint FK50B057BB1F88D72E 

@@ -6,13 +6,32 @@ strr.step.enfant.desc =
 strr.step.autorisations.label =
 strr.step.autorisations.desc =
 
+strr.step.reglements.label =
+strr.step.reglements.desc =
+
 
 strr.property.ligne.help =
 strr.property.ligne.validationError =
 
 
+strr.property.idLigne.help =
+strr.property.idLigne.validationError =
+
+
+strr.property.labelLigne.help =
+strr.property.labelLigne.validationError =
+
+
 strr.property.arret.help =
 strr.property.arret.validationError =
+
+
+strr.property.idArret.help =
+strr.property.idArret.validationError =
+
+
+strr.property.labelArret.help =
+strr.property.labelArret.validationError =
 
 
 strr.property.autorisation.help =
@@ -55,5 +74,9 @@ strr.property.frereOuSoeurEcole.validationError =
 
 strr.property.frereOuSoeurClasse.help =
 strr.property.frereOuSoeurClasse.validationError =
+
+
+strr.property.acceptationReglementInterieur.help =
+strr.property.acceptationReglementInterieur.validationError =
 
 

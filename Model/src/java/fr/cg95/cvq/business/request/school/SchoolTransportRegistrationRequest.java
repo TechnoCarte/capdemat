@@ -60,6 +60,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         
           stepState = new HashMap<String, Object>(4);
           stepState.put("state", "unavailable");
+          stepState.put("required", true);
+          stepState.put("errorMsg", null);
+          stepState.put("invalidFields", new ArrayList<String>());
+          getStepStates().put("reglements", stepState);
+        
+          stepState = new HashMap<String, Object>(4);
+          stepState.put("state", "unavailable");
           stepState.put("required", false);
           stepState.put("errorMsg", null);
           stepState.put("invalidFields", new ArrayList<String>());
@@ -115,8 +122,15 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
       
         if (getAutorisation() != null)
             schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.xml.request.school.AutorisationType.Enum.forString(getAutorisation().toString()));
+        LigneType ligneTypeLigne = schoolTransportRegistrationRequest.addNewLigne();
+        ligneTypeLigne.setIdLigne(getIdLigne());
+      
+        if (getAcceptationReglementInterieur() != null)
+            schoolTransportRegistrationRequest.setAcceptationReglementInterieur(getAcceptationReglementInterieur().booleanValue());
       
         frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurEcole(getFrereOuSoeurEcole());
+        ArretType arretTypeArret = schoolTransportRegistrationRequest.addNewArret();
+        arretTypeArret.setIdArret(getIdArret());
       
         frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurPrenom(getFrereOuSoeurPrenom());
       
@@ -129,23 +143,9 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
             schoolTransportRegistrationRequest.setTiersAutorisesArray(tiersAutorisesTypeTab);
         }
       
-        i = 0;
-        if (getArret() != null) {
-            fr.cg95.cvq.xml.common.LocalReferentialDataType[] arretTypeTab = new fr.cg95.cvq.xml.common.LocalReferentialDataType[getArret().size()];
-            for (LocalReferentialData object : getArret()) {
-              arretTypeTab[i++] = LocalReferentialData.modelToXml(object);
-            }
-            schoolTransportRegistrationRequest.setArretArray(arretTypeTab);
-        }
+        arretTypeArret.setLabelArret(getLabelArret());
       
-        i = 0;
-        if (getLigne() != null) {
-            fr.cg95.cvq.xml.common.LocalReferentialDataType[] ligneTypeTab = new fr.cg95.cvq.xml.common.LocalReferentialDataType[getLigne().size()];
-            for (LocalReferentialData object : getLigne()) {
-              ligneTypeTab[i++] = LocalReferentialData.modelToXml(object);
-            }
-            schoolTransportRegistrationRequest.setLigneArray(ligneTypeTab);
-        }
+        ligneTypeLigne.setLabelLigne(getLabelLigne());
       
         frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurClasse(getFrereOuSoeurClasse());
       
@@ -172,7 +172,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         else
             schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.business.request.school.AutorisationType.getDefaultAutorisationType());
       
+        schoolTransportRegistrationRequest.setIdLigne(schoolTransportRegistrationRequestXml.getLigne().getIdLigne());
+      
+        schoolTransportRegistrationRequest.setAcceptationReglementInterieur(Boolean.valueOf(schoolTransportRegistrationRequestXml.getAcceptationReglementInterieur()));
+      
         schoolTransportRegistrationRequest.setFrereOuSoeurEcole(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurEcole());
+      
+        schoolTransportRegistrationRequest.setIdArret(schoolTransportRegistrationRequestXml.getArret().getIdArret());
       
         schoolTransportRegistrationRequest.setFrereOuSoeurPrenom(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurPrenom());
       
@@ -182,17 +188,9 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         }
         schoolTransportRegistrationRequest.setTiersAutorises(tiersAutorisesList);
       
-        List<fr.cg95.cvq.business.request.LocalReferentialData> arretList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>(schoolTransportRegistrationRequestXml.sizeOfArretArray());
-        for (LocalReferentialDataType object : schoolTransportRegistrationRequestXml.getArretArray()) {
-            arretList.add(fr.cg95.cvq.business.request.LocalReferentialData.xmlToModel(object));
-        }
-        schoolTransportRegistrationRequest.setArret(arretList);
+        schoolTransportRegistrationRequest.setLabelArret(schoolTransportRegistrationRequestXml.getArret().getLabelArret());
       
-        List<fr.cg95.cvq.business.request.LocalReferentialData> ligneList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>(schoolTransportRegistrationRequestXml.sizeOfLigneArray());
-        for (LocalReferentialDataType object : schoolTransportRegistrationRequestXml.getLigneArray()) {
-            ligneList.add(fr.cg95.cvq.business.request.LocalReferentialData.xmlToModel(object));
-        }
-        schoolTransportRegistrationRequest.setLigne(ligneList);
+        schoolTransportRegistrationRequest.setLabelLigne(schoolTransportRegistrationRequestXml.getLigne().getLabelLigne());
       
         schoolTransportRegistrationRequest.setFrereOuSoeurClasse(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurClasse());
       
@@ -217,6 +215,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
           stepState.put("errorMsg", null);
           stepState.put("invalidFields", new ArrayList<String>());
           clone.getStepStates().put("autorisations", stepState);
+        
+          stepState = new HashMap<String, Object>(4);
+          stepState.put("state", "unavailable");
+          stepState.put("required", true);
+          stepState.put("errorMsg", null);
+          stepState.put("invalidFields", new ArrayList<String>());
+          clone.getStepStates().put("reglements", stepState);
         
           stepState = new HashMap<String, Object>(4);
           stepState.put("state", "unavailable");
@@ -254,6 +259,24 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         return schoolTransportRegistrationRequestData.getAutorisation();
     }
   
+    public final void setIdLigne(final String idLigne) {
+        schoolTransportRegistrationRequestData.setIdLigne(idLigne);
+    }
+
+    
+    public final String getIdLigne() {
+        return schoolTransportRegistrationRequestData.getIdLigne();
+    }
+  
+    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
+        schoolTransportRegistrationRequestData.setAcceptationReglementInterieur(acceptationReglementInterieur);
+    }
+
+    @IsRulesAcceptance
+    public final Boolean getAcceptationReglementInterieur() {
+        return schoolTransportRegistrationRequestData.getAcceptationReglementInterieur();
+    }
+  
     public final void setFrereOuSoeurEcole(final String frereOuSoeurEcole) {
         schoolTransportRegistrationRequestData.setFrereOuSoeurEcole(frereOuSoeurEcole);
     }
@@ -261,6 +284,15 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
     
     public final String getFrereOuSoeurEcole() {
         return schoolTransportRegistrationRequestData.getFrereOuSoeurEcole();
+    }
+  
+    public final void setIdArret(final String idArret) {
+        schoolTransportRegistrationRequestData.setIdArret(idArret);
+    }
+
+    
+    public final String getIdArret() {
+        return schoolTransportRegistrationRequestData.getIdArret();
     }
   
     public final void setFrereOuSoeurPrenom(final String frereOuSoeurPrenom) {
@@ -281,22 +313,22 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         return schoolTransportRegistrationRequestData.getTiersAutorises();
     }
   
-    public final void setArret(final List<fr.cg95.cvq.business.request.LocalReferentialData> arret) {
-        schoolTransportRegistrationRequestData.setArret(arret);
+    public final void setLabelArret(final String labelArret) {
+        schoolTransportRegistrationRequestData.setLabelArret(labelArret);
     }
 
     
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getArret() {
-        return schoolTransportRegistrationRequestData.getArret();
+    public final String getLabelArret() {
+        return schoolTransportRegistrationRequestData.getLabelArret();
     }
   
-    public final void setLigne(final List<fr.cg95.cvq.business.request.LocalReferentialData> ligne) {
-        schoolTransportRegistrationRequestData.setLigne(ligne);
+    public final void setLabelLigne(final String labelLigne) {
+        schoolTransportRegistrationRequestData.setLabelLigne(labelLigne);
     }
 
     
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getLigne() {
-        return schoolTransportRegistrationRequestData.getLigne();
+    public final String getLabelLigne() {
+        return schoolTransportRegistrationRequestData.getLabelLigne();
     }
   
     public final void setFrereOuSoeurClasse(final String frereOuSoeurClasse) {
