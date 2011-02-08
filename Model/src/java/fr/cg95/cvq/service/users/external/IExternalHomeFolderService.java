@@ -53,4 +53,6 @@ public interface IExternalHomeFolderService {
     void setExternalId(String externalServiceLabel,
         @IsUser Long homeFolderId, @IsUser Long individualId,
         String externalId);
+
+    IndividualMapping getIndividualMapping(String externalServiceLabel, @IsIndividual Individual individual);
 }
