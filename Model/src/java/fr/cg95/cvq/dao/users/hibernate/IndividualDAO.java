@@ -2,6 +2,8 @@ package fr.cg95.cvq.dao.users.hibernate;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
@@ -19,6 +21,7 @@ import fr.cg95.cvq.dao.hibernate.GenericDAO;
 import fr.cg95.cvq.dao.hibernate.HibernateUtil;
 import fr.cg95.cvq.dao.users.IIndividualDAO;
 import fr.cg95.cvq.util.Critere;
+import fr.cg95.cvq.util.DateUtils;
 
 /**
  * The "Individual" service Hibernate implementation. This class is responsible
@@ -299,6 +302,89 @@ public class IndividualDAO extends GenericDAO implements IIndividualDAO {
             }
         }
         return sb;
+    }
+
+    private int getMaxDelay() {
+        Query maxDelayQuery = HibernateUtil.getSession()
+            .createQuery("select grtc.instructionMaxDelay from GlobalRequestTypeConfiguration grtc ");
+        return ((Number) maxDelayQuery.uniqueResult()).intValue();
+    }
+
+    private int getAlertDelay() {
+        Query alertDelayQuery = HibernateUtil.getSession()
+            .createQuery("select grtc.instructionAlertDelay from GlobalRequestTypeConfiguration grtc ");
+        return ((Number) alertDelayQuery.uniqueResult()).intValue();
+    }
+
+    public List<Object> findLateTasks(int max) {
+        Query countQ = HibernateUtil.getSession()
+            .createQuery("select count(*) from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate <= :limitDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("limitDate", DateUtils.getShiftedDate(Calendar.DATE, - getMaxDelay()));
+
+        Query allQ = HibernateUtil.getSession()
+            .createQuery("from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate <= :limitDate order by i.lastModificationDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("limitDate", DateUtils.getShiftedDate(Calendar.DATE, - getMaxDelay()));
+        if (max > 0)
+            allQ.setMaxResults(max);
+
+        return Arrays.asList(
+                (Long) countQ.iterate().next(), // count(*)
+                (List<Individual>) allQ.list()
+            );
+    }
+
+    public List<Object> findUrgentTasks(int max) {
+        Query countQ = HibernateUtil.getSession()
+            .createQuery("select count(*) from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate > :limitDate and i.lastModificationDate <= :alertDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("limitDate", DateUtils.getShiftedDate(Calendar.DATE, - getMaxDelay()))
+            .setTimestamp("alertDate", DateUtils.getShiftedDate(Calendar.DATE, - getAlertDelay()));
+
+        Query allQ = HibernateUtil.getSession()
+            .createQuery("from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate > :limitDate and i.lastModificationDate <= :alertDate order by i.lastModificationDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("limitDate", DateUtils.getShiftedDate(Calendar.DATE, - getMaxDelay()))
+            .setTimestamp("alertDate", DateUtils.getShiftedDate(Calendar.DATE, - getAlertDelay()));
+        if (max > 0)
+            allQ.setMaxResults(max);
+
+        return Arrays.asList(
+                (Long) countQ.iterate().next(), // count(*)
+                (List<Individual>) allQ.list()
+            );
+    }
+
+    public List<Object> findUsualTasks(int max) {
+        Query countQ = HibernateUtil.getSession()
+            .createQuery("select count(*) from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate > :alertDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("alertDate", DateUtils.getShiftedDate(Calendar.DATE, - getAlertDelay()));
+
+        Query allQ = HibernateUtil.getSession()
+            .createQuery("from Individual i where i.state in (:new, :modified, :invalid) and i.lastModificationDate > :alertDate order by i.lastModificationDate ")
+            .setString("new", UserState.NEW.toString())
+            .setString("modified", UserState.MODIFIED.toString())
+            .setString("invalid", UserState.INVALID.toString())
+            .setTimestamp("alertDate", DateUtils.getShiftedDate(Calendar.DATE, - getAlertDelay()));
+        if (max > 0)
+            allQ.setMaxResults(max);
+
+        return Arrays.asList(
+                (Long) countQ.iterate().next(), // count(*)
+                (List<Individual>) allQ.list()
+            );
     }
 
 }

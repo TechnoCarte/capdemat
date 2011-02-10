@@ -90,7 +90,9 @@ public abstract class Individual implements Historizable, Serializable {
 
 
     private Date creationDate;
+
     private UserState state;
+    private Date lastModificationDate;
 
     @NotNull(message = "address", when = "groovy:_this instanceof fr.cg95.cvq.business.users.Adult")
     @AssertValid(message = "address", when = "groovy:_this instanceof fr.cg95.cvq.business.users.Adult")
@@ -348,6 +350,7 @@ public abstract class Individual implements Historizable, Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+        this.lastModificationDate = creationDate;
     }
 
     public void setCreationDate(String creationDate) {
@@ -357,6 +360,32 @@ public abstract class Individual implements Historizable, Serializable {
             DateFormat df = DateFormat.getDateInstance();
             try {
                 this.creationDate = df.parse(creationDate);
+                this.lastModificationDate = this.creationDate;
+            } catch (java.text.ParseException pe) {
+                // hmm, worrying isn't it ?
+            }
+        }
+    }
+
+    /**
+     * @hibernate.property
+     *  column="last_modification_date"
+     */
+    public Date getLastModificationDate() {
+        return this.lastModificationDate;
+    }
+
+    public void setLastModificationDate(Date lastModificationDate) {
+        this.lastModificationDate = lastModificationDate;
+    }
+
+    public void setLastModificationDate(String lastModificationDate) {
+        if (lastModificationDate == null || lastModificationDate.equals("")) {
+            this.lastModificationDate = null;
+        } else {
+            DateFormat df = DateFormat.getDateInstance();
+            try {
+                this.lastModificationDate = df.parse(lastModificationDate);
             } catch (java.text.ParseException pe) {
                 // hmm, worrying isn't it ?
             }

@@ -86,4 +86,40 @@ public interface IIndividualDAO extends IGenericDAO {
 
     boolean hasSimilarIndividuals(String firstName, String lastName, String email,
         String phone, String streetNumber, String streetName, String postalCode, String city);
+
+    /**
+     * Returns {@link Individual individuals} in state {@link UserState New}, {@link UserState Modified} or
+     * {@link UserState Invalid} whose the last modification date is past the maximum delay.
+     *
+     * @param max Maximum number of individuals to retrieve
+     * @return [
+     *      Long Total of individuals found,
+     *      List<Individual> Individuals actually retrieved
+     *  ]
+     */
+    public List<Object> findLateTasks(int max);
+
+    /**
+     * Returns {@link Individual individuals} in state {@link UserState New}, {@link UserState Modified} or
+     * {@link UserState Invalid} whose the last modification date is past the alert delay.
+     *
+     * @param max Maximum number of individuals to retrieve
+     * @return [
+     *      Long Total of individuals found,
+     *      List<Individual> Individuals actually retrieved
+     *  ]
+     */
+    public List<Object> findUrgentTasks(int max);
+
+    /**
+     * Returns {@link Individual individuals} in state {@link UserState New}, {@link UserState Modified} or
+     * {@link UserState Invalid} whose the last modification date is post the alert delay.
+     *
+     * @param max Maximum number of individuals to retrieve
+     * @return [
+     *      Long Total of individuals found,
+     *      List<Individual> Individuals actually retrieved
+     *  ]
+     */
+    public List<Object> findUsualTasks(int max);
 }

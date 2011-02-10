@@ -409,20 +409,7 @@ class BackofficeHomeFolderController {
             params.currentOffset ? Integer.parseInt(params.currentOffset) : 0)
         
         for(Individual indv : individuals) {
-            def entry = [
-                'id' : indv.id,
-                "state" : indv.state,
-                'lastName' : indv.lastName,
-                'firstName' : indv.firstName,
-                'homeFolderId' : indv.homeFolder?.id,
-                "homeFolderState" : indv.homeFolder?.state,
-                'streetName' : indv.address.streetName,
-                'streetNumber' : indv.address.streetNumber,
-                'postalCode': indv.address.postalCode,
-                'city' : indv.address.city,
-                'birthDate': indv instanceof Child ? indv.birthDate : null,
-                'birthCity': indv instanceof Child ? indv.birthCity : null
-            ]
+            def entry = prepareRecordForView(indv)
             if(!result.contains(entry)) result.add(entry)
         }
         
@@ -478,5 +465,88 @@ class BackofficeHomeFolderController {
             ])
         }
         return result;
+    }
+
+    protected def prepareRecordForView(Individual indv) {
+        return [
+            'id' : indv.id,
+            'state' : indv.homeFolder?.state,
+            'status' : indv.homeFolder?.enabled,
+            'lastName' : indv.lastName,
+            'firstName' : indv.firstName,
+            'homeFolderId' : indv.homeFolder?.id,
+            'streetName' : indv.address.streetName,
+            'streetNumber' : indv.address.streetNumber,
+            'postalCode': indv.address.postalCode,
+            'city' : indv.address.city,
+            'birthDate': indv instanceof Child ? indv.birthDate : null,
+            'birthCity': indv instanceof Child ? indv.birthCity : null
+        ]
+    }
+
+    def searchLates = {
+        def individuals = individualService.findLateTasks(0)
+        def result = []
+        individuals[1].each {
+            result.add(prepareRecordForView(it))
+        }
+        def state = [:]
+
+        // TODO deal with pagination
+        render(view : 'search', model: [
+            'state': state,
+            'records': result,
+            'count' : individuals[0],
+            'max': 100,
+            'homeFolderStates': buildHomeFolderStateFilter(),
+            'currentSiteName': SecurityContext.currentSite.name,
+            'homeFolderStatus' : buildHomeFolderStatusFilter(),
+            'pageState' : (new JSON(state)).toString().encodeAsHTML(),
+            'offset' : 0
+        ]);
+    }
+
+    def searchUrgents = {
+        def individuals = individualService.findUrgentTasks(0)
+        def result = []
+        individuals[1].each {
+            result.add(prepareRecordForView(it))
+        }
+        def state = [:]
+
+        // TODO deal with pagination
+        render(view : 'search', model: [
+            'state': state,
+            'records': result,
+            'count' : individuals[0],
+            'max': 100,
+            'homeFolderStates': buildHomeFolderStateFilter(),
+            'currentSiteName': SecurityContext.currentSite.name,
+            'homeFolderStatus' : buildHomeFolderStatusFilter(),
+            'pageState' : (new JSON(state)).toString().encodeAsHTML(),
+            'offset' : 0
+        ]);
+    }
+
+    def searchUsuals = {
+        def individuals = individualService.findUsualTasks(0)
+        def result = []
+        individuals[1].each {
+            result.add(prepareRecordForView(it))
+        }
+        def state = [:]
+
+        // TODO deal with pagination
+        render(view : 'search', model: [
+            'state': state,
+            'records': result,
+            'count' : individuals[0],
+            'max': 100,
+            'homeFolderStates': buildHomeFolderStateFilter(),
+            'currentSiteName': SecurityContext.currentSite.name,
+            'homeFolderStatus' : buildHomeFolderStatusFilter(),
+            'pageState' : (new JSON(state)).toString().encodeAsHTML(),
+            'offset' : 0
+        ]);
     }
 }

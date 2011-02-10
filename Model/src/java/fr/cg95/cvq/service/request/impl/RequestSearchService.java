@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +22,7 @@ import fr.cg95.cvq.business.request.RequestState;
 import fr.cg95.cvq.dao.request.IRequestDAO;
 import fr.cg95.cvq.exception.CvqException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
+import fr.cg95.cvq.security.SecurityContext;
 import fr.cg95.cvq.security.annotation.Context;
 import fr.cg95.cvq.security.annotation.ContextPrivilege;
 import fr.cg95.cvq.security.annotation.ContextType;
@@ -159,5 +162,55 @@ public class RequestSearchService implements IRequestSearchService {
 
     public void setLocalAuthorityRegistry(ILocalAuthorityRegistry localAuthorityRegistry) {
         this.localAuthorityRegistry = localAuthorityRegistry;
+    }
+
+    public List<Object> findLateTasks(int max) throws CvqException {
+        Set<Critere> criteriaSet = new HashSet<Critere>();
+        Critere criterion = new Critere();
+
+        criterion.setComparatif(Critere.EQUALS);
+        criterion.setAttribut(Request.SEARCH_BY_QUALITY_TYPE);
+        criterion.setValue(Request.QUALITY_TYPE_RED);
+        criteriaSet.add(criterion);
+
+        return Arrays.asList(
+                getCount(criteriaSet),
+                get(criteriaSet, null, null, max, 0, false)
+            );
+    }
+
+    public List<Object> findUrgentTasks(int max) throws CvqException {
+        Set<Critere> criteriaSet = new HashSet<Critere>();
+        Critere criterion = new Critere();
+
+        criterion.setComparatif(Critere.EQUALS);
+        criterion.setAttribut(Request.SEARCH_BY_QUALITY_TYPE);
+        criterion.setValue(Request.QUALITY_TYPE_ORANGE);
+        criteriaSet.add(criterion);
+
+        return Arrays.asList(
+                getCount(criteriaSet),
+                get(criteriaSet, null, null, max, 0, false)
+            );
+    }
+
+    public List<Object> findUsualTasks(int max) throws CvqException {
+        Set<Critere> criteriaSet = new HashSet<Critere>();
+        Critere criterion = new Critere();
+        criterion.setComparatif(Critere.IN);
+        criterion.setAttribut(Request.SEARCH_BY_STATE);
+
+        Set<RequestState> states = new HashSet<RequestState>(3);
+        states.add(RequestState.PENDING);
+        states.add(RequestState.COMPLETE);
+        states.add(RequestState.UNCOMPLETE);
+        criterion.setValue(states);
+
+        criteriaSet.add(criterion);
+
+        return Arrays.asList(
+                getCount(criteriaSet),
+                get(criteriaSet, null, null, max, 0, false)
+            );
     }
 }

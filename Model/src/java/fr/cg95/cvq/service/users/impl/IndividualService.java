@@ -334,5 +334,17 @@ public class IndividualService implements IIndividualService {
         }
         return invalidFields.get("") != null ? invalidFields.get("") : Collections.<String>emptyList();
     }
+
+    public List<Object> findLateTasks(int max) {
+        return individualDAO.findLateTasks(max);
+    }
+
+    public List<Object> findUrgentTasks(int max) {
+        return individualDAO.findUrgentTasks(max);
+    }
+
+    public List<Object> findUsualTasks(int max) {
+        return individualDAO.findUsualTasks(max);
+    }
 }
 

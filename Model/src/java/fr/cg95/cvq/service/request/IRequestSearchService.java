@@ -7,6 +7,7 @@ import java.util.Set;
 
 import fr.cg95.cvq.business.request.Request;
 import fr.cg95.cvq.business.request.RequestState;
+import fr.cg95.cvq.business.users.Individual;
 import fr.cg95.cvq.exception.CvqException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
 import fr.cg95.cvq.security.annotation.IsHomeFolder;
@@ -80,4 +81,40 @@ public interface IRequestSearchService {
      * @return the names of the archives which could not be deleted
      */
     List<String> deleteArchives(List<String> names);
+
+    /**
+     * Returns late {@link Request requests} (requests having a red alert).
+     *
+     * @param max Maximum number of requests to retrieve
+     * @return [
+     *      Long Total of requests found,
+     *      List<Request> Requests retrieved
+     *  ]
+     * @throws CvqException
+     */
+    public List<Object> findLateTasks(int max) throws CvqException;
+
+    /**
+     * Returns urgent {@link Request requests} (requests having an orange alert).
+     *
+     * @param max Maximum number of requests to find
+     * @return [
+     *      Long Total of requests found,
+     *      List<Request> Requests retrieved
+     *  ]
+     * @throws CvqException
+     */
+    public List<Object> findUrgentTasks(int max) throws CvqException;
+
+    /**
+     * Returns {@link Request requests} to process (requests having no alert but in state New or Modified).
+     *
+     * @param max Maximum number of requests to find
+     * @return [
+     *      Long Total of requests found,
+     *      List<Request> Requests retrieved
+     *  ]
+     * @throws CvqException
+     */
+    public List<Object> findUsualTasks(int max) throws CvqException;
 }
