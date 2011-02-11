@@ -118,8 +118,7 @@ class FrontofficeHomeFolderController {
                 model["invalidFields"].add("captchaText")
             }
             if (model["invalidFields"].isEmpty()) {
-                homeFolderService.addHomeFolderRole(adult, RoleType.HOME_FOLDER_RESPONSIBLE)
-                requestWorkflowService.createAccountCreationRequest(adult, model["temporary"] && params.boolean("temporary"))
+                homeFolderService.create(adult, model["temporary"] && params.boolean("temporary"))
                 securityService.setEcitizenSessionInformation(adult.login, session)
                 if (params.requestTypeLabel) {
                     flash.precedeByAccountCreation = true
@@ -184,9 +183,8 @@ class FrontofficeHomeFolderController {
                     SecurityContext.currentEcitizen.homeFolder.id, individual.id)
             params.roles.each {
                 if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
-                    homeFolderService.addRole(individualService.getById(Long.valueOf(it.value.owner)),
-                        individual, SecurityContext.currentEcitizen.homeFolder.id,
-                        RoleType.forString(it.value.type))
+                    homeFolderService.addIndividualRole(individualService.getById(Long.valueOf(it.value.owner)),
+                        individual, RoleType.forString(it.value.type))
                 }
             }
             model["invalidFields"] = individualService.validate(individual)

@@ -179,81 +179,40 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
-    public String assignLogin(Adult adult)
+    public Long create(Adult adult, boolean assignLogin)
         throws CvqException {
-
-        synchronized (bookedLogin) {
-
-            if (adult.getFirstName() == null || adult.getLastName() == null)
-                throw new CvqModelException("Individual must have not-null first and last names");
-
-            String baseLogin =  Normalizer.normalize(
-                (adult.getFirstName().trim() + '.' + adult.getLastName().trim())
-                    .replaceAll("\\s", "-")
-                    .replaceAll("'", ""),
-                Normalizer.Form.NFD)
-                    .replaceAll("[^\\p{ASCII}]","").toLowerCase();
-            logger.debug("assignLogin() searching from " + baseLogin);
-            List<String> similarLogins = individualDAO.getSimilarLogins(baseLogin);
-            String finalLogin = computeNewLogin(similarLogins, baseLogin);
-            logger.debug("assignLogin() setting login : " + finalLogin);
-
-            adult.setLogin(finalLogin);
-
-            return finalLogin;
+        if (assignLogin) {
+            synchronized (bookedLogin) {
+                String baseLogin =  Normalizer.normalize(
+                    (adult.getFirstName().trim() + '.' + adult.getLastName().trim())
+                        .replaceAll("\\s", "-")
+                        .replaceAll("'", ""),
+                    Normalizer.Form.NFD)
+                        .replaceAll("[^\\p{ASCII}]","").toLowerCase();
+                logger.debug("assignLogin() searching from " + baseLogin);
+                List<String> similarLogins = individualDAO.getSimilarLogins(baseLogin);
+                String finalLogin = computeNewLogin(similarLogins, baseLogin);
+                logger.debug("assignLogin() setting login : " + finalLogin);
+                adult.setLogin(finalLogin);
+            }
         }
+        if (adult.getPassword() != null)
+            adult.setPassword(authenticationService.encryptPassword(adult.getPassword()));
+        return create(adult);
     }
 
-    public Long create(Individual individual, final HomeFolder homeFolder, Address address,
-            boolean assignLogin)
-        throws CvqException {
 
-        if (individual == null)
-            return null;
-        
-        if (individual instanceof Adult) {
-            initializeAdult((Adult) individual, assignLogin);
-        } else if (individual instanceof Child) {
-            initializeChild((Child) individual);            
-        }
-        
+    @Override
+    public Long create(Child child) {
+        return create((Individual)child);
+    }
+
+    private Long create(Individual individual) {
         individual.setState(ActorState.PENDING);
         individual.setCreationDate(new Date());
-        
-        if (address != null)
-            individual.setAddress(address);
-        else if (homeFolder != null)
-            individual.setAddress(homeFolder.getAddress());
-        
-        if (homeFolder != null) {
-            individual.setHomeFolder(homeFolder);
-            if (homeFolder.getIndividuals() == null)
-                homeFolder.setIndividuals(new ArrayList<Individual>());
-            homeFolder.getIndividuals().add(individual);
-        }
-        
         return individualDAO.create(individual);
     }
 
-    private void initializeAdult(Adult adult, boolean assignLogin) 
-        throws CvqException {
-        
-        if (adult.getFamilyStatus() == null)
-            adult.setFamilyStatus(FamilyStatusType.OTHER);
-        if (adult.getTitle() == null)
-            adult.setTitle(TitleType.UNKNOWN);
-        // generate a login even if user has not asked for a personal space
-        if (assignLogin)
-            assignLogin(adult);
-        if (adult.getPassword() != null)
-            adult.setPassword(encryptPassword(adult.getPassword()));        
-    }
-    
-    private void initializeChild(Child child) {
-        if (child.getSex() == null)
-            child.setSex(SexType.UNKNOWN);
-    }
-    
     public void modify(final Individual individual)
         throws CvqException {
 

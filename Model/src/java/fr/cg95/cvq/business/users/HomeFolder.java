@@ -59,6 +59,7 @@ public class HomeFolder implements fr.cg95.cvq.business.Historizable,Serializabl
 
     /** default constructor */
     public HomeFolder() {
+        individuals = new ArrayList<Individual>();
     }
 
     public HomeFolderType modelToXml() {

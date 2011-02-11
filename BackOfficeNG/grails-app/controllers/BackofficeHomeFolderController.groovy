@@ -30,7 +30,9 @@ class BackofficeHomeFolderController {
     
     def instructionService
     def translationService
+    def homeFolderAdaptorService
     def requestAdaptorService
+    def genericDAO
 
     def defaultAction = 'search'
     def defaultMax = 15
@@ -146,7 +148,7 @@ class BackofficeHomeFolderController {
     }
 
     def actions = {
-      return []
+      return ["actions" : homeFolderAdaptorService.prepareActions(genericDAO.findByProperties(UserAction.class, [:]))]
     }
 
     def mapping = {

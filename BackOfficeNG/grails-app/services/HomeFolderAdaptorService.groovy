@@ -6,6 +6,7 @@ class HomeFolderAdaptorService {
 
     IHomeFolderService homeFolderService
     IIndividualService individualService
+    def instructionService
 
     public prepareAdultSubjectRoles(adult ) {
         def adultSubjectRoles = []
@@ -28,5 +29,19 @@ class HomeFolderAdaptorService {
             }
         }
         return ownerRoles
+    }
+
+    public prepareActions(actions) {
+        if (!actions) actions = []
+        return actions.collect { prepareAction(it) }
+    }
+
+    public prepareAction(action) {
+        if (!action) return null
+        return [
+            "type" : CapdematUtils.adaptCapdematEnum(action.type, "userAction.type"),
+            "date" : action.date,
+            "username" : instructionService.getActionPosterDetails(action.userId)
+        ]
     }
 }
