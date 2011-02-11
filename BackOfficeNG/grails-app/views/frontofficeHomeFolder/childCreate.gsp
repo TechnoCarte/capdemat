@@ -16,18 +16,7 @@
     <div id="request" class="main-box">
       <h2>
         <a href="${createLink(action : 'index')}" class="button">${message(code:'action.cancel')}</a>
-        <g:if test="${child.id}">
-          <g:if test="${!child.born}">
-            <g:message code="request.subject.childNoBorn" args="${[child.fullName]}" />
-          </g:if>
-          <g:else>
-            ${child.firstName} ${child.lastName}
-          </g:else>
-          <span>${message(code:'homeFolder.header.modifyChildInformations')}</span>
-        </g:if>
-        <g:else>
-          ${message(code:'homeFolder.header.createChild')}
-        </g:else>
+        ${message(code:'homeFolder.header.createChild')}
       </h2>
       <div class="datas">
         <div class="${invalidFields && !invalidFields.isEmpty() ? 'invalid' : 'uncomplete'} form">
@@ -35,32 +24,10 @@
           <input type="hidden" name="requestId" value="${params.requestId}" />
           <g:render template="childCommonFields" />
           <p style="text-align: center; font-size: 1.3em;">
-            <g:if test="${child.id}">
-              <input type="submit" value="${message(code:'action.modify')}" />
-            </g:if>
-            <g:else>
-              <input type="submit" value="${message(code:'action.create')}" />
-            </g:else>
+            <input type="submit" value="${message(code:'action.create')}" />
           </p>
         </form>
         </div>
-      </div>
-      <div  class="steps">
-        <ul>
-          <li>
-            ${message(code:'homeFolder.message.whenModifyAccount')}
-            <p class="help">
-              ${message(code:'homeFolder.message.whenModifyAccount1')}
-            </p>
-            <p class="help">
-              ${message(code:'homeFolder.message.whenModifyAccount2')}
-            </p>
-          </li>
-          <li>
-            ${message(code:'homeFolder.message.accountModificationInstruction')}
-            <p class="help">${message(code:'homeFolder.message.accountModificationInstruction1')}</p>
-          </li>
-        <ul>
       </div>
     </div>
   </body>

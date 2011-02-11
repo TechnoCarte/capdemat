@@ -1,6 +1,6 @@
 <h2>
   <g:if test="${hfmr.enabled}">
-    <a href="${createLink(action:'child', params:['mode':'edit'])}" class="action">
+    <a href="${createLink(action:'child', params:['mode':'create'])}" class="action">
       ${message(code:'homeFolder.action.addChild')}
     </a>
   </g:if>
@@ -44,12 +44,10 @@
         </dd>
       </g:if>
       <dd class="see-details">
-        <a href="${createLink(action:'child',id:record.id)}">
+        <a href="${createLink(action:'child', params:['id':record.id, 'mode':'static'])}">
           <g:message code="homeFolder.individual.action.seeDetails" />
         </a>
-        <g:if test="${hfmr.enabled}">
-          <p><a href="${createLink(action:'child', params:['id':record.id, 'mode':'edit'])}">${message(code:'action.modify')}</a></p>
-        </g:if>
+        - <a href="${createLink(action:'deleteChild', id:record.id)}">Supprimer</a>
       </dd>
     </dl> 
   </g:each>

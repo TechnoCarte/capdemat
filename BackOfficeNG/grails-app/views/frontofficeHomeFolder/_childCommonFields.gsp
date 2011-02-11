@@ -1,5 +1,5 @@
 <input type="hidden" name="id" value="${child?.id}" />
-<input type="hidden" name="mode" value="edit" />
+<input type="hidden" name="mode" value="create" />
   <fieldset>
     <label class="required">
    <g:message code="homeFolder.individual.property.born" /> *
@@ -15,7 +15,7 @@
       </g:each>
     </ul>
 
-    <legend><g:message code="homeFolder.individual.header.civilInformations" /></legend>
+    <legend><g:message code="homeFolder.individual.header.identity" /></legend>
     <label for="lastName" class="required">
       <g:message code="homeFolder.individual.property.lastName" />
     </label>

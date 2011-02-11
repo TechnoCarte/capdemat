@@ -34,7 +34,7 @@
             </g:if>
             <g:render template="/frontofficeHomeFolder/adultCommonFields" />
             <fieldset>
-              <legend>${message(code:'homeFolder.individual.header.connexionInformations')}</legend>
+              <legend>${message(code:'homeFolder.individual.header.connexion')}</legend>
               <g:if test="${temporary}">
                 <p>${message(code:'request.step.validation.help.followRequest')}</p>
                 <label class="required">

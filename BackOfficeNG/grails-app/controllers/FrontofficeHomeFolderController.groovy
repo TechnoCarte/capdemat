@@ -131,10 +131,38 @@ class FrontofficeHomeFolderController {
         }
     }
 
+    def editAdult = { // TODO merge with def adult?
+        def model = [:]
+        def individual = individualService.getAdultById(Long.valueOf(params.id))
+        def mode = params.mode
+        if (request.post) {
+            DataBindingUtils.initBind(individual, params)
+            bind(individual)
+            model['invalidFields'] = individualService.validate(individual, false)
+            if (model['invalidFields'].isEmpty()) {
+                redirect(action : 'adult', params : ['id' : individual.id, 'mode' : 'static'])
+                return false
+            } else {
+                session.doRollback = true
+            }
+            individualService.modify(individual)
+        }
+        model['mode'] = mode
+        model['adult'] = individual
+        model['ownerRoles'] = homeFolderAdaptorService.prepareOwnerRoles(individual)
+        model['subjectRoles'] = homeFolderAdaptorService.prepareAdultSubjectRoles(individual)
+        render(view : 'adult', model : model)
+    }
+
+    def deleteAdult = {
+        Adult adult = individualService.getAdultById(Long.valueOf(params.id))
+        homeFolderService.deleteIndividual(adult.homeFolder.id, adult.id)
+        redirect(controller : 'frontofficeHomeFolder')
+    }
+
     def adult = {
         def model = [:]
         def individual
-        def template = "adult"
         if (params.id) {
             individual = individualService.getAdultById(Long.valueOf(params.id))
         } else {
@@ -143,6 +171,7 @@ class FrontofficeHomeFolderController {
             individual.title = null
             individual.address = SecurityContext.currentEcitizen.address.clone()
         }
+        def mode = params.mode
         if (request.post) {
             DataBindingUtils.initBind(individual, params)
             bind(individual)
@@ -151,25 +180,71 @@ class FrontofficeHomeFolderController {
                 if (individual.id) individualService.modify(individual)
                 else homeFolderService.addAdult(this.currentEcitizen.homeFolder, individual, false)
                 redirect(action : "adult", params : ["id" : individual.id])
+
                 return false
             } else {
                 session.doRollback = true
             }
         }
-        model["adult"] = individual
-        if (params.mode == "edit") {
-            template += "Edit"
+        model['mode'] = mode
+        model['adult'] = individual
+        if (params.mode.equals('create')) {
+            render(view: 'adultCreate', model : model)
+            return
         } else {
-            model["ownerRoles"] = homeFolderAdaptorService.prepareOwnerRoles(individual)
-            model["subjectRoles"] = homeFolderAdaptorService.prepareAdultSubjectRoles(individual)
+            model['ownerRoles'] = homeFolderAdaptorService.prepareOwnerRoles(individual)
+            model['subjectRoles'] = homeFolderAdaptorService.prepareAdultSubjectRoles(individual)
         }
-        render(view : template, model : model)
+        render(view : 'adult', model : model)
+    }
+
+    def editChild = {
+        def model = [:]
+        def individual = individualService.getChildById(Long.valueOf(params.id))
+        def mode = params.mode
+        if (request.post) {
+            bind(individual)
+            model["invalidFields"] = individualService.validate(individual)
+            if (model["invalidFields"].isEmpty()) {
+                redirect(action : "child", params : ["id" : individual.id, "mode" : 'static'])
+                return false
+            } else {
+                session.doRollback = true
+            }
+            
+            individualService.modify(individual)
+        }
+        model["mode"] = mode
+        model["child"] = individual
+        model["roleOwners"] = individual.id ?
+            homeFolderService.getBySubjectRoles(individual.id,
+                [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[])
+                .sort { a, b ->
+                  if (a.id == b.id) return a.fullName.compareTo(b.fullName)
+                  if (a.id == SecurityContext.currentEcitizen.id) return -1
+                  if (b.id == SecurityContext.currentEcitizen.id) return 1
+                  return a.fullName.compareTo(b.fullName)
+                } : []
+        if (["create","editIdentity","editResponsibles"].contains(params.mode)) {
+            model["adults"] = homeFolderService.getAdults(SecurityContext.currentEcitizen.homeFolder.id)
+            model["currentUser"] = SecurityContext.currentEcitizen
+        }
+        if (["create"].contains(params.mode)) {
+            render(view: "childCreate", model : model)
+            return
+        }
+        render(view : "child", model : model)
+    }
+
+    def deleteChild = {
+        Child child = individualService.getChildById(Long.valueOf(params.id))
+        homeFolderService.deleteIndividual(child.homeFolder.id, child.id)
+        redirect(controller : "frontofficeHomeFolder")
     }
 
     def child = {
         def model = [:]
         def individual
-        def template = "child"
         if (params.id) {
             individual = individualService.getChildById(Long.valueOf(params.id))
         } else {
@@ -178,8 +253,13 @@ class FrontofficeHomeFolderController {
             // hack : WTF is an unknown sex ?
             individual.sex = null
         }
+        def mode = params.mode
         if (request.post) {
             bind(individual)
+            if (mode.equals('create')) {
+                HomeFolder homeFolder = individualService.getByLogin(session.currentEcitizen).homeFolder
+                individualService.create(individual, homeFolder, homeFolder.address, false)
+            }
             if (individual.id)
                 homeFolderService.removeRolesOnSubject(
                     SecurityContext.currentEcitizen.homeFolder.id, individual.id)
@@ -193,12 +273,16 @@ class FrontofficeHomeFolderController {
             if (model["invalidFields"].isEmpty()) {
                 if (individual.id) individualService.modify(individual)
                 else homeFolderService.addChild(this.currentEcitizen.homeFolder, individual)
+
                 redirect(action : "child", params : ["id" : individual.id])
+                mode = 'static'
+
                 return false
             } else {
                 session.doRollback = true
             }
         }
+        model["mode"] = mode
         model["child"] = individual
         model["roleOwners"] = individual.id ?
             homeFolderService.listBySubjectRoles(individual.id,
@@ -209,12 +293,15 @@ class FrontofficeHomeFolderController {
                   if (b.id == SecurityContext.currentEcitizen.id) return 1
                   return a.fullName.compareTo(b.fullName)
                 } : []
-        if (params.mode == "edit") {
-            template += "Edit"
+        if (["create","editIdentity","editResponsibles"].contains(params.mode)) {
             model["adults"] = homeFolderService.getAdults(SecurityContext.currentEcitizen.homeFolder.id)
             model["currentUser"] = SecurityContext.currentEcitizen
         }
-        render(view : template, model : model)
+        if (["create"].contains(params.mode)) {
+            render(view: "childCreate", model : model)
+            return
+        }
+        render(view : "child", model : model)
     }
 
     def editPassword = {
