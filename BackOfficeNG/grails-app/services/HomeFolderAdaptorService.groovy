@@ -39,15 +39,25 @@ class HomeFolderAdaptorService {
 
     public prepareAction(action) {
         if (!action) return null
-        def resultingState = null
-        if (UserAction.Type.STATE_CHANGE.equals(action.type))
-            resultingState = CapdematUtils.adaptCapdematEnum(action.data.state, "actor.state")
-        return [
+        def result = [
             "type" : CapdematUtils.adaptCapdematEnum(action.type, "userAction.type"),
             "date" : action.date,
             "username" : instructionService.getActionPosterDetails(action.userId),
-            "resultingState" : resultingState,
-            "data" : action.data
+            "data" : [:]
         ]
+        action.data.each {
+            switch (it.key) {
+                case "state" :
+                    result["state"] = CapdematUtils.adaptCapdematEnum(action.data.state, "actor.state")
+                    break;
+                case "role" :
+                    result.data.role = it.value.role
+                    break;
+                default :
+                    result.data.(it.key) = it.value
+                    break;
+            }
+        }
+        return result
     }
 }

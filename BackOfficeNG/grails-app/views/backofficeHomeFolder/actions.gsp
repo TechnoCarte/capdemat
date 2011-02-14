@@ -7,10 +7,10 @@
             <g:message code="${action.type.i18nKey}" />
           </span>
         </dt>
-        <g:if test="${action.resultingState}">
+        <g:if test="${action.state}">
           <dd class="title">
-            <span class="tag ${action.resultingState.cssClass}">
-              <g:message code="${action.resultingState.i18nKey}" />
+            <span class="tag ${action.state.cssClass}">
+              <g:message code="${action.state.i18nKey}" />
             </span>
           </dd>
         </g:if>

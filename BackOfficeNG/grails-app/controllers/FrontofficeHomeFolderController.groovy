@@ -190,7 +190,8 @@ class FrontofficeHomeFolderController {
             }
             model["invalidFields"] = individualService.validate(individual)
             if (model["invalidFields"].isEmpty()) {
-                requestWorkflowService.createAccountModificationRequest(individual)
+                if (individual.id) individualService.modify(individual)
+                else homeFolderService.addChild(this.currentEcitizen.homeFolder, individual)
                 redirect(action : "child", params : ["id" : individual.id])
                 return false
             } else {
