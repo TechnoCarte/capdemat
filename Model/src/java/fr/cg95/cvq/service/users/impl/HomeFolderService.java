@@ -98,7 +98,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         homeFolder.setState(ActorState.PENDING);
         homeFolder.setTemporary(temporary);
         homeFolderDAO.create(homeFolder);
-        genericDAO.create(new UserAction(UserAction.Type.CREATION, homeFolder.getId()));
+        homeFolder.getActions().add(new UserAction(UserAction.Type.CREATION, homeFolder.getId()));
+        homeFolderDAO.update(homeFolder);
         addAdult(homeFolder, adult, !temporary);
         addHomeFolderRole(adult, homeFolder.getId(), RoleType.HOME_FOLDER_RESPONSIBLE);
         logger.debug("create() successfully created home folder " + homeFolder.getId());
@@ -107,6 +108,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             applicationContext.publishEvent(new UsersEvent(
                 this, UsersEvent.EVENT_TYPE.LOGIN_ASSIGNED, homeFolder.getId(), adult.getId()));
         }
+        HibernateUtil.getSession().flush();
         return homeFolder;
     }
 
@@ -430,7 +432,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         }
         UserAction action = new UserAction(UserAction.Type.MODIFICATION, owner.getId());
         action.getData().put("role", role);
-        genericDAO.create(action);
+        owner.getHomeFolder().getActions().add(action);
+        homeFolderDAO.update(owner.getHomeFolder());
     }
     
     @Override
@@ -477,7 +480,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             logger.debug("removeRolesOnSubject() removing " + rolesToRemove.size()
                     + " roles from " + homeFolderIndividual.getId());
             for (IndividualRole roleToRemove : rolesToRemove)
-                homeFolderIndividual.getIndividualRoles().remove(roleToRemove);
+                removeRoleFromOwner(homeFolderIndividual, roleToRemove);
             individualDAO.update(homeFolderIndividual);
         }
     }
@@ -494,7 +497,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 break;
             } 
         }
-        if (roleToRemove != null) owner.getIndividualRoles().remove(roleToRemove);
+        if (roleToRemove != null) removeRoleFromOwner(owner, roleToRemove);
     }
 
     @Override
@@ -516,7 +519,15 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 }
             }
         }
-        if (roleToRemove != null) owner.getIndividualRoles().remove(roleToRemove);
+        if (roleToRemove != null) removeRoleFromOwner(owner, roleToRemove);
+    }
+
+    private void removeRoleFromOwner(Individual owner, IndividualRole role) {
+        owner.getIndividualRoles().remove(role);
+        UserAction action = new UserAction(UserAction.Type.MODIFICATION, owner.getId());
+        action.getData().put("role", role);
+        owner.getHomeFolder().getActions().add(action);
+        homeFolderDAO.update(owner.getHomeFolder());
     }
 
     @Override
@@ -743,10 +754,10 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
 		logger.debug("updateHomeFolderState() Gonna update state of home folder : " 
 		        + homeFolder.getId());
 		homeFolder.setState(newState);
-		homeFolderDAO.update(homeFolder);
         UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, homeFolder.getId());
-        action.getData().put("state", newState.toString());
-        genericDAO.create(action);
+        action.getData().put("state", newState);
+        homeFolder.getActions().add(action);
+        homeFolderDAO.update(homeFolder);
 		// retrieve individuals and validate them
 		List<Individual> homeFolderIndividuals = homeFolder.getIndividuals();
 		for (Individual individual : homeFolderIndividuals) {

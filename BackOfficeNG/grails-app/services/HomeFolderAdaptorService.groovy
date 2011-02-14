@@ -1,4 +1,5 @@
 import fr.cg95.cvq.business.users.RoleType
+import fr.cg95.cvq.business.users.UserAction
 import fr.cg95.cvq.service.users.IHomeFolderService
 import fr.cg95.cvq.service.users.IIndividualService
 
@@ -38,10 +39,15 @@ class HomeFolderAdaptorService {
 
     public prepareAction(action) {
         if (!action) return null
+        def resultingState = null
+        if (UserAction.Type.STATE_CHANGE.equals(action.type))
+            resultingState = CapdematUtils.adaptCapdematEnum(action.data.state, "actor.state")
         return [
             "type" : CapdematUtils.adaptCapdematEnum(action.type, "userAction.type"),
             "date" : action.date,
-            "username" : instructionService.getActionPosterDetails(action.userId)
+            "username" : instructionService.getActionPosterDetails(action.userId),
+            "resultingState" : resultingState,
+            "data" : action.data
         ]
     }
 }

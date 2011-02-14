@@ -7,9 +7,13 @@
             <g:message code="${action.type.i18nKey}" />
           </span>
         </dt>
-        <dd class="title">
-          <span class="tag tag-statechange">Modifié</span>
-        </dd>
+        <g:if test="${action.resultingState}">
+          <dd class="title">
+            <span class="tag ${action.resultingState.cssClass}">
+              <g:message code="${action.resultingState.i18nKey}" />
+            </span>
+          </dd>
+        </g:if>
         <dd class="title">
           <g:message code="searchResult.actionDate" /> :
           <strong><g:formatDate formatName="format.fullDate" date="${action.date}"/></strong>
@@ -18,6 +22,10 @@
             <strong>${action.username}</strong>
           </g:if>
         </dd>
+        <g:each var="data" in="${action.data}">
+          <dt>${data.key}</dt>
+          <dd>${data.value}</dd>
+        </g:each>
       </dl>
     </li>
   </g:each>

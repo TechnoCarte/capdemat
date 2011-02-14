@@ -27,6 +27,7 @@ import fr.cg95.cvq.business.users.HomeFolder;
 import fr.cg95.cvq.business.users.Individual;
 import fr.cg95.cvq.business.users.SexType;
 import fr.cg95.cvq.business.users.TitleType;
+import fr.cg95.cvq.business.users.UserAction;
 import fr.cg95.cvq.dao.users.IAdultDAO;
 import fr.cg95.cvq.dao.users.IChildDAO;
 import fr.cg95.cvq.dao.users.IIndividualDAO;
@@ -210,7 +211,10 @@ public class IndividualService implements IIndividualService {
     private Long create(Individual individual) {
         individual.setState(ActorState.PENDING);
         individual.setCreationDate(new Date());
-        return individualDAO.create(individual);
+        Long id = individualDAO.create(individual);
+        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.CREATION, id));
+        individualDAO.update(individual.getHomeFolder());
+        return id;
     }
 
     public void modify(final Individual individual)
@@ -220,8 +224,10 @@ public class IndividualService implements IIndividualService {
             throw new CvqException("No adult object provided");
         else if (individual.getId() == null)
             throw new CvqException("Cannot modify a transient individual");
-
         individualDAO.update(individual);
+        individual.getHomeFolder().getActions().add(
+            new UserAction(UserAction.Type.MODIFICATION, individual.getId()));
+        individualDAO.update(individual.getHomeFolder());
     }
 
     public void delete(final Individual individual) 
@@ -236,6 +242,10 @@ public class IndividualService implements IIndividualService {
         
         individual.setState(newState);
         individualDAO.update(individual);
+        UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, individual.getId());
+        action.getData().put("state", newState);
+        individual.getHomeFolder().getActions().add(action);
+        individualDAO.update(individual.getHomeFolder());
     }
 
     public void setIndividualDAO(IIndividualDAO individualDAO) {

@@ -148,7 +148,7 @@ class BackofficeHomeFolderController {
     }
 
     def actions = {
-      return ["actions" : homeFolderAdaptorService.prepareActions(genericDAO.findByProperties(UserAction.class, [:]))]
+        return ["actions" : homeFolderAdaptorService.prepareActions(homeFolderService.getById(Long.valueOf(params.id)).actions)]
     }
 
     def mapping = {
