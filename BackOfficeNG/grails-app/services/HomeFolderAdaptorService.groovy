@@ -2,11 +2,13 @@ import fr.cg95.cvq.business.users.RoleType
 import fr.cg95.cvq.business.users.UserAction
 import fr.cg95.cvq.service.users.IHomeFolderService
 import fr.cg95.cvq.service.users.IIndividualService
+import fr.cg95.cvq.util.translation.ITranslationService
 
 class HomeFolderAdaptorService {
 
     IHomeFolderService homeFolderService
     IIndividualService individualService
+    ITranslationService translationService
     def instructionService
 
     public prepareAdultSubjectRoles(adult ) {
@@ -45,6 +47,13 @@ class HomeFolderAdaptorService {
             "username" : instructionService.getActionPosterDetails(action.userId),
             "data" : [:]
         ]
+        def target
+        try {
+            homeFolderService.getById(action.targetId)
+            result.target = translationService.translate("homeFolder.header")
+        } catch (CvqObjectNotFoundException) {
+            result.target = instructionService.getActionPosterDetails(action.targetId)
+        }
         action.data.each {
             switch (it.key) {
                 case "state" :

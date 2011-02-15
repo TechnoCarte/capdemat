@@ -7,13 +7,12 @@
             <g:message code="${action.type.i18nKey}" />
           </span>
         </dt>
-        <g:if test="${action.state}">
-          <dd class="title">
-            <span class="tag ${action.state.cssClass}">
-              <g:message code="${action.state.i18nKey}" />
-            </span>
-          </dd>
-        </g:if>
+        <dd class="title">
+          <g:if test="${action.state}">
+            <span class="tag ${action.state.cssClass}"><g:message code="${action.state.i18nKey}" /></span>
+          </g:if>
+          ${action.target}
+        </dd>
         <dd class="title">
           <g:message code="searchResult.actionDate" /> :
           <strong><g:formatDate formatName="format.fullDate" date="${action.date}"/></strong>

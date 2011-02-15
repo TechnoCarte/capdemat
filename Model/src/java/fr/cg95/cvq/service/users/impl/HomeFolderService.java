@@ -99,7 +99,6 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         homeFolder.setTemporary(temporary);
         homeFolderDAO.create(homeFolder);
         homeFolder.getActions().add(new UserAction(UserAction.Type.CREATION, homeFolder.getId()));
-        homeFolderDAO.update(homeFolder);
         addAdult(homeFolder, adult, !temporary);
         addHomeFolderRole(adult, homeFolder.getId(), RoleType.HOME_FOLDER_RESPONSIBLE);
         logger.debug("create() successfully created home folder " + homeFolder.getId());
@@ -109,6 +108,12 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 this, UsersEvent.EVENT_TYPE.LOGIN_ASSIGNED, homeFolder.getId(), adult.getId()));
         }
         HibernateUtil.getSession().flush();
+        // FIXME SecurityContext wasn't set yet by the web layer,
+        // so attribute all actions to the newly created responsible instead of system
+        for (UserAction action : homeFolder.getActions()) {
+            action.setUserId(adult.getId());
+        }
+        homeFolderDAO.update(homeFolder);
         return homeFolder;
     }
 

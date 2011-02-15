@@ -731,6 +731,7 @@ public class LocalAuthorityRegistry
                             address, FamilyStatusType.SINGLE);
                     homeFolderResponsible.setPassword("aaaaaaaa");
                     HomeFolder homeFolder = homeFolderService.create(homeFolderResponsible, false);
+                    SecurityContext.setCurrentEcitizen(homeFolderResponsible);
                     homeFolderService.addAdult(homeFolder,
                         BusinessObjectsFactory.gimmeAdult(TitleType.MISTER, "Durand", "Jacques",
                             address, FamilyStatusType.SINGLE), true);

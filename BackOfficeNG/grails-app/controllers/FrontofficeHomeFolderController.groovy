@@ -174,6 +174,7 @@ class FrontofficeHomeFolderController {
             individual = individualService.getChildById(Long.valueOf(params.id))
         } else {
             individual = new Child()
+            individual.homeFolder = currentEcitizen.homeFolder
             // hack : WTF is an unknown sex ?
             individual.sex = null
         }
