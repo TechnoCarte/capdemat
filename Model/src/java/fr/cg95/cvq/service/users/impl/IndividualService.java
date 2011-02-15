@@ -17,6 +17,9 @@ import net.sf.oval.Validator;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import fr.cg95.cvq.authentication.IAuthenticationService;
 import fr.cg95.cvq.business.users.ActorState;
 import fr.cg95.cvq.business.users.Address;
@@ -243,7 +246,9 @@ public class IndividualService implements IIndividualService {
         individual.setState(newState);
         individualDAO.update(individual);
         UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, individual.getId());
-        action.getData().put("state", newState);
+        JsonObject payload = new JsonObject();
+        payload.addProperty("state", newState.toString());
+        action.setData(new Gson().toJson(payload));
         individual.getHomeFolder().getActions().add(action);
         individualDAO.update(individual.getHomeFolder());
     }

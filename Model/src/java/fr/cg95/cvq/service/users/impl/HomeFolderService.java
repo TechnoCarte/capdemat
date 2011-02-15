@@ -18,6 +18,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.annotation.Async;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import au.com.bytecode.opencsv.CSVWriter;
 
 import fr.cg95.cvq.authentication.IAuthenticationService;
@@ -427,20 +430,6 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         return new ArrayList<Individual>(externalIndividuals);
     }
 
-    private void addRoleToOwner(Individual owner, IndividualRole role) {        
-        if (owner.getIndividualRoles() == null) {
-            Set<IndividualRole> individualRoles = new HashSet<IndividualRole>();
-            individualRoles.add(role);
-            owner.setIndividualRoles(individualRoles);
-        } else {
-            owner.getIndividualRoles().add(role);
-        }
-        UserAction action = new UserAction(UserAction.Type.MODIFICATION, owner.getId());
-        action.getData().put("role", role);
-        owner.getHomeFolder().getActions().add(action);
-        homeFolderDAO.update(owner.getHomeFolder());
-    }
-    
     @Override
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public void addHomeFolderRole(Individual owner, Long homeFolderId, RoleType role)
@@ -449,7 +438,16 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         IndividualRole individualRole = new IndividualRole();
         individualRole.setRole(role);
         individualRole.setHomeFolderId(homeFolderId);
-        addRoleToOwner(owner, individualRole);
+        owner.getIndividualRoles().add(individualRole);
+        UserAction action = new UserAction(UserAction.Type.MODIFICATION, homeFolderId);
+        JsonObject payload = new JsonObject();
+        JsonObject roleInfo = new JsonObject();
+        roleInfo.addProperty("type", role.toString());
+        roleInfo.addProperty("owner", owner.getId());
+        payload.add("role", roleInfo);
+        action.setData(new Gson().toJson(payload));
+        owner.getHomeFolder().getActions().add(action);
+        homeFolderDAO.update(owner.getHomeFolder());
     }
 
     @Override
@@ -463,14 +461,23 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             individualRole.setIndividualId(individual.getId());
         else
             individualRole.setIndividualName(individual.getFullName());
-        addRoleToOwner(owner, individualRole);
+        owner.getIndividualRoles().add(individualRole);
+        UserAction action = new UserAction(UserAction.Type.MODIFICATION, individual.getId());
+        JsonObject payload = new JsonObject();
+        JsonObject roleInfo = new JsonObject();
+        roleInfo.addProperty("type", role.toString());
+        roleInfo.addProperty("owner", owner.getId());
+        payload.add("role", roleInfo);
+        action.setData(new Gson().toJson(payload));
+        owner.getHomeFolder().getActions().add(action);
+        homeFolderDAO.update(owner.getHomeFolder());
     }
 
     @Override
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public void removeRolesOnSubject(final Long homeFolderId, final Long individualId)
         throws CvqException {
-        
+        Individual target = individualService.getById(individualId);
         for (Individual homeFolderIndividual : getById(homeFolderId).getIndividuals()) {
             if (homeFolderIndividual.getIndividualRoles() == null)
                 continue;
@@ -485,7 +492,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             logger.debug("removeRolesOnSubject() removing " + rolesToRemove.size()
                     + " roles from " + homeFolderIndividual.getId());
             for (IndividualRole roleToRemove : rolesToRemove)
-                removeRoleFromOwner(homeFolderIndividual, roleToRemove);
+                removeIndividualRole(homeFolderIndividual, target, roleToRemove.getRole());
             individualDAO.update(homeFolderIndividual);
         }
     }
@@ -502,7 +509,19 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 break;
             } 
         }
-        if (roleToRemove != null) removeRoleFromOwner(owner, roleToRemove);
+        if (roleToRemove != null) {
+            owner.getIndividualRoles().remove(roleToRemove);
+            UserAction action = new UserAction(UserAction.Type.MODIFICATION, homeFolderId);
+            JsonObject payload = new JsonObject();
+            JsonObject roleInfo = new JsonObject();
+            roleInfo.addProperty("type", role.toString());
+            roleInfo.addProperty("owner", owner.getId());
+            roleInfo.addProperty("deleted", true);
+            payload.add("role", roleInfo);
+            action.setData(new Gson().toJson(payload));
+            owner.getHomeFolder().getActions().add(action);
+            homeFolderDAO.update(owner.getHomeFolder());
+        }
     }
 
     @Override
@@ -524,15 +543,19 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 }
             }
         }
-        if (roleToRemove != null) removeRoleFromOwner(owner, roleToRemove);
-    }
-
-    private void removeRoleFromOwner(Individual owner, IndividualRole role) {
-        owner.getIndividualRoles().remove(role);
-        UserAction action = new UserAction(UserAction.Type.MODIFICATION, owner.getId());
-        action.getData().put("role", role);
-        owner.getHomeFolder().getActions().add(action);
-        homeFolderDAO.update(owner.getHomeFolder());
+        if (roleToRemove != null) {
+            owner.getIndividualRoles().remove(roleToRemove);
+            UserAction action = new UserAction(UserAction.Type.MODIFICATION, individual.getId());
+            JsonObject payload = new JsonObject();
+            JsonObject roleInfo = new JsonObject();
+            roleInfo.addProperty("type", role.toString());
+            roleInfo.addProperty("owner", owner.getId());
+            roleInfo.addProperty("deleted", true);
+            payload.add("role", roleInfo);
+            action.setData(new Gson().toJson(payload));
+            owner.getHomeFolder().getActions().add(action);
+            homeFolderDAO.update(owner.getHomeFolder());
+        }
     }
 
     @Override
@@ -760,7 +783,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
 		        + homeFolder.getId());
 		homeFolder.setState(newState);
         UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, homeFolder.getId());
-        action.getData().put("state", newState);
+        JsonObject payload = new JsonObject();
+        payload.addProperty("state", newState.toString());
+        action.setData(new Gson().toJson(payload));
         homeFolder.getActions().add(action);
         homeFolderDAO.update(homeFolder);
 		// retrieve individuals and validate them

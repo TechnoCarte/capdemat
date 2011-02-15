@@ -21,6 +21,14 @@
             <strong>${action.username}</strong>
           </g:if>
         </dd>
+        <g:if test="${action.role}">
+          <dt <g:if test="${action.role.deleted}">style="text-decoration : line-through;"</g:if>>
+            <g:capdematEnumToFlag var="${action.role.type}" i18nKeyPrefix="homeFolder.role" />
+          </dt>
+          <dd <g:if test="${action.role.deleted}">style="text-decoration : line-through;"</g:if>>
+            ${action.role.owner}
+          </dd>
+        </g:if>
         <g:each var="data" in="${action.data}">
           <dt>${data.key}</dt>
           <dd>${data.value}</dd>

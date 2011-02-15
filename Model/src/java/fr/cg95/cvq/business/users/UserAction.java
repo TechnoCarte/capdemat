@@ -1,9 +1,6 @@
 package fr.cg95.cvq.business.users;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import fr.cg95.cvq.dao.hibernate.PersistentStringEnum;
 import fr.cg95.cvq.security.SecurityContext;
@@ -34,14 +31,11 @@ public class UserAction {
     private Long userId;
     private Long targetId;
     private String note;
-    private Map<String, Serializable> data;
+    private String data;
 
-    protected UserAction() {
-        data = new HashMap<String, Serializable>();
-    }
+    protected UserAction() { /* empty constructor for Hibernate */ }
 
     public UserAction(Type type, Long targetId) {
-        this();
         date = new Date();
         userId= SecurityContext.getCurrentUserId();
         if (userId == null) userId = -1L;
@@ -132,24 +126,14 @@ public class UserAction {
     }
 
     /**
-     * @hibernate.map
-     *  lazy="false"
-     *  cascade="all"
-     *  table="user_action_data"
-     * @hibernate.key
-     *  column="id"
-     * @hibernate.index
-     *  column="key"
-     *  type="string"
-     * @hibernate.element
-     *  column="value"
-     *  type="serializable"
+     * @hibernate.property
+     *  column="data"
      */
-    public Map<String, Serializable> getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Map<String, Serializable> data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

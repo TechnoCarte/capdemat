@@ -4,6 +4,8 @@ import fr.cg95.cvq.service.users.IHomeFolderService
 import fr.cg95.cvq.service.users.IIndividualService
 import fr.cg95.cvq.util.translation.ITranslationService
 
+import grails.converters.JSON
+
 class HomeFolderAdaptorService {
 
     IHomeFolderService homeFolderService
@@ -54,17 +56,22 @@ class HomeFolderAdaptorService {
         } catch (CvqObjectNotFoundException) {
             result.target = instructionService.getActionPosterDetails(action.targetId)
         }
-        action.data.each {
-            switch (it.key) {
-                case "state" :
-                    result["state"] = CapdematUtils.adaptCapdematEnum(action.data.state, "actor.state")
-                    break;
-                case "role" :
-                    result.data.role = it.value.role
-                    break;
-                default :
-                    result.data.(it.key) = it.value
-                    break;
+        if (action.data) {
+            JSON.parse(action.data).each {
+                switch (it.key) {
+                    case "state" :
+                        result["state"] = CapdematUtils.adaptCapdematEnum(it.value, "actor.state")
+                        break;
+                    case "role" :
+                        result["role"] = [:]
+                        result["role"]["type"] = it.value.type
+                        result["role"]["owner"] = instructionService.getActionPosterDetails(it.value.owner)
+                        result["role"]["deleted"] = it.value.deleted
+                        break;
+                    default :
+                        result.data.(it.key) = it.value
+                        break;
+                }
             }
         }
         return result
