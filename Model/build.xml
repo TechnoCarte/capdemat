@@ -290,8 +290,6 @@
 		<mkdir dir="${basedir}/${build.test.dir}" />
 		<taskdef classpathref="classpath.compile.test"
 			resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"/>
-		<iajc destdir="${basedir}/${build.test.dir}" srcdir="${basedir}/${test.java.dir}" 
-			fork="true" source="1.5" classpathRef="classpath.compile.test"/>
 	</target>
 
 	<!--
