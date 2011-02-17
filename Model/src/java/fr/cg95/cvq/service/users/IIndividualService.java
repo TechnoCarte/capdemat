@@ -32,8 +32,7 @@ public interface IIndividualService extends IAutofillTriggerService {
     void delete(@IsIndividual Individual individual);
 
     List<Individual> get(final Set<Critere> criteriaSet, final String orderedBy,
-        final boolean searchAmongArchived)
-        throws CvqException;
+        final boolean searchAmongArchived);
 
     List<Individual> get(Set<Critere> criterias, Map<String,String> sortParams,
         Integer max, Integer offset);
@@ -49,14 +48,12 @@ public interface IIndividualService extends IAutofillTriggerService {
     Child getChildById(@IsIndividual final Long id)
         throws CvqObjectNotFoundException;
 
-    Adult getByLogin(@IsIndividual final String login)
-        throws CvqException;
+    Adult getByLogin(@IsIndividual final String login);
 
     /**
      * Get an individual by its Liberty Alliance federation key.
      */
-    Individual getByFederationKey(final String federationKey)
-        throws CvqException;
+    Individual getByFederationKey(final String federationKey);
 
     void modifyPassword(final Adult adult, final String oldPassword, final String newPassword)
         throws CvqException, CvqBadPasswordException;

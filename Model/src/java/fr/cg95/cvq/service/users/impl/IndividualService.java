@@ -64,11 +64,9 @@ public class IndividualService implements IIndividualService {
     @Override
     @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Individual> get(final Set<Critere> criteriaSet, final String orderedBy,
-        final boolean searchAmongArchived)
-        throws CvqException {
-        
-        return individualDAO.search(criteriaSet, orderedBy, 
-                searchAmongArchived ? null : new ActorState[] { ActorState.ARCHIVED });
+        final boolean searchAmongArchived) {
+        return individualDAO.search(criteriaSet, orderedBy,
+            searchAmongArchived ? null : new ActorState[] { ActorState.ARCHIVED });
     }
 
     @Override
@@ -106,17 +104,16 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
-    public Adult getByLogin(final String login)
-        throws CvqException {
+    public Adult getByLogin(final String login) {
         return adultDAO.findByLogin(login);
     }
 
-    public Individual getByFederationKey(final String federationKey)
-        throws CvqException {
-
+    @Override
+    public Individual getByFederationKey(final String federationKey) {
         return individualDAO.findByFederationKey(federationKey);
     }
 
+    @Override
     public void modifyPassword(final Adult adult, final String oldPassword, 
             final String newPassword)
         throws CvqException, CvqBadPasswordException {
@@ -135,12 +132,6 @@ public class IndividualService implements IIndividualService {
 
         // it's ok, set the new one
         authenticationService.resetAdultPassword(adult, newPassword);
-    }
-
-    public String encryptPassword(final String clearPassword)
-        throws CvqException {
-
-        return authenticationService.encryptPassword(clearPassword);
     }
 
     private String computeNewLogin(List<String> baseList, String baseLogin) {
@@ -229,6 +220,7 @@ public class IndividualService implements IIndividualService {
         return id;
     }
 
+    @Override
     public void modify(final Individual individual)
         throws CvqException {
 
@@ -277,6 +269,7 @@ public class IndividualService implements IIndividualService {
         this.authenticationService = authenticationService;
     }
 
+    @Override
     public List<String> validate(Adult adult, boolean login)
         throws ClassNotFoundException, IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
@@ -299,6 +292,7 @@ public class IndividualService implements IIndividualService {
         return result;
     }
 
+    @Override
     public List<String> validate(Child child)
         throws ClassNotFoundException, IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {

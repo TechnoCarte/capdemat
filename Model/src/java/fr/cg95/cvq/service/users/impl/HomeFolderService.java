@@ -93,6 +93,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     @Context(types = {ContextType.UNAUTH_ECITIZEN}, privilege = ContextPrivilege.WRITE)
     public HomeFolder create(final Adult adult, boolean temporary)
         throws CvqException {
+        // FIXME bypass all access checks while we're setting everything up
+        SecurityContext.setCurrentContext(SecurityContext.ADMIN_CONTEXT);
         HomeFolder homeFolder = new HomeFolder();
         homeFolder.setAddress(adult.getAddress());
         homeFolder.setEnabled(Boolean.TRUE);
@@ -109,12 +111,13 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 this, UsersEvent.EVENT_TYPE.LOGIN_ASSIGNED, homeFolder.getId(), adult.getId()));
         }
         HibernateUtil.getSession().flush();
-        // FIXME SecurityContext wasn't set yet by the web layer,
-        // so attribute all actions to the newly created responsible instead of system
+        // FIXME attribute all actions to the newly created responsible instead of system
         for (UserAction action : homeFolder.getActions()) {
             action.setUserId(adult.getId());
         }
         homeFolderDAO.update(homeFolder);
+        // FIXME restore correct context
+        SecurityContext.setCurrentContext(SecurityContext.FRONT_OFFICE_CONTEXT);
         return homeFolder;
     }
 
