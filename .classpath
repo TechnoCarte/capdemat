@@ -19,7 +19,6 @@
 	<classpathentry kind="src" output="Plugins/CsvImporters/Concerto/build/classes" path="Plugins/CsvImporters/Concerto/src/java"/>
 	<classpathentry excluding="**/*.groovy" kind="src" output="Generator/build/classes" path="Generator/src/java"/>
 	<classpathentry kind="src" output="Model/build/classes" path="Model/src/java"/>
-	<classpathentry kind="src" output="Model/build/test" path="Model/test/java"/>
 	<classpathentry kind="lib" path="Libraries/edu.yale/cas/casclient-2.1.1-1.jar"/>
 	<classpathentry kind="lib" path="Libraries/mail/mail.jar"/>
 	<classpathentry kind="lib" path="Libraries/org.apache/axis-1.2.1/axis.jar"/>
