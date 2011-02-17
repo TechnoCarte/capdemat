@@ -22,14 +22,9 @@ import com.google.gson.JsonObject;
 
 import fr.cg95.cvq.authentication.IAuthenticationService;
 import fr.cg95.cvq.business.users.ActorState;
-import fr.cg95.cvq.business.users.Address;
 import fr.cg95.cvq.business.users.Adult;
 import fr.cg95.cvq.business.users.Child;
-import fr.cg95.cvq.business.users.FamilyStatusType;
-import fr.cg95.cvq.business.users.HomeFolder;
 import fr.cg95.cvq.business.users.Individual;
-import fr.cg95.cvq.business.users.SexType;
-import fr.cg95.cvq.business.users.TitleType;
 import fr.cg95.cvq.business.users.UserAction;
 import fr.cg95.cvq.dao.users.IAdultDAO;
 import fr.cg95.cvq.dao.users.IChildDAO;
@@ -38,8 +33,10 @@ import fr.cg95.cvq.exception.CvqAuthenticationFailedException;
 import fr.cg95.cvq.exception.CvqBadPasswordException;
 import fr.cg95.cvq.exception.CvqDisabledAccountException;
 import fr.cg95.cvq.exception.CvqException;
-import fr.cg95.cvq.exception.CvqModelException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
+import fr.cg95.cvq.security.annotation.Context;
+import fr.cg95.cvq.security.annotation.ContextPrivilege;
+import fr.cg95.cvq.security.annotation.ContextType;
 import fr.cg95.cvq.service.users.IIndividualService;
 import fr.cg95.cvq.util.Critere;
 import fr.cg95.cvq.util.ValidationUtils;
@@ -53,52 +50,64 @@ public class IndividualService implements IIndividualService {
 
     static Logger logger = Logger.getLogger(IndividualService.class);
 
-    private static Collection<String> bookedLogin = 
+    private static Collection<String> bookedLogin =
         Collections.synchronizedCollection(new ArrayList<String>());
-    
-    protected IIndividualDAO individualDAO;
-    protected IAdultDAO adultDAO;
-    protected IChildDAO childDAO;
-    
-    protected IAuthenticationService authenticationService;
 
-    public List<Individual> get(final Set<Critere> criteriaSet, final String orderedBy, 
-            final boolean searchAmongArchived)
+    private IIndividualDAO individualDAO;
+
+    private IAdultDAO adultDAO;
+
+    private IChildDAO childDAO;
+
+    private IAuthenticationService authenticationService;
+
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    public List<Individual> get(final Set<Critere> criteriaSet, final String orderedBy,
+        final boolean searchAmongArchived)
         throws CvqException {
         
         return individualDAO.search(criteriaSet, orderedBy, 
                 searchAmongArchived ? null : new ActorState[] { ActorState.ARCHIVED });
     }
-    
+
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Individual> get(Set<Critere> criterias, Map<String,String> sortParams,
                                     Integer max, Integer offset) {
         return this.individualDAO.search(criterias,sortParams,max,offset);
     }
-    
+
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Integer getCount(Set<Critere> criterias) {
         return this.individualDAO.searchCount(criterias);
     }
 
+    @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Individual getById(final Long id)
         throws CvqObjectNotFoundException {
         return (Individual) individualDAO.findById(Individual.class, id);
     }
 
+    @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Adult getAdultById(final Long id)
         throws CvqObjectNotFoundException {
-
         return (Adult) adultDAO.findById(Adult.class, id);
     }
 
-    public Child getChildById(final Long id) 
+    @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    public Child getChildById(final Long id)
         throws CvqObjectNotFoundException {
-        
         return (Child) childDAO.findById(Child.class, id);
     }
 
+    @Override
     public Adult getByLogin(final String login)
         throws CvqException {
-
         return adultDAO.findByLogin(login);
     }
 
@@ -233,16 +242,15 @@ public class IndividualService implements IIndividualService {
         individualDAO.update(individual.getHomeFolder());
     }
 
-    public void delete(final Individual individual) 
-        throws CvqException {
-
+    @Override
+    public void delete(final Individual individual) {
         individual.setAddress(null);
-		individualDAO.delete(individual);
-	}
+        individualDAO.delete(individual);
+    }
 
-    public void updateIndividualState(Individual individual, ActorState newState) 
-        throws CvqException {
-        
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
+    public void updateIndividualState(Individual individual, ActorState newState) {
         individual.setState(newState);
         individualDAO.update(individual);
         UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, individual.getId());
