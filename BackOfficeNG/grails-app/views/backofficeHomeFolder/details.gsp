@@ -27,21 +27,21 @@
                 <dl class="edit state collapse">
                   <g:render template="static/adultState" model="['adult':homeFolderResponsible]" />
                 </dl>
-                <h3>Idendité </h3>
+                <h3>${message(code:'homeFolder.individual.header.identity')}</h3>
                 <dl class="edit identity collapse">
                   <g:render template="static/adultIdentity" model="['adult':homeFolderResponsible]" />
                 </dl>
-                <h3>Authentification</h3>
+                <h3>${message(code:'homeFolder.individual.header.auth')}</h3>
                 <dl class="collapse">
                   <g:render template="static/adultAuth" model="['adult':homeFolderResponsible]" />
                 </dl>
               </div>
               <div class="yui-u">
-                <h3>Adresse</h3>
+                <h3>${message(code:'homeFolder.individual.header.address')}</h3>
                 <dl class="edit address reponsible collapse">
                   <g:render template="static/adultAddress" model="['adult':homeFolderResponsible, 'isResponsible':true]" />
                 </dl>
-                <h3>Contact</h3>
+                <h3>${message(code:'homeFolder.individual.header.contact')}</h3>
                 <dl class="edit contact reponsible collapse">
                   <g:render template="static/adultContact" model="['adult':homeFolderResponsible, 'isResponsible':true]" />
                 </dl>
@@ -51,55 +51,26 @@
 
           <div class="yui-g">
             <div class="yui-u first">
-              <h2>${message(code:'homeFolder.property.adults')}</h2>
-              <g:each var="record" in="${adults}">
-                <div id="adult_${record.id}" class="account collapse">
-                  <a class="toggle">${message(code:'action.expand')} / ${message(code:'action.collapse')}</a>
-                  <dl class="edit state collapse">
-                    <g:render template="static/adultState" model="['adult':record]" />
-                  </dl>
-                  <h3>Idendité </h3>
-                  <dl class="edit identity collapse">
-                    <g:render template="static/adultIdentity" model="['adult':record]" />
-                  </dl>
-                  <h3>Adresse</h3>
-                  <dl class="edit address collapse">
-                    <g:render template="static/adultAddress" model="['adult':record]" />
-                  </dl>
-                  <h3>Contact</h3>
-                  <dl class="edit contact collapse">
-                    <g:render template="static/adultContact" model="['adult':record]" />
-                  </dl>
-                  <h3>Authentification</h3>
-                  <dl class="collapse">
-                    <g:render template="static/adultAuth" model="['adult':record]" />
-                  </dl>
-                </div>
+              <h2>
+                ${message(code:'homeFolder.property.adults')}
+                <a class="add adult" style="font-size:.7em;">${message(code:'action.add')}</a>
+              </h2>
+              <g:each var="adult" in="${adults}">
+                <g:render template="static/adult" model="['adult':adult]" />
               </g:each>
             </div>
-
             <div class="yui-u">
-              <g:if test="${children.isEmpty()}">
-                ${message(code:'homeFolder.label.noChild')}
+              <g:if test="${!children.isEmpty()}">
+                <h2>
+                  ${message(code:'homeFolder.property.children')}
+                  <a class="add child" style="font-size:.7em;">${message(code:'action.add')}</a>
+                </h2>
+                <g:each var="child" in="${children}">
+                  <g:render template="static/child" model="['child':child, 'roleOwners': responsibles[child.id]]" />
+                </g:each>
               </g:if>
               <g:else>
-                <h2>${message(code:'homeFolder.property.children')}</h2>
-                <g:each var="record" in="${children}">
-                  <div id="child_${record.id}" class="account collapse">
-                    <a class="toggle">${message(code:'action.expand')} / ${message(code:'action.collapse')}</a>
-                    <dl class="edit state collapse">
-                      <g:render template="static/childState" model="['child':record]" />
-                    </dl>
-                    <h3>Idendité</h3>
-                    <dl class="edit identity collapse">
-                      <g:render template="static/childIdentity" model="['child':record]" />
-                    </dl>
-                    <h3>Responsables</h3>
-                    <dl class="edit responsibles collapse">
-                      <g:render template="static/childResponsibles" model="['child':record, 'roleOwners': responsibles[record.id]]" />
-                    </dl>
-                  </div>
-                </g:each>
+                ${message(code:'homeFolder.label.noChild')}
               </g:else>
             </div>
           </div>

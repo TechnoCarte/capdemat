@@ -86,7 +86,6 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
         zct.doAjaxCall(
             '/'+ div.id.split('_')[0]
             + '?id=' + div.id.split('_')[1]
-            + '&homeFolderId=' + zcbh.Details.homeFolderId
             + '&mode=' + mode
             + '&template=' + div.id.split('_')[0] + zct.capitalize(dl.className.split(' ')[1])
           , null,
@@ -104,10 +103,36 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
         yue.preventDefault(e);
         var target = yue.getTarget(e);
         var dl = yud.getAncestorByTagName(target, 'dl');
+        target.form.action += '?homeFolderId=' + zcbh.Details.homeFolderId;
         zct.doAjaxFormSubmitCall(target.form.getAttribute('id'), [], function(o) {
-//          dl.innerHTML = o.responseText;
-          zcbh.Details.individual(e , 'static');
+          if (!!target.form.id.value) {
+            dl.innerHTML = o.responseText;
+          }
+          else {
+            var individual = yud.getAncestorByClassName(dl, 'account');
+            var div = individual.parentNode;
+            div.removeChild(individual);
+            div.innerHTML += o.responseText;
+          }
         });
+      },
+
+      add : function(e) {
+        var target = yue.getTarget(e);
+        var div = yud.getAncestorByTagName(target, 'div');
+        zct.doAjaxCall(
+          '/' + target.className.split(' ')[1]
+          +'?mode=edit'
+          + '&homeFolderId=' + zcbh.Details.homeFolderId
+          , null,
+          function(o) {
+            div.innerHTML += o.responseText;
+          });
+      },
+
+      cancelAdd : function(e) {
+        var div = yud.getAncestorByTagName(yue.getTarget(e), 'div');
+        yud.getAncestorByTagName(div, 'div').removeChild(div);
       },
 
 // --> legacy code

@@ -77,9 +77,8 @@ class BackofficeHomeFolderController {
         result.responsableLogin = adult.login
         
         for(Child child : result.children)
-            result.responsibles.put(child.id, homeFolderService.getBySubjectRoles(child.id,
-                [RoleType.CLR_FATHER,RoleType.CLR_MOTHER,RoleType.CLR_TUTOR] as RoleType[]))
-        
+            result.responsibles.put(child.id, homeFolderService.getBySubjectRoles(child.id, RoleType.childRoleTypes))
+
         result.identifierMappings =
             externalHomeFolderService.getHomeFolderMappings(homeFolder.id).collect { [
                 "externalServiceLabel" : it.externalServiceLabel,
@@ -93,37 +92,47 @@ class BackofficeHomeFolderController {
         return result
     }
 
-    def adult = {
-        def adult = individualService.getAdultById(Long.valueOf(params.id))
-        def mode = params.mode
+    def adult = { 
+        def adult = !params.id ? new Adult() : individualService.getAdultById(Long.valueOf(params.id))
+        def mode = params.mode 
+        def template = !params.id ? 'adult' : params.template
         if (request.post) {
             bind(adult)
             mode = 'static'
+            if (!adult.id) {
+                def homeFolder = homeFolderService.getById(Long.valueOf(params.homeFolderId))
+                individualService.create(adult, homeFolder, homeFolder.address, false)
+            }
         }
-        render(template: mode + '/' + params.template, model:['adult': adult])
+        render(template: mode + '/' + template, model:['adult': adult])
     }
 
     def child = {
-        def child = individualService.getChildById(Long.valueOf(params.id))
+        def child = !params.id ? new Child() : individualService.getChildById(Long.valueOf(params.id))
         def mode = params.mode
+        def template = !params.id ? 'child' : params.template
         if (request.post) {
             bind(child)
             mode = 'static'
-            if (child.id)
+            if (child.id) {
                 homeFolderService.removeRolesOnSubject(child.homeFolder.id, child.id)
-            params.roles.each {
-                if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
-                    homeFolderService.addRole(individualService.getById(Long.valueOf(it.value.owner)),
-                        child, child.homeFolder.id, RoleType.forString(it.value.type))
+                params.roles.each {
+                    if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
+                        homeFolderService.addRole(individualService.getById(Long.valueOf(it.value.owner)),
+                            child, child.homeFolder.id, RoleType.forString(it.value.type))
+                    }
                 }
+            } else {
+                def homeFolder = homeFolderService.getById(Long.valueOf(params.homeFolderId))
+                individualService.create(child, homeFolder, homeFolder.address, false)
             }
         }
-        render(template: mode + '/' + params.template, model:[
-            'child': child,
-            'adults': homeFolderService.getAdults(child.homeFolder.id),
-            'roleOwners' : homeFolderService.getBySubjectRoles(child.id,
-                [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[])
-        ])
+        def models = ['child': child]
+        if (child.id) {
+            models['adults'] = homeFolderService.getAdults(child.homeFolder.id)
+            models['roleOwners'] = homeFolderService.getBySubjectRoles(child.id, RoleType.childRoleTypes)
+        }
+        render(template: mode + '/' + template, model: models)
     }
 
     def homeFolder = {
