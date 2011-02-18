@@ -17,7 +17,6 @@ import net.sf.oval.Validator;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import fr.cg95.cvq.authentication.IAuthenticationService;
@@ -215,7 +214,11 @@ public class IndividualService implements IIndividualService {
         individual.setState(ActorState.PENDING);
         individual.setCreationDate(new Date());
         Long id = individualDAO.create(individual);
-        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.CREATION, id));
+        JsonObject payload = new JsonObject();
+        JsonObject target = new JsonObject();
+        target.addProperty("id", id);
+        payload.add("target", target);
+        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.CREATION, payload));
         individualDAO.update(individual.getHomeFolder());
         return id;
     }
@@ -229,8 +232,12 @@ public class IndividualService implements IIndividualService {
         else if (individual.getId() == null)
             throw new CvqException("Cannot modify a transient individual");
         individualDAO.update(individual);
+        JsonObject payload = new JsonObject();
+        JsonObject target = new JsonObject();
+        target.addProperty("id", individual.getId());
+        payload.add("target", target);
         individual.getHomeFolder().getActions().add(
-            new UserAction(UserAction.Type.MODIFICATION, individual.getId()));
+            new UserAction(UserAction.Type.MODIFICATION, payload));
         individualDAO.update(individual.getHomeFolder());
     }
 
@@ -245,11 +252,12 @@ public class IndividualService implements IIndividualService {
     public void updateIndividualState(Individual individual, ActorState newState) {
         individual.setState(newState);
         individualDAO.update(individual);
-        UserAction action = new UserAction(UserAction.Type.STATE_CHANGE, individual.getId());
         JsonObject payload = new JsonObject();
         payload.addProperty("state", newState.toString());
-        action.setData(new Gson().toJson(payload));
-        individual.getHomeFolder().getActions().add(action);
+        JsonObject target = new JsonObject();
+        target.addProperty("id", individual.getId());
+        payload.add("target", target);
+        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.STATE_CHANGE, payload));
         individualDAO.update(individual.getHomeFolder());
     }
 

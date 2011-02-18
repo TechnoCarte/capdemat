@@ -2,6 +2,9 @@ package fr.cg95.cvq.business.users;
 
 import java.util.Date;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import fr.cg95.cvq.dao.hibernate.PersistentStringEnum;
 import fr.cg95.cvq.security.SecurityContext;
 
@@ -28,24 +31,18 @@ public class UserAction {
     private Long id;
     private Date date;
     private Type type;
-    private Long userId;
-    private Long targetId;
     private String note;
     private String data;
 
     protected UserAction() { /* empty constructor for Hibernate */ }
 
-    public UserAction(Type type, Long targetId) {
+    public UserAction(Type type, JsonObject payload) {
         date = new Date();
-        userId= SecurityContext.getCurrentUserId();
-        if (userId == null) userId = -1L;
         this.type = type;
-        this.targetId = targetId;
-    }
-
-    public UserAction(Type type, Long targetId, String note) {
-        this(type, targetId);
-        this.note = note;
+        JsonObject user = new JsonObject();
+        user.addProperty("id", SecurityContext.getCurrentUserId());
+        payload.add("user", user);
+        data = new Gson().toJson(payload);
     }
 
     /**
@@ -72,32 +69,6 @@ public class UserAction {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    /**
-     * @hibernate.property
-     *  column="user_id"
-     *  not-null="true"
-     */
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * @hibernate.property
-     *  column="target_id"
-     *  not-null="true"
-     */
-    public Long getTargetId() {
-        return targetId;
-    }
-
-    public void setTargetId(Long targetId) {
-        this.targetId = targetId;
     }
 
     /**
