@@ -214,11 +214,7 @@ public class IndividualService implements IIndividualService {
         individual.setState(ActorState.PENDING);
         individual.setCreationDate(new Date());
         Long id = individualDAO.create(individual);
-        JsonObject payload = new JsonObject();
-        JsonObject target = new JsonObject();
-        target.addProperty("id", id);
-        payload.add("target", target);
-        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.CREATION, payload));
+        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.CREATION, id));
         individualDAO.update(individual.getHomeFolder());
         return id;
     }
@@ -232,19 +228,9 @@ public class IndividualService implements IIndividualService {
         else if (individual.getId() == null)
             throw new CvqException("Cannot modify a transient individual");
         individualDAO.update(individual);
-        JsonObject payload = new JsonObject();
-        JsonObject target = new JsonObject();
-        target.addProperty("id", individual.getId());
-        payload.add("target", target);
         individual.getHomeFolder().getActions().add(
-            new UserAction(UserAction.Type.MODIFICATION, payload));
+            new UserAction(UserAction.Type.MODIFICATION, individual.getId()));
         individualDAO.update(individual.getHomeFolder());
-    }
-
-    @Override
-    public void delete(final Individual individual) {
-        individual.setAddress(null);
-        individualDAO.delete(individual);
     }
 
     @Override
@@ -254,10 +240,8 @@ public class IndividualService implements IIndividualService {
         individualDAO.update(individual);
         JsonObject payload = new JsonObject();
         payload.addProperty("state", newState.toString());
-        JsonObject target = new JsonObject();
-        target.addProperty("id", individual.getId());
-        payload.add("target", target);
-        individual.getHomeFolder().getActions().add(new UserAction(UserAction.Type.STATE_CHANGE, payload));
+        individual.getHomeFolder().getActions().add(
+            new UserAction(UserAction.Type.STATE_CHANGE, individual.getId(), payload));
         individualDAO.update(individual.getHomeFolder());
     }
 

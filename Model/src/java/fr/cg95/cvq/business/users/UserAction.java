@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import fr.cg95.cvq.dao.hibernate.PersistentStringEnum;
 import fr.cg95.cvq.security.SecurityContext;
+import fr.cg95.cvq.util.UserUtils;
 
 /**
  * @hibernate.class
@@ -24,6 +25,7 @@ public class UserAction {
         public static final Type CREATION = new Type("Creation");
         public static final Type MODIFICATION = new Type("Modification");
         public static final Type STATE_CHANGE = new Type("StateChange");
+        public static final Type DELETION = new Type("Deletion");
         public Type() { /* empty constructor for Hibernate */ }
         private Type(String type) { super(type); }
     }
@@ -36,12 +38,21 @@ public class UserAction {
 
     protected UserAction() { /* empty constructor for Hibernate */ }
 
-    public UserAction(Type type, JsonObject payload) {
+    public UserAction(Type type, Long targetId) {
+        this(type, targetId, new JsonObject());
+    }
+
+    public UserAction(Type type, Long targetId, JsonObject payload) {
         date = new Date();
         this.type = type;
         JsonObject user = new JsonObject();
         user.addProperty("id", SecurityContext.getCurrentUserId());
+        user.addProperty("name", UserUtils.getDisplayName(SecurityContext.getCurrentUserId()));
         payload.add("user", user);
+        user = new JsonObject();
+        user.addProperty("id", targetId);
+        user.addProperty("name", UserUtils.getDisplayName(targetId));
+        payload.add("target", user);
         data = new Gson().toJson(payload);
     }
 
