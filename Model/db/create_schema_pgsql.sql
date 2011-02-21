@@ -579,6 +579,8 @@
 
     drop table history_entry;
 
+    drop table holiday_camp_registration_request;
+
     drop table holiday_security_request;
 
     drop table home_emergency_registration_request;
@@ -1768,6 +1770,15 @@
         old_value varchar(1024),
         new_value varchar(1024),
         object_id int8,
+        primary key (id)
+    );
+
+    create table holiday_camp_registration_request (
+        id int8 not null,
+        label_centre_sejours varchar(255),
+        id_centre_sejours varchar(255),
+        acceptation_reglement_interieur bool,
+        est_accompte bool,
         primary key (id)
     );
 
