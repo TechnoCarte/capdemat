@@ -122,8 +122,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(JsonObject.class, new JsonDeserializer<JsonObject>() {
             @Override
-            public JsonObject deserialize(JsonElement arg0, Type arg1,
-                    JsonDeserializationContext arg2) throws JsonParseException {
+            public JsonObject deserialize(JsonElement arg0, @SuppressWarnings("unused") Type arg1,
+                @SuppressWarnings("unused") JsonDeserializationContext arg2)
+                throws JsonParseException {
                 return arg0.getAsJsonObject();
             }
         });
@@ -184,26 +185,11 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         for (Individual responsible : homeFolder.getIndividuals()) {
             unlink(responsible, individual);
         }
+        homeFolder.getActions().add(new UserAction(UserAction.Type.DELETION, individual.getId()));
         homeFolder.getIndividuals().remove(individual);
         individual.setAddress(null);
         individual.setHomeFolder(null);
         individualDAO.delete(individual);
-        homeFolder.getActions().add(new UserAction(UserAction.Type.DELETION, individual.getId()));
-        //HibernateUtil.getSession().flush();
-        /*Gson gson = getGson();
-        for (UserAction action : homeFolder.getActions()) {
-            JsonObject payload = gson.fromJson(action.getData(), JsonObject.class);
-            JsonObject jsonIndividual;
-            for (String type : new String[]{"user", "target", "responsible"}) {
-                jsonIndividual = payload.getAsJsonObject(type);
-                if (jsonIndividual != null && jsonIndividual.has("id")
-                    && individual.getId().equals(jsonIndividual.get("id").getAsLong())) {
-                    jsonIndividual.remove("id");
-                    jsonIndividual.addProperty("name", individual.getFullName());
-                }
-            }
-            action.setData(gson.toJson(payload));
-        }*/
         homeFolderDAO.update(homeFolder);
         UsersEvent individualEvent = 
             new UsersEvent(this, EVENT_TYPE.INDIVIDUAL_DELETE, null, individual.getId());

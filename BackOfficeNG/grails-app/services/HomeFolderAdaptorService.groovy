@@ -48,31 +48,15 @@ class HomeFolderAdaptorService {
             "date" : action.date
         ]
         if (action.data) {
-            def payload = JSON.parse(action.data)
-            if (payload.user.id) {
-                result.username = instructionService.getActionPosterDetails(payload.user.id)
-            } else {
-                result.username = payload.user.name
-            }
-            if (payload.target.id) {
-                try {
-                    homeFolderService.getById(payload.target.id)
-                    result.target = translationService.translate("homeFolder.header")
-                } catch (CvqObjectNotFoundException) {
-                    result.target = instructionService.getActionPosterDetails(payload.target.id)
+            JSON.parse(action.data).each {
+                switch (it.key) {
+                    case "state" :
+                        result.state = CapdematUtils.adaptCapdematEnum(it.value, "actor.state")
+                        break
+                    default :
+                        result.(it.key) = it.value
+                        break
                 }
-            } else {
-                result.target = payload.target.name
-            }
-            if (payload.state) result.state = CapdematUtils.adaptCapdematEnum(payload.state, "actor.state")
-            if (payload.responsible) {
-                result.responsible = [:]
-                result.responsible.types = payload.responsible.types
-                result.responsible.deleted = payload.responsible.deleted
-                if (payload.responsible.id)
-                    result.responsible.owner = instructionService.getActionPosterDetails(payload.responsible.id)
-                else
-                    result.responsible.owner = payload.responsible.name
             }
         }
         return result
