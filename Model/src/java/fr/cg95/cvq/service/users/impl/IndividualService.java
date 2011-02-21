@@ -33,9 +33,6 @@ import fr.cg95.cvq.exception.CvqBadPasswordException;
 import fr.cg95.cvq.exception.CvqDisabledAccountException;
 import fr.cg95.cvq.exception.CvqException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
-import fr.cg95.cvq.security.annotation.Context;
-import fr.cg95.cvq.security.annotation.ContextPrivilege;
-import fr.cg95.cvq.security.annotation.ContextType;
 import fr.cg95.cvq.service.users.IIndividualService;
 import fr.cg95.cvq.util.Critere;
 import fr.cg95.cvq.util.ValidationUtils;
@@ -61,7 +58,6 @@ public class IndividualService implements IIndividualService {
     private IAuthenticationService authenticationService;
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Individual> get(final Set<Critere> criteriaSet, final String orderedBy,
         final boolean searchAmongArchived) {
         return individualDAO.search(criteriaSet, orderedBy,
@@ -69,34 +65,29 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Individual> get(Set<Critere> criterias, Map<String,String> sortParams,
                                     Integer max, Integer offset) {
         return this.individualDAO.search(criterias,sortParams,max,offset);
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Integer getCount(Set<Critere> criterias) {
         return this.individualDAO.searchCount(criterias);
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Individual getById(final Long id)
         throws CvqObjectNotFoundException {
         return (Individual) individualDAO.findById(Individual.class, id);
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Adult getAdultById(final Long id)
         throws CvqObjectNotFoundException {
         return (Adult) adultDAO.findById(Adult.class, id);
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Child getChildById(final Long id)
         throws CvqObjectNotFoundException {
         return (Child) childDAO.findById(Child.class, id);
@@ -234,7 +225,6 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public void updateIndividualState(Individual individual, ActorState newState) {
         individual.setState(newState);
         individualDAO.update(individual);
