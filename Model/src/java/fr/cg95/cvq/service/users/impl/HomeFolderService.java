@@ -130,6 +130,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         });
         Gson gson = gsonBuilder.create();
         for (UserAction action : homeFolder.getActions()) {
+            action.setUserId(adult.getId());
             JsonObject payload = gson.fromJson(action.getData(), JsonObject.class);
             JsonObject user = payload.getAsJsonObject("user");
             user.addProperty("id", adult.getId());

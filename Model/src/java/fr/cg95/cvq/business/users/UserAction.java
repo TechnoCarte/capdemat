@@ -33,6 +33,8 @@ public class UserAction {
     private Long id;
     private Date date;
     private Type type;
+    private Long userId;
+    private Long targetId;
     private String note;
     private String data;
 
@@ -45,10 +47,12 @@ public class UserAction {
     public UserAction(Type type, Long targetId, JsonObject payload) {
         date = new Date();
         this.type = type;
+        userId = SecurityContext.getCurrentUserId();
         JsonObject user = new JsonObject();
-        user.addProperty("id", SecurityContext.getCurrentUserId());
-        user.addProperty("name", UserUtils.getDisplayName(SecurityContext.getCurrentUserId()));
+        user.addProperty("id", userId);
+        user.addProperty("name", UserUtils.getDisplayName(userId));
         payload.add("user", user);
+        this.targetId = targetId;
         user = new JsonObject();
         user.addProperty("id", targetId);
         user.addProperty("name", UserUtils.getDisplayName(targetId));
@@ -117,5 +121,31 @@ public class UserAction {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    /**
+     * @hibernate.property
+     *  column="user_id"
+     *  not-null="true"
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * @hibernate.property
+     *  column="target_id"
+     *  not-null="true"
+     */
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
     }
 }
