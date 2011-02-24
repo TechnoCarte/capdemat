@@ -76,6 +76,33 @@
             </property>
           </bean>
         </entry>
+        <entry>
+          <key>
+            <ref bean="technocarteExternalService" />
+          </key>
+          <bean class="fr.cg95.cvq.external.ExternalServiceBean">
+            <property name="requestTypes">
+              <list>
+                <value>Day Care Center Registration</value>
+                <value>Learning Activities Discovery Registration</value>
+                <value>Home Emergency Registration</value>
+                <value>Home Folder Modification</value>
+                <value>School Transport Registration</value>
+                <value>Global School Registration</value>
+              </list>
+            </property>
+            <property name="serviceProperties">
+              <map>
+                <entry>
+                  <key>
+                    <value>urlkiosque</value>
+                  </key>
+                  <value>http://193.253.39.123:8081/formation/kiosque/web_methode/web_methode.php</value>
+                </entry>
+              </map>
+            </property>
+          </bean>
+        </entry>
       </map>
     </property>
     <property name="ecitizenCreationNotifications">
