@@ -76,6 +76,9 @@
             <fileset dir="${sun.lib.dir}">
               <include name="xws-security.jar" />
             </fileset>
+            <fileset dir="${apache.lib.dir}/soap">
+              <include name="soap.jar" />
+            </fileset>
             <fileset dir="${saxon.lib.dir}" />
             <fileset dir="${gson.lib.dir}" />
         </copy>
