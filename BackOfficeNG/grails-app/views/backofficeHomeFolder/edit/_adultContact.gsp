@@ -1,4 +1,4 @@
-<form id="adultContact_${adult.id}" method="post" action="${g.createLink(action:'adult')}">
+<form id="adultContact_${adult.id}" method="post" action="${g.createLink(action:'individualContact')}">
 <dt class="required">${message(code:'homeFolder.adult.property.email')}</dt>
 <dd class="required">
   <input type="text" name="email" value="${adult.email}" />

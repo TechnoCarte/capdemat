@@ -1,11 +1,11 @@
 <div id="adult_${adult.id}" class="account collapse">
   <a class="toggle">${message(code:'action.expand')} / ${message(code:'action.collapse')}</a>
   <dl class="edit state collapse">
-    <g:render template="static/adultState" model="['adult':adult]" />
+    <g:render template="static/state" model="['actor':adult]" />
   </dl>
   <h3>${message(code:'homeFolder.individual.header.identity')}</h3>
   <dl class="edit identity collapse">
-    <g:render template="static/adultIdentity" model="['adult':adult]" />
+    <g:render template="static/adultIdentity" model="['individual':adult]" />
   </dl>
   <h3>${message(code:'homeFolder.individual.header.address')}</h3>
   <dl class="edit address collapse">

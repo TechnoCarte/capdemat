@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringUtils
+
 class BackofficeUrlMappings {
   static mappings = {
 
@@ -13,6 +15,7 @@ class BackofficeUrlMappings {
     "/backoffice/contact/$action?/$id?" (controller : "backofficeContact" )
     "/backoffice/login/$action?/$id?" (controller : "backofficeLogin" )
     "/backoffice/documentInstruction/$action?/$id?" (controller : "backofficeDocumentInstruction" )
+    "/backoffice/homeFolder/$actor/$id/$part" (controller : {"backofficeHomeFolder"}, action : {params.actor + StringUtils.capitalize(params.part)})
     "/backoffice/homeFolder/$action?/$id?" (controller : "backofficeHomeFolder" )
     "/backoffice/displayGroup/$action?/$id?" (controller : "backofficeDisplayGroup" )
     "/backoffice/agent/$action?/$id?" (controller : "backofficeAgent" )

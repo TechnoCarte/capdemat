@@ -114,6 +114,7 @@ public class UserAction {
     /**
      * @hibernate.property
      *  column="data"
+     *  type="text"
      */
     public String getData() {
         return data;

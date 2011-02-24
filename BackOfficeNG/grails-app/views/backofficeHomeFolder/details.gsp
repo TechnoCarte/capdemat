@@ -25,11 +25,11 @@
             <div class="yui-g">
               <div class="yui-u first">
                 <dl class="edit state collapse">
-                  <g:render template="static/adultState" model="['adult':homeFolderResponsible]" />
+                  <g:render template="static/state" model="['actor':homeFolderResponsible]" />
                 </dl>
                 <h3>${message(code:'homeFolder.individual.header.identity')}</h3>
                 <dl class="edit identity collapse">
-                  <g:render template="static/adultIdentity" model="['adult':homeFolderResponsible]" />
+                  <g:render template="static/adultIdentity" model="['individual':homeFolderResponsible]" />
                 </dl>
                 <h3>${message(code:'homeFolder.individual.header.auth')}</h3>
                 <dl class="collapse">

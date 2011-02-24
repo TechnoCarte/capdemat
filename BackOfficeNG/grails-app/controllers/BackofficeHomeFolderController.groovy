@@ -1,3 +1,4 @@
+import com.google.gson.JsonObject
 import grails.converters.JSON
 import java.io.IOException
 
@@ -145,6 +146,88 @@ class BackofficeHomeFolderController {
             mode = 'static'
         }
         render(template: mode + '/' + params.template, model:['homeFolder': homeFolder])
+    }
+
+    def homeFolderState = {
+        def homeFolder = homeFolderService.getById(params.long("id"))
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            homeFolderService.modifyState(individual, ActorState.forString(params.state))
+        }
+        render(template : params.mode + "/state",
+            model : ["actor" : individual, "states" : ActorState.allActorStates])
+    }
+
+    def homeFolderAddress = {
+        
+    }
+
+    def individualState = {
+        def individual = individualService.getById(params.long("id"))
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            individualService.updateIndividualState(individual, ActorState.forString(params.state))
+        }
+        render(template : mode + "/state",
+            model : ["actor" : individual, "states" : ActorState.allActorStates])
+    }
+
+    def individualAddress = {
+        
+    }
+
+    def individualContact = {
+        def fields = ["email", "homePhone", "mobilePhone", "officePhone"]
+        def adult = individualService.getAdultById(params.long("id"))
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            def temp = new Adult()
+            def atom = new JsonObject()
+            atom.addProperty("name", "contact")
+            def diff = new JsonObject()
+            atom.add("fields", diff)
+            bind(temp)
+            fields.each {
+                if (temp[it] != adult[it]) {
+                    def field = new JsonObject()
+                    field.addProperty("from", adult[it].toString())
+                    field.addProperty("to", temp[it].toString())
+                    diff.add(it, field)
+                    adult[it] = temp[it]
+                }
+            }
+            if (diff.entrySet().size() > 0) individualService.modify(adult, atom)
+        }
+        render(template : mode + "/adultContact",
+            model : ["adult" : adult])
+    }
+
+    def individualIdentity = {
+        def individual = individualService.getById(params.long("id"))
+        def fields = individual instanceof Adult ?
+            ["title", "familyStatus", "lastName", "maidenName", "nameOfUse", "firstName", "firstName2", "firstName3", "profession"] :
+            ["lastName", "firstName", "firstName2", "firstName3", "birthDate", "birthPostalCode", "birthCity", "birthCountry"]
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            def temp = new Adult()
+            def atom = new JsonObject()
+            atom.addProperty("name", "identity")
+            def diff = new JsonObject()
+            atom.add("fields", diff)
+            bind(temp)
+            fields.each {
+                if (temp[it] != individual[it]) {
+                    def field = new JsonObject()
+                    field.addProperty("from", individual[it].toString())
+                    field.addProperty("to", temp[it].toString())
+                    diff.add(it, field)
+                    individual[it] = temp[it]
+                }
+            }
+            if (diff.entrySet().size() > 0) individualService.modify(individual, atom)
+        }
+        render(template : mode + "/" + individual.class.simpleName.toLowerCase() + "Identity",
+            model : ["individual" : individual])
     }
 
     def actions = {
