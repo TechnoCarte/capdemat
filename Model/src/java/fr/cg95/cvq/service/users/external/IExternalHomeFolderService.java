@@ -4,7 +4,9 @@ import java.util.List;
 
 import fr.cg95.cvq.business.payment.external.ExternalApplication;
 import fr.cg95.cvq.business.payment.external.ExternalHomeFolder;
+import fr.cg95.cvq.business.users.Individual;
 import fr.cg95.cvq.business.users.external.HomeFolderMapping;
+import fr.cg95.cvq.business.users.external.IndividualMapping;
 import fr.cg95.cvq.exception.CvqModelException;
 import fr.cg95.cvq.security.annotation.IsUser;
 
@@ -54,5 +56,5 @@ public interface IExternalHomeFolderService {
         @IsUser Long homeFolderId, @IsUser Long individualId,
         String externalId);
 
-    IndividualMapping getIndividualMapping(String externalServiceLabel, @IsIndividual Individual individual);
+    IndividualMapping getIndividualMapping(@IsIndividual Individual individual, String externalServiceLabel);
 }
