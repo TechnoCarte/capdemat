@@ -173,7 +173,30 @@ class BackofficeHomeFolderController {
     }
 
     def individualAddress = {
-        
+        def fields = ["additionalDeliveryInformation", "additionalGeographicalInformation", "city",
+            "cityInseeCode", "countryName", "placeNameOrService", "postalCode",
+            "streetMatriculation", "streetName", "streetNumber", "streetRivoliCode"]
+        def adult = individualService.getAdultById(params.long("id"))
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            def temp = new Address()
+            def atom = new JsonObject()
+            atom.addProperty("name", "address")
+            def diff = new JsonObject()
+            atom.add("fields", diff)
+            bind(temp)
+            fields.each {
+                if (temp[it] != adult.address[it]) {
+                    def field = new JsonObject()
+                    field.addProperty("from", adult.address[it].toString())
+                    field.addProperty("to", temp[it].toString())
+                    diff.add(it, field)
+                    adult.address[it] = temp[it]
+                }
+            }
+            if (diff.entrySet().size() > 0) individualService.modify(adult, atom)
+        }
+        render(template : mode + "/adultAddress", model : ["adult" : adult])
     }
 
     def individualContact = {
@@ -228,6 +251,28 @@ class BackofficeHomeFolderController {
         }
         render(template : mode + "/" + individual.class.simpleName.toLowerCase() + "Identity",
             model : ["individual" : individual])
+    }
+
+    def individualResponsibles = {
+        def child = individualService.getChildById(Long.valueOf(params.id))
+        def mode = request.get ? params.mode : "static"
+        if (request.post) {
+            child.homeFolder.individuals.each {
+                homeFolderService.unlink(it, child)
+            }
+            params.roles.each {
+                if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
+                    homeFolderService.link(individualService.getById(Long.valueOf(it.value.owner)),
+                        child, [RoleType.forString(it.value.type)] as List)
+                }
+            }
+        }
+        def model = [
+            "child" : child,
+            "adults" : homeFolderService.getAdults(child.homeFolder.id),
+            "roleOwners" : homeFolderService.listBySubjectRoles(child.id, RoleType.childRoleTypes)
+        ]
+        render(template : mode + "/childResponsibles", model : model)
     }
 
     def actions = {

@@ -1,4 +1,4 @@
-<form id="childIdentity_${individual.id}" method="post" action="${g.createLink(action:'child')}">
+<form id="childIdentity_${individual.id}" method="post" action="${g.createLink(action:'individualIdentity')}">
 <dt class="required">${message(code:'homeFolder.individual.property.lastName')}'</dt> 
 <dd class="required">
 	<input type="text" name="lastName" value="${individual.lastName}" />
@@ -30,6 +30,6 @@
 <dd>
 	<input type="text" name="birthCountry" value="${individual.birthCountry}" />
 </dd>
-<g:render template="edit/submit" model="['object':child, 'template':'childIdentity']" />
+<g:render template="edit/submit" model="['object':individual, 'template':'childIdentity']" />
 </form>
 
