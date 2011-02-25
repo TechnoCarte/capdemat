@@ -1,6 +1,8 @@
 import com.google.gson.JsonObject
 import grails.converters.JSON
 import java.io.IOException
+import java.util.ArrayList
+import java.util.Collections
 
 import fr.cg95.cvq.schema.ximport.HomeFolderImportDocument
 import fr.cg95.cvq.service.users.IHomeFolderService
@@ -276,7 +278,9 @@ class BackofficeHomeFolderController {
     }
 
     def actions = {
-        return ["actions" : homeFolderAdaptorService.prepareActions(homeFolderService.getById(Long.valueOf(params.id)).actions)]
+        def list = new ArrayList(homeFolderService.getById(Long.valueOf(params.id)).actions)
+        Collections.reverse(list)
+        return ["actions" : homeFolderAdaptorService.prepareActions(list)]
     }
 
     def mapping = {
