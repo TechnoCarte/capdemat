@@ -35,7 +35,7 @@ class BackofficeHomeFolderController {
     def translationService
     def homeFolderAdaptorService
     def requestAdaptorService
-    def genericDAO
+    def individualAdaptorService
 
     def defaultAction = 'search'
     def defaultMax = 15
@@ -156,12 +156,8 @@ class BackofficeHomeFolderController {
         if (request.post) {
             homeFolderService.modifyState(individual, ActorState.forString(params.state))
         }
-        render(template : params.mode + "/state",
-            model : ["actor" : individual, "states" : ActorState.allActorStates])
-    }
-
-    def homeFolderAddress = {
-        
+        render(template : params.mode + "/state", model : [
+            "actor" : individual, "actorType" : "homeFolder", "states" : ActorState.allActorStates])
     }
 
     def individualState = {
@@ -170,92 +166,54 @@ class BackofficeHomeFolderController {
         if (request.post) {
             individualService.updateIndividualState(individual, ActorState.forString(params.state))
         }
-        render(template : mode + "/state",
-            model : ["actor" : individual, "states" : ActorState.allActorStates])
+        render(template : mode + "/state", model : [
+            "actor" : individual, "actorType" : "individual", "states" : ActorState.allActorStates])
     }
 
-    def individualAddress = {
-        def fields = ["additionalDeliveryInformation", "additionalGeographicalInformation", "city",
-            "cityInseeCode", "countryName", "placeNameOrService", "postalCode",
-            "streetMatriculation", "streetName", "streetNumber", "streetRivoliCode"]
+    def address = {
         def adult = individualService.getAdultById(params.long("id"))
         def mode = request.get ? params.mode : "static"
         if (request.post) {
             def temp = new Address()
-            def atom = new JsonObject()
-            atom.addProperty("name", "address")
-            def diff = new JsonObject()
-            atom.add("fields", diff)
             bind(temp)
-            fields.each {
-                if (temp[it] != adult.address[it]) {
-                    def field = new JsonObject()
-                    field.addProperty("from", adult.address[it].toString())
-                    field.addProperty("to", temp[it].toString())
-                    diff.add(it, field)
-                    adult.address[it] = temp[it]
-                }
-            }
-            if (diff.entrySet().size() > 0) individualService.modify(adult, atom)
+            individualAdaptorService.historize(
+                adult, adult.address, temp, "address",
+                ["additionalDeliveryInformation", "additionalGeographicalInformation", "city",
+                    "cityInseeCode", "countryName", "placeNameOrService", "postalCode",
+                    "streetMatriculation", "streetName", "streetNumber", "streetRivoliCode"])
         }
-        render(template : mode + "/adultAddress", model : ["adult" : adult])
+        render(template : mode + "/address", model : ["actor" : adult])
     }
 
-    def individualContact = {
-        def fields = ["email", "homePhone", "mobilePhone", "officePhone"]
+    def contact = {
         def adult = individualService.getAdultById(params.long("id"))
         def mode = request.get ? params.mode : "static"
         if (request.post) {
             def temp = new Adult()
-            def atom = new JsonObject()
-            atom.addProperty("name", "contact")
-            def diff = new JsonObject()
-            atom.add("fields", diff)
             bind(temp)
-            fields.each {
-                if (temp[it] != adult[it]) {
-                    def field = new JsonObject()
-                    field.addProperty("from", adult[it].toString())
-                    field.addProperty("to", temp[it].toString())
-                    diff.add(it, field)
-                    adult[it] = temp[it]
-                }
-            }
-            if (diff.entrySet().size() > 0) individualService.modify(adult, atom)
+            individualAdaptorService.historize(
+                adult, adult, temp, "contact", ["email", "homePhone", "mobilePhone", "officePhone"])
         }
-        render(template : mode + "/adultContact",
-            model : ["adult" : adult])
+        render(template : mode + "/contact", model : ["adult" : adult])
     }
 
-    def individualIdentity = {
+    def identity = {
         def individual = individualService.getById(params.long("id"))
-        def fields = individual instanceof Adult ?
-            ["title", "familyStatus", "lastName", "maidenName", "nameOfUse", "firstName", "firstName2", "firstName3", "profession"] :
-            ["lastName", "firstName", "firstName2", "firstName3", "birthDate", "birthPostalCode", "birthCity", "birthCountry"]
         def mode = request.get ? params.mode : "static"
         if (request.post) {
             def temp = new Adult()
-            def atom = new JsonObject()
-            atom.addProperty("name", "identity")
-            def diff = new JsonObject()
-            atom.add("fields", diff)
             bind(temp)
-            fields.each {
-                if (temp[it] != individual[it]) {
-                    def field = new JsonObject()
-                    field.addProperty("from", individual[it].toString())
-                    field.addProperty("to", temp[it].toString())
-                    diff.add(it, field)
-                    individual[it] = temp[it]
-                }
-            }
-            if (diff.entrySet().size() > 0) individualService.modify(individual, atom)
+            individualAdaptorService.historize(
+                individual, individual, temp, "contact",
+                individual instanceof Adult ?
+                    ["title", "familyStatus", "lastName", "maidenName", "nameOfUse", "firstName", "firstName2", "firstName3", "profession"] :
+                    ["lastName", "firstName", "firstName2", "firstName3", "birthDate", "birthPostalCode", "birthCity", "birthCountry"])
         }
         render(template : mode + "/" + individual.class.simpleName.toLowerCase() + "Identity",
             model : ["individual" : individual])
     }
 
-    def individualResponsibles = {
+    def responsibles = {
         def child = individualService.getChildById(Long.valueOf(params.id))
         def mode = request.get ? params.mode : "static"
         if (request.post) {
@@ -274,7 +232,7 @@ class BackofficeHomeFolderController {
             "adults" : homeFolderService.getAdults(child.homeFolder.id),
             "roleOwners" : homeFolderService.listBySubjectRoles(child.id, RoleType.childRoleTypes)
         ]
-        render(template : mode + "/childResponsibles", model : model)
+        render(template : mode + "/responsibles", model : model)
     }
 
     def actions = {

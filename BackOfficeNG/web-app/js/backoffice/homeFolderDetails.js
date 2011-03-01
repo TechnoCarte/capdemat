@@ -82,11 +82,12 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
         yue.preventDefault(e);
         var dl = zcbh.Details.getTarget(e);
         if (dl.tagName != 'DL') dl = yud.getAncestorByTagName(dl, 'dl');
+        var atom = dl.className.split(' ')[1].split('-');
         var div = yud.getAncestorByClassName(dl, 'account');
         zct.doAjaxCall(
-            '/individual'
+            '/' + atom[0]
             + '/' + div.id.split('_')[1]
-            + '/' + dl.className.split(' ')[1]
+            + '/' + atom[1]
             + '?mode=' + mode
           , null,
           function(o) {
