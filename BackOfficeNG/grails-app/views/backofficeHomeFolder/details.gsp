@@ -25,7 +25,7 @@
             <div class="yui-g">
               <div class="yui-u first">
                 <dl class="edit individual-state collapse">
-                  <g:render template="static/state" model="['actor':homeFolderResponsible]" />
+                  <g:render template="static/state" model="['user':homeFolderResponsible]" />
                 </dl>
                 <h3>${message(code:'homeFolder.individual.header.identity')}</h3>
                 <dl class="edit individual-identity collapse">
@@ -89,7 +89,7 @@
         <h3>${message(code:'property.homeFolderState')}</h3>
         <div class="body">
           <span id="homeFolderState" class="tag-${homeFolderState}" style="float: right; font-size:1.1em">
-            ${message(code:'actor.state.' + homeFolderState)}
+            ${message(code:'user.state.' + homeFolderState)}
           </span>
         </div>
       </div>
