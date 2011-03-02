@@ -146,8 +146,10 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     @Override
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public final void modify(final HomeFolder homeFolder) {
-        if (homeFolder != null)
-            homeFolderDAO.update(homeFolder);
+        if (SecurityContext.isFrontOfficeContext()) {
+            homeFolder.setState(UserState.MODIFIED);
+        }
+        homeFolderDAO.update(homeFolder);
     }
 
     @Override
@@ -289,6 +291,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             newRole.setHomeFolderId(target.getId());
             owner.getIndividualRoles().add(newRole);
         }
+        if (SecurityContext.isFrontOfficeContext()) {
+            target.setState(UserState.MODIFIED);
+        }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();
         JsonArray jsonTypes = new JsonArray();
@@ -311,6 +316,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         for (IndividualRole role : roles) {
             owner.getIndividualRoles().remove(role);
             deleted.add(role.getRole());
+        }
+        if (SecurityContext.isFrontOfficeContext()) {
+            target.setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();
@@ -339,6 +347,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             newRole.setIndividualId(target.getId());
             owner.getIndividualRoles().add(newRole);
         }
+        if (SecurityContext.isFrontOfficeContext()) {
+            target.setState(UserState.MODIFIED);
+        }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();
         JsonArray jsonTypes = new JsonArray();
@@ -361,6 +372,9 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         for (IndividualRole role : roles) {
             owner.getIndividualRoles().remove(role);
             deleted.add(role.getRole());
+        }
+        if (SecurityContext.isFrontOfficeContext()) {
+            target.setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();
@@ -424,47 +438,6 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Individual> listBySubjectRoles(Long subjectId, RoleType[] roles) {
         return individualDAO.listBySubjectRoles(subjectId, roles, false);
-    }
-
-    private void updateHomeFolderState(HomeFolder homeFolder, UserState newState) {
-        logger.debug("updateHomeFolderState() Gonna update state of home folder : "
-            + homeFolder.getId());
-        homeFolder.setState(newState);
-        JsonObject payload = new JsonObject();
-        payload.addProperty("state", newState.toString());
-        homeFolder.getActions().add(
-            new UserAction(UserAction.Type.STATE_CHANGE, homeFolder.getId(), payload));
-        homeFolderDAO.update(homeFolder);
-		// retrieve individuals and validate them
-		List<Individual> homeFolderIndividuals = homeFolder.getIndividuals();
-		for (Individual individual : homeFolderIndividuals) {
-			individualService.updateIndividualState(individual, newState);
-		}
-    }
-
-    @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
-    public final void validate(final Long id)
-        throws CvqObjectNotFoundException {
-        updateHomeFolderState(getById(id), UserState.VALID);
-    }
-
-    @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
-    public final void invalidate(final Long id)
-        throws CvqObjectNotFoundException {
-        updateHomeFolderState(getById(id), UserState.INVALID);
-    }
-
-    @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
-    public final void archive(final Long id) 
-        throws CvqObjectNotFoundException {
-        HomeFolder homeFolder = getById(id);
-        updateHomeFolderState(homeFolder, UserState.ARCHIVED);
-        UsersEvent homeFolderEvent =
-            new UsersEvent(this, EVENT_TYPE.HOME_FOLDER_ARCHIVE, homeFolder.getId(), null);
-        applicationContext.publishEvent(homeFolderEvent);
     }
 
     @Override
@@ -577,7 +550,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
                 }
                 HomeFolder result = new HomeFolder();
                 //create(adults, children, homeFolderAddress, false);
-                updateHomeFolderState(result, UserState.VALID);
+                //updateHomeFolderState(result, UserState.VALID);
                 HibernateUtil.getSession().flush();
                 Adult responsible = getHomeFolderResponsible(result.getId());
                 String password = authenticationService.generatePassword();

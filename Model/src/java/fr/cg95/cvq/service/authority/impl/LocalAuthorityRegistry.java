@@ -59,6 +59,7 @@ import fr.cg95.cvq.business.users.FamilyStatusType;
 import fr.cg95.cvq.business.users.HomeFolder;
 import fr.cg95.cvq.business.users.RoleType;
 import fr.cg95.cvq.business.users.TitleType;
+import fr.cg95.cvq.business.users.UserState;
 import fr.cg95.cvq.dao.authority.ILocalAuthorityDAO;
 import fr.cg95.cvq.dao.hibernate.HibernateUtil;
 import fr.cg95.cvq.dao.request.IRequestActionDAO;
@@ -75,6 +76,7 @@ import fr.cg95.cvq.service.authority.ILocalAuthorityRegistry;
 import fr.cg95.cvq.service.authority.LocalAuthorityConfigurationBean;
 import fr.cg95.cvq.service.request.job.RequestArchivingJob;
 import fr.cg95.cvq.service.users.IHomeFolderService;
+import fr.cg95.cvq.service.users.IUserWorkflowService;
 import fr.cg95.cvq.util.development.BusinessObjectsFactory;
 
 /**
@@ -113,6 +115,8 @@ public class LocalAuthorityRegistry
     private ILocalAuthorityDAO localAuthorityDAO;
     private IAgentService agentService;
     private IHomeFolderService homeFolderService;
+    private IUserWorkflowService userWorkflowService;
+
     private IRequestActionDAO requestActionDAO;
 
     private ListableBeanFactory beanFactory;
@@ -732,15 +736,18 @@ public class LocalAuthorityRegistry
                     homeFolderResponsible.setPassword("aaaaaaaa");
                     HomeFolder homeFolder = homeFolderService.create(homeFolderResponsible, false);
                     SecurityContext.setCurrentEcitizen(homeFolderResponsible);
-                    homeFolderService.addAdult(homeFolder,
-                        BusinessObjectsFactory.gimmeAdult(TitleType.MISTER, "Durand", "Jacques",
-                            address, FamilyStatusType.SINGLE), true);
+                    Adult other = BusinessObjectsFactory.gimmeAdult(TitleType.MISTER, "Durand",
+                        "Jacques", address, FamilyStatusType.SINGLE);
+                    homeFolderService.addAdult(homeFolder, other, true);
                     Child child = BusinessObjectsFactory.gimmeChild("Moreau", "Émilie");
                     homeFolderService.addChild(homeFolder, child);
                     homeFolderService.link(homeFolderResponsible, child, Collections.singleton(RoleType.CLR_FATHER));
                     SecurityContext.setCurrentSite(DEVELOPMENT_LOCAL_AUTHORITY,
                         SecurityContext.ADMIN_CONTEXT);
-                    homeFolderService.validate(homeFolder.getId());
+                    userWorkflowService.changeState(homeFolderResponsible, UserState.VALID);
+                    userWorkflowService.changeState(other, UserState.VALID);
+                    userWorkflowService.changeState(child, UserState.VALID);
+                    userWorkflowService.changeState(homeFolder, UserState.VALID);
                 }
                 // set current site to be able to generateJPEGFiles (which uses getCurrentSite) ...
                 SecurityContext.setCurrentSite(localAuthorityName, SecurityContext.ADMIN_CONTEXT);
@@ -977,6 +984,10 @@ public class LocalAuthorityRegistry
 
     public void setHomeFolderService(IHomeFolderService homeFolderService) {
         this.homeFolderService = homeFolderService;
+    }
+
+    public void setUserWorkflowService(IUserWorkflowService userWorkflowService) {
+        this.userWorkflowService = userWorkflowService;
     }
 
     public void setRequestActionDAO(IRequestActionDAO requestActionDAO) {
