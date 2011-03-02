@@ -1,4 +1,4 @@
-<form id="adultContact_${adult.id}" method="post" action="${g.createLink(action:'editAdult', fragment:'contact')}">
+<form id="adultContact_${adult.id}" method="post" action="${g.createLink(action:'adult')}">
 
   <label for="email" class="required">
     ${message(code:'homeFolder.adult.property.email')} *
@@ -48,12 +48,5 @@
         class="validate-phone ${invalidFields?.contains('officePhone') ? 'validation-failed' : ''}"
         title="${message(code:'homeFolder.adult.property.officePhone.validationError')}" />
   </div>
-
-  <dt>&nbsp;</dt>
-  <dd>
-    <a href="${createLink(action:'adult', params:['id':adult.id, 'mode':'static'])}#contact">${message(code:'action.cancel')}</a>
-    <input type="hidden" name="mode" value="${mode}" />
-    <input type="hidden" name="id" value="${adult.id}" />
-    <input type="submit" name="submit" value="${message(code:'action.save')}" class="save" />
-  </dd>
+  <g:render template="edit/submit" model="['individual':adult, 'fragment':'contact']" />
 </form>

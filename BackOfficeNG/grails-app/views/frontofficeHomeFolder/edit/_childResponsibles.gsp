@@ -1,68 +1,56 @@
+<style>
+  form       { padding: 1.5em 0 ; }
+  form .tag-state { margin-right: .5em; }
+  form p         { margin: 0 0 .5em !important; overflow: auto; }
+  form label      { float: left; width: 35%; }
+  form input[type=submit] { margin: 0; }
+</style>
+<a href="${createLink(action:'child', params:['id':child.id])}#responsibles">
+  ${message(code:'action.cancel')}
+</a>
 <form id="childResponsibles_${child.id}" method="post" action="${g.createLink(action:'child')}">
-    <g:set var="roleCount" value="${0}" />
-    <ul>
-      <g:each var="roleOwner" in="${roleOwners}">
-        <g:each var="individualRole" in="${roleOwner.getIndividualRoles(child.id)}">
-          <li>
-            <input type="hidden" name="roles.${roleCount}.id" value="${individualRole.id}" />
-            <select name="roles.${roleCount}.owner" style="width : auto; display : inline;">
-              <option value=""><g:message code="message.select.defaultOption" /></option>
-              <g:each var="adult" in="${adults}">
-                <option value="${adult.id}"
-                  <g:if test="${roleOwner.id == adult.id}">selected="selected"</g:if>>
-                  <g:if test="${adult.id == currentUser.id}">
-                    <g:message code="homeFolder.role.message.YouAre" />
-                  </g:if>
-                  <g:else>
-                    <g:message code="homeFolder.role.message.anotherAdultIs" args="${[adult.fullName]}"/>
-                  </g:else>
-                </option>
-              </g:each>
-            </select>
-            <select name="roles.${roleCount}.type" style="width : auto; display : inline;">
-              <option value=""><g:message code="message.select.defaultOption" /></option>
-              <g:each var="roleType" in="${fr.cg95.cvq.business.users.RoleType.childRoleTypes}">
-                <option value="${roleType}"
-                  <g:if test="${individualRole.role.equals(roleType)}">selected="selected"</g:if>>
-                  <g:capdematEnumToText var="${roleType}" i18nKeyPrefix="homeFolder.role.withParticle" />
-                </option>
-              </g:each>
-            </select>
-          </li>
-          <g:set var="roleCount" value="${roleCount + 1}" />
+  <g:if test="${!invalidFields.isEmpty()}">
+    <p class="error">${message(code:'homeFolder.child.property.legalResponsibles.help')}<p>
+  </g:if>
+  <g:each var="roleOwner" in="${roleOwners}">
+    <p>
+      <label>
+        <g:if test="${roleOwner.adult.id == currentEcitizen.id}">
+          ${message(code:'homeFolder.role.message.YouAre')}
+        </g:if>
+        <g:else>
+          ${roleOwner.adult.fullName}
+        </g:else>
+      </label>
+      <g:if test="${roleOwner.adult.id == currentRoleOwnerId}">
+        <g:each var="role" in="${fr.cg95.cvq.business.users.RoleType.childRoleTypes}">
+          <input type="checkbox" name="roleTypes" value="${role}" ${roleOwner.roles.contains(role) ? 'checked="checked"' : ''} />
+          ${g.capdematEnumToFlag(var:role, i18nKeyPrefix:'homeFolder.role')}
         </g:each>
-      </g:each>
-      <g:if test="${roleCount < 3}">
-        <g:each var="i" in="${roleCount..2}">
-          <li>
-            <select name="roles.${i}.owner" style="width : auto; display : inline;"
-              class="${i == 0 && invalidFields?.contains('legalResponsibles') ? 'validation-failed' : ''}">
-              <option value=""><g:message code="message.select.defaultOption" /></option>
-              <g:each var="adult" in="${adults}">
-                <option value="${adult.id}"
-                  <g:if test="${params['roles.' + i + '.owner'] == adult.id.toString()}">selected="selected"</g:if>>
-                  <g:if test="${adult.id == currentUser.id}">
-                    <g:message code="homeFolder.role.message.YouAre" />
-                  </g:if>
-                  <g:else>
-                    <g:message code="homeFolder.role.message.anotherAdultIs" args="${[adult.fullName]}"/>
-                  </g:else>
-                </option>
-              </g:each>
-            </select>
-            <select name="roles.${i}.type" style="width : auto; display : inline;"
-              class="${i == 0 && invalidFields?.contains('legalResponsibles') ? 'validation-failed' : ''}">
-              <option value=""><g:message code="message.select.defaultOption" /></option>
-              <g:each var="roleType" in="${fr.cg95.cvq.business.users.RoleType.childRoleTypes}">
-                <option value="${roleType}"
-                  <g:if test="${params['roles.' + i + '.type'] == roleType.toString()}">selected="selected"</g:if>>
-                  <g:capdematEnumToText var="${roleType}" i18nKeyPrefix="homeFolder.role.withParticle" />
-                </option>
-              </g:each>
-            </select>
-          </li>
-        </g:each>
+        <input type="hidden" name="roleOwnerId" value="${roleOwner.adult.id}">
+        <input type="hidden" name="fragment" value="responsibles" />
+        <input type="hidden" name="id" value="${child.id}" />
+        <input type="submit" name="submit" value="${message(code:'action.save')}"/>
       </g:if>
-    </ul>
-    <g:render template="edit/submit" model="['object':child, 'mode':mode]" />
+      <g:else>
+        <g:if test="${roleOwner.roles}">
+          <g:each var="role" in="${roleOwner.roles}">
+            ${g.capdematEnumToFlag(var:role, i18nKeyPrefix:'homeFolder.role')}
+          </g:each>
+        </g:if>
+        <g:else>
+          <span>${message(code:'homeFolder.role.message.none')}</em>
+        </g:else>
+        <a href="${createLink(action:'child', params:['id':child.id, 'fragment':'responsibles','roleOwnerId':roleOwner.adult.id])}#responsibles">
+          ${message(code:'action.modify')}
+        </a>
+        <g:if test="${roleOwner.roles}">
+          &nbsp;
+          <a href="${createLink(action:'unlink', params:['id':child.id, 'fragment':'responsibles','roleOwnerId':roleOwner.adult.id])}#responsibles">
+            ${message(code:'action.remove')}
+          </a>
+        </g:if>
+      </g:else>
+    </p>
+  </g:each>
 </form>

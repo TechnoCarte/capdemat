@@ -1,3 +1,6 @@
+<a href="${createLink(action:'child', params:['id':child.id, 'fragment':'identity'])}#identity">
+  ${message(code:'action.modify')}
+</a>
 <dl>
   <dt><g:message code="homeFolder.child.property.sex" /> : </dt>
   <dd><g:capdematEnumToText var="${child.sex}" i18nKeyPrefix="homeFolder.child.property.sex"/></dd>

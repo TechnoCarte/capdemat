@@ -4,6 +4,7 @@ import fr.cg95.cvq.dao.hibernate.HibernateUtil
 import fr.cg95.cvq.exception.CvqAuthenticationFailedException
 import fr.cg95.cvq.exception.CvqBadPasswordException
 import fr.cg95.cvq.exception.CvqModelException
+import fr.cg95.cvq.exception.CvqValidationException
 import fr.cg95.cvq.security.SecurityContext
 import fr.cg95.cvq.service.request.IRequestSearchService
 import fr.cg95.cvq.service.request.IRequestServiceRegistry
@@ -11,9 +12,11 @@ import fr.cg95.cvq.service.request.IRequestTypeService
 import fr.cg95.cvq.service.request.IRequestWorkflowService
 import fr.cg95.cvq.service.users.IHomeFolderService
 import fr.cg95.cvq.service.users.IIndividualService
+import fr.cg95.cvq.service.users.IUserWorkflowService
 
 import com.octo.captcha.service.CaptchaServiceException
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+
+import com.google.gson.JsonObject
 
 class FrontofficeHomeFolderController {
 
@@ -24,74 +27,43 @@ class FrontofficeHomeFolderController {
     IRequestServiceRegistry requestServiceRegistry
     IRequestTypeService requestTypeService
     IRequestWorkflowService requestWorkflowService
+    IUserWorkflowService userWorkflowService
 
     def homeFolderAdaptorService
+    def individualAdaptorService
     def jcaptchaService
     def securityService
 
     Adult currentEcitizen
-
     def beforeInterceptor = {
-        this.currentEcitizen = SecurityContext.getCurrentEcitizen();
+        currentEcitizen = SecurityContext.getCurrentEcitizen();
     }
 
     def index = {
-        def result = ['adults':[], 'children': [], homeFolder: []]
-        def homeFolderId = SecurityContext.currentEcitizen.homeFolder.id
-        homeFolderService.getAdults(homeFolderId).each { adult ->
-            result.adults.add([
-                'id' : adult.id,
-                'title' : message('code':"homeFolder.adult.title.${adult.title.toString().toLowerCase()}"),
-                'fullName' : "${adult.firstName} ${adult.lastName}",
-                'email' : adult.email,
-                'homePhone' : adult.homePhone,
-                'mobilePhone' : adult.mobilePhone,
-                'birthDate' : adult.birthDate,
-                'birthCountry' : adult.birthCountry,
-                'birthPostalCode' : adult.birthPostalCode,
-                'birthCity' : adult.birthCity,
-                'ownerRoles' : homeFolderAdaptorService.prepareOwnerRoles(adult)
-            ])
+        def homeFolderId = currentEcitizen.homeFolder.id
+        def children = homeFolderService.getChildren(homeFolderId)
+        // FIXME : Poor implementation : db request on Role are crappy
+        def childResponsibles = [:]
+        children.each {
+            childResponsibles.put(it.id, homeFolderService.listBySubjectRoles(it.id, RoleType.childRoleTypes))
         }
-        homeFolderService.getChildren(homeFolderId).each{ child ->
-            result.children.add([
-                'id' : child.id,
-                'sex' : child.sex,
-                'fullName' : child.born ? "${child.firstName} ${child.lastName}" :
-                    message('code':"request.subject.childNoBorn", args:[child.getFullName()]),
-                'birthDate' : child.birthDate,
-                'birthCountry' : child.birthCountry,
-                'birthPostalCode' : child.birthPostalCode,
-                'birthCity' : child.birthCity,
-                'roleOwners' : homeFolderService.listBySubjectRoles(child.id,
-                    [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[]),
-                'born' : child.born
-            ])
+
+        Individual.metaClass.homeFolderResponsible = {
+            def role = null
+            delegate.individualRoles.each {
+                if (it.homeFolderId) role = it.role
+            }
+            return role
         }
-        
-        result.homeFolder = [
-            'state' : currentEcitizen.homeFolder.state,
-            'isActive' : currentEcitizen.homeFolder.enabled,
-            'addressDetails' :   "${currentEcitizen.homeFolder.address.streetNumber ?: ''} "+
-                                 "${currentEcitizen.homeFolder.address.streetName} " +
-                                 "${currentEcitizen.homeFolder.address.postalCode} " +
-                                 "${currentEcitizen.homeFolder.address.city}"
-        ]
-        
-        def enabled = true, message = null
-        try {
-            requestWorkflowService.isAccountModificationRequestAuthorized(currentEcitizen.homeFolder)
-        } catch (CvqModelException cvqme) {
-            enabled = false
-            message = cvqme.i18nKey
-        }
-        result.hfmr = [
-            'label': IRequestTypeService.HOME_FOLDER_MODIFICATION_REQUEST,
-            'enabled': enabled,
-            'message': message
-        ]
-        
-        return result
+
+        if (params.idToDelete)
+            flash.idToDelete = Long.valueOf(params.idToDelete)
+
+        // TODO: filter individual by state ine Service Layer
+        return ['homeFolder': currentEcitizen.homeFolder,
+                'adults':  homeFolderService.getAdults(homeFolderId).findAll{ it.state != UserState.ARCHIVED },
+                'children': children.findAll{ it.state != UserState.ARCHIVED },
+                'childResponsibles' : childResponsibles]
     }
 
     def create = {
@@ -131,33 +103,10 @@ class FrontofficeHomeFolderController {
         }
     }
 
-    def editAdult = { // TODO merge with def adult?
-        def model = [:]
-        def individual = individualService.getAdultById(Long.valueOf(params.id))
-        def mode = params.mode
-        if (request.post) {
-            DataBindingUtils.initBind(individual, params)
-            bind(individual)
-            model['invalidFields'] = individualService.validate(individual, false)
-            if (model['invalidFields'].isEmpty()) {
-                redirect(action : 'adult', params : ['id' : individual.id, 'mode' : 'static'])
-                return false
-            } else {
-                session.doRollback = true
-            }
-            individualService.modify(individual)
-        }
-        model['mode'] = mode
-        model['adult'] = individual
-        model['ownerRoles'] = homeFolderAdaptorService.prepareOwnerRoles(individual)
-        model['subjectRoles'] = homeFolderAdaptorService.prepareAdultSubjectRoles(individual)
-        render(view : 'adult', model : model)
-    }
-
-    def deleteAdult = {
-        Adult adult = individualService.getAdultById(Long.valueOf(params.id))
-        homeFolderService.deleteIndividual(adult.homeFolder.id, adult.id)
-        redirect(controller : 'frontofficeHomeFolder')
+    // In fact, individual is archived
+    def deleteIndividual = {
+        userWorkflowService.changeState(individualService.getById(Long.valueOf(params.id)), UserState.ARCHIVED)
+        redirect(action : 'index')
     }
 
     def adult = {
@@ -169,81 +118,33 @@ class FrontofficeHomeFolderController {
             individual = new Adult()
             // hack : WTF is an unknown title ?
             individual.title = null
-            individual.address = SecurityContext.currentEcitizen.address.clone()
+            individual.address = currentEcitizen.address.clone()
         }
-        def mode = params.mode
         if (request.post) {
-            DataBindingUtils.initBind(individual, params)
-            bind(individual)
-            model["invalidFields"] = individualService.validate(individual, false)
-            if (model["invalidFields"].isEmpty()) {
-                if (individual.id) individualService.modify(individual)
-                else homeFolderService.addAdult(this.currentEcitizen.homeFolder, individual, false)
+            try {
+                if (individual.id) historize(params.fragment, individual)
+                else addAdult(individual)
                 redirect(action : "adult", params : ["id" : individual.id])
-
                 return false
-            } else {
+            } catch (CvqValidationException e) {
+                model["invalidFields"] = e.invalidFields
                 session.doRollback = true
             }
         }
-        model['mode'] = mode
+        Adult.metaClass.fragmentMode = { name ->
+            def template = '/adult' + StringUtils.firstCase(name,'Upper')
+            return (name == params.fragment  ? 'edit' : 'static') + template
+        }
         model['adult'] = individual
-        if (params.mode.equals('create')) {
-            render(view: 'adultCreate', model : model)
-            return
-        } else {
+        if (individual.id) {
             model['ownerRoles'] = homeFolderAdaptorService.prepareOwnerRoles(individual)
-            model['subjectRoles'] = homeFolderAdaptorService.prepareAdultSubjectRoles(individual)
         }
-        render(view : 'adult', model : model)
-    }
-
-    def editChild = {
-        def model = [:]
-        def individual = individualService.getChildById(Long.valueOf(params.id))
-        def mode = params.mode
-        if (request.post) {
-            bind(individual)
-            model["invalidFields"] = individualService.validate(individual)
-            if (model["invalidFields"].isEmpty()) {
-                redirect(action : "child", params : ["id" : individual.id, "mode" : 'static'])
-                return false
-            } else {
-                session.doRollback = true
-            }
-            
-            individualService.modify(individual)
-        }
-        model["mode"] = mode
-        model["child"] = individual
-        model["roleOwners"] = individual.id ?
-            homeFolderService.getBySubjectRoles(individual.id,
-                [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[])
-                .sort { a, b ->
-                  if (a.id == b.id) return a.fullName.compareTo(b.fullName)
-                  if (a.id == SecurityContext.currentEcitizen.id) return -1
-                  if (b.id == SecurityContext.currentEcitizen.id) return 1
-                  return a.fullName.compareTo(b.fullName)
-                } : []
-        if (["create","editIdentity","editResponsibles"].contains(params.mode)) {
-            model["adults"] = homeFolderService.getAdults(SecurityContext.currentEcitizen.homeFolder.id)
-            model["currentUser"] = SecurityContext.currentEcitizen
-        }
-        if (["create"].contains(params.mode)) {
-            render(view: "childCreate", model : model)
-            return
-        }
-        render(view : "child", model : model)
-    }
-
-    def deleteChild = {
-        Child child = individualService.getChildById(Long.valueOf(params.id))
-        homeFolderService.deleteIndividual(child.homeFolder.id, child.id)
-        redirect(controller : "frontofficeHomeFolder")
+        return model
     }
 
     def child = {
         def model = [:]
+        model["invalidFields"] = []
         def individual
         if (params.id) {
             individual = individualService.getChildById(Long.valueOf(params.id))
@@ -253,55 +154,106 @@ class FrontofficeHomeFolderController {
             // hack : WTF is an unknown sex ?
             individual.sex = null
         }
-        def mode = params.mode
         if (request.post) {
-            bind(individual)
-            if (mode.equals('create')) {
-                HomeFolder homeFolder = individualService.getByLogin(session.currentEcitizen).homeFolder
-                individualService.create(individual, homeFolder, homeFolder.address, false)
-            }
-            if (individual.id)
-                homeFolderService.removeRolesOnSubject(
-                    SecurityContext.currentEcitizen.homeFolder.id, individual.id)
-            params.roles.each {
-                if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
-                    homeFolderService.addIndividualRole(individualService.getById(Long.valueOf(it.value.owner)),
-                        individual, RoleType.forString(it.value.type))
+            try {
+                if (individual.id && params.roleOwnerId) {
+                    def roles = []
+                    params.roleTypes.each { roles.add(RoleType.forString(it)) }
+                    homeFolderService.link(individualService.getById(Long.valueOf(params.roleOwnerId)), individual, roles)
+                    def invalidFields = individualService.validate(individual)
+                    if (!invalidFields.isEmpty()) throw new CvqValidationException(invalidFields)
+                    redirect(url:createLink(action:'child', params:['id':individual.id, 'fragment':params.fragment]) + '#' + params.fragment)
+                    return false
+                } else if (individual.id) {
+                    historize(params.fragment, individual)
+                } else {
+                    addChild(individual)
                 }
-            }
-            model["invalidFields"] = individualService.validate(individual)
-            if (model["invalidFields"].isEmpty()) {
-                if (individual.id) individualService.modify(individual)
-                else homeFolderService.addChild(this.currentEcitizen.homeFolder, individual)
-
-                redirect(action : "child", params : ["id" : individual.id])
-                mode = 'static'
-
+                redirect(action : 'child', params : ['id' : individual.id])
                 return false
-            } else {
+            } catch (CvqValidationException e) {
+                model["invalidFields"] = e.invalidFields
                 session.doRollback = true
             }
         }
-        model["mode"] = mode
+        Child.metaClass.fragmentMode = { name ->
+            def template = '/child' + StringUtils.firstCase(name,'Upper')
+            return (name == params.fragment  ? 'edit' : 'static') + template
+        }
         model["child"] = individual
-        model["roleOwners"] = individual.id ?
-            homeFolderService.listBySubjectRoles(individual.id,
-                [RoleType.CLR_FATHER, RoleType.CLR_MOTHER, RoleType.CLR_TUTOR] as RoleType[])
-                .sort { a, b ->
-                  if (a.id == b.id) return a.fullName.compareTo(b.fullName)
-                  if (a.id == SecurityContext.currentEcitizen.id) return -1
-                  if (b.id == SecurityContext.currentEcitizen.id) return 1
-                  return a.fullName.compareTo(b.fullName)
-                } : []
-        if (["create","editIdentity","editResponsibles"].contains(params.mode)) {
-            model["adults"] = homeFolderService.getAdults(SecurityContext.currentEcitizen.homeFolder.id)
-            model["currentUser"] = SecurityContext.currentEcitizen
+        if (individual.id) {
+            model['roleOwners'] = ('responsibles' != params.fragment) ? homeFolderService.listBySubjectRoles(individual.id, RoleType.childRoleTypes) : roleOwners(individual.id)
+            model['currentEcitizen'] = currentEcitizen
+            model['currentRoleOwnerId'] = params.roleOwnerId ? Long.valueOf(params.roleOwnerId) : 0
         }
-        if (["create"].contains(params.mode)) {
-            render(view: "childCreate", model : model)
-            return
+        return model
+    }
+
+    def unlink = {
+        homeFolderService.unlink(
+            individualService.getById(Long.valueOf(params.roleOwnerId)),
+            individualService.getById(Long.valueOf(params.id)))
+        redirect(url:createLink(action:'child', params:['id':params.id, 'fragment':params.fragment]) + '#' + params.fragment)
+    }
+
+    private List<Map<Individual,RoleType>> roleOwners(subjectId) {
+        def roleOwners = []
+        def owners = homeFolderService.listBySubjectRoles(subjectId, RoleType.childRoleTypes)
+        owners.each { adult ->
+            def roleOwner = ['adult':adult, 'roles':[]]
+            adult.getIndividualRoles(subjectId).each { individualRole ->
+                roleOwner['roles'].add(individualRole.role)
+            }
+            roleOwners.add(roleOwner)
         }
-        render(view : "child", model : model)
+        (homeFolderService.getAdults(currentEcitizen.homeFolder.id).findAll{ it.state != UserState.ARCHIVED }).each { adult ->
+            if (!owners.contains(adult))
+                roleOwners.add(['adult':adult, 'roles':[]])
+        }
+        return roleOwners
+    }
+
+    private addAdult(individual) throws CvqValidationException {
+        DataBindingUtils.initBind(individual, params)
+        bind(individual)
+        def invalidFields = individualService.validate(individual)
+        if (!invalidFields.isEmpty())
+            throw new CvqValidationException(invalidFields)
+        homeFolderService.addAdult(currentEcitizen.homeFolder, individual, false)
+    }
+
+    // FIXME : Special server side validation to enable legal responsibles checking
+    private addChild(individual) throws CvqValidationException {
+        bind(individual)
+        if (params.roleType.isEmpty())
+            throw new CvqValidationException(individualService.validate(individual))
+        homeFolderService.addChild(currentEcitizen.homeFolder, individual)
+        homeFolderService.link(currentEcitizen, individual, [RoleType.forString(params.roleType)])
+        def invalidFields = individualService.validate(individual)
+        if (!invalidFields.isEmpty())
+            throw new CvqValidationException(invalidFields)
+    }
+
+    // FIXME :
+    private historize(fragment, individual) throws CvqValidationException {
+        def fields, dto
+        if (fragment == 'identity') {
+            dto = individual instanceof Adult ? new Adult() : new Child()
+            fields = individual instanceof Adult ?
+                ["title", "familyStatus", "lastName", "maidenName", "nameOfUse", "firstName", "firstName2", "firstName3", "profession"] :
+                ["lastName", "firstName", "firstName2", "firstName3", "birthDate", "birthPostalCode", "birthCity", "birthCountry"]
+        }
+        if (fragment == 'contact') {
+            dto = new Adult()
+            fields = ["email", "homePhone", "mobilePhone", "officePhone"]
+        }
+        if (fragment == 'address') {
+            dto = new Address()
+            fields = ["additionalDeliveryInformation", "additionalGeographicalInformation", "city", "cityInseeCode", "countryName", "placeNameOrService", "postalCode", "streetMatriculation", "streetName", "streetNumber", "streetRivoliCode"]
+        }
+        bind(dto)
+        individualAdaptorService.historize(individual,
+            (fragment == 'address' ? individual.address : individual), dto, fragment, fields)
     }
 
     def editPassword = {

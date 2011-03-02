@@ -1,4 +1,4 @@
-<form id="adultIdentity_${adult.id}" method="post" action="${g.createLink(action:'editAdult', fragment:'identity')}">
+<form id="adultIdentity_${adult.id}" method="post" action="${g.createLink(action:'adult')}">
 
   <label for="title" class="required">${message(code:'homeFolder.adult.property.title')} *</label>
   <select id="title" name="title"
@@ -9,6 +9,17 @@
       <option value="fr.cg95.cvq.business.users.TitleType_${it}"
           ${it == adult.title ? 'selected="selected"' : ''}>
         <g:capdematEnumToText var="${it}" i18nKeyPrefix="homeFolder.adult.title" />
+      </option>
+    </g:each>
+  </select>
+
+  <label for="familyStatus">${message(code:'homeFolder.adult.property.familyStatus')}</label>
+  <select id="familyStatus" name="familyStatus">
+    <option value="">${message(code:'message.select.defaultOption')}</option>
+    <g:each in="${fr.cg95.cvq.business.users.FamilyStatusType.allFamilyStatusTypes}">
+      <option value="fr.cg95.cvq.business.users.FamilyStatusType_${it}"
+          ${it == adult.familyStatus ? 'selected="selected"' : ''}>
+        <g:capdematEnumToText var="${it}" i18nKeyPrefix="homeFolder.adult.familyStatus" />
       </option>
     </g:each>
   </select>
@@ -39,63 +50,44 @@
       class="validate-firstName ${invalidFields?.contains('firstName3') ? 'validation-failed' : ''}"
       title="${message(code:'homeFolder.individual.property.firstName3.validationError')}" />
 
-  <label for="familyStatus">${message(code:'homeFolder.adult.property.familyStatus')}</label>
-  <select id="familyStatus" name="familyStatus">
-    <option value="">${message(code:'message.select.defaultOption')}</option>
-    <g:each in="${fr.cg95.cvq.business.users.FamilyStatusType.allFamilyStatusTypes}">
-      <option value="fr.cg95.cvq.business.users.FamilyStatusType_${it}"
-          ${it == adult.familyStatus ? 'selected="selected"' : ''}>
-        <g:capdematEnumToText var="${it}" i18nKeyPrefix="homeFolder.adult.familyStatus" />
-      </option>
-    </g:each>
-  </select>
+  <label for="profession">${message(code:'homeFolder.adult.property.profession')}</label>
+  <input type="text" name="profession" value="${adult.profession}" />
 
-  <label >${message(code:'homeFolder.individual.property.birthDate')}</label>
-  <script type="text/javascript">
-      var zcf = zenexity.capdemat.fong;
-      zcf.i18n = {};
-      zcf.i18n['adult.birthDate'] = '${message(code:'homeFolder.individual.property.birthDate')}';
-  </script>
-  <div class="date validate-date">
-    <select id="birthDate_day" name="birthDate_day" class="day ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
-    <option value="">${message(code:'message.select.defaultOption')}</option>
-      <g:each in="${1..31}">
-        <option value="${it}"
-          <g:if test="${adult.birthDate?.date == it || (adult.birthDate == null && params['birthDate_day'] == it.toString())}">
-            selected="selected"
-          </g:if>
-        >${it}</option>
-      </g:each>
-    </select>
-    <select id="birthDate_month" name="birthDate_month" class="month ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
-      <option value="">${message(code:'message.select.defaultOption')}</option>
-      <g:each in="${1..12}">
-        <option value="${it}"
-          <g:if test="${adult.birthDate?.month == (it - 1) || (adult?.birthDate == null && params['birthDate_month'] == it.toString())}">
-            selected="selected"
-          </g:if>
-        ><g:message code="month.${it}" /></option>
-      </g:each>
-    </select>
-    <input type="text" id="birthDate_year" name="birthDate_year" maxlength="4" size="3"
-        class="year ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}"
-        value="${adult.birthDate ? adult.birthDate.year + 1900 : params['birthDate_year']}" />
-  </div>
+%{--  <label >${message(code:'homeFolder.individual.property.birthDate')}</label>--}%
+%{--  <div class="date validate-date">--}%
+%{--    <select id="birthDate_day" name="birthDate_day" class="day ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">--}%
+%{--    <option value="">${message(code:'message.select.defaultOption')}</option>--}%
+%{--      <g:each in="${1..31}">--}%
+%{--        <option value="${it}"--}%
+%{--          <g:if test="${adult.birthDate?.date == it || (adult.birthDate == null && params['birthDate_day'] == it.toString())}">--}%
+%{--            selected="selected"--}%
+%{--          </g:if>--}%
+%{--        >${it}</option>--}%
+%{--      </g:each>--}%
+%{--    </select>--}%
+%{--    <select id="birthDate_month" name="birthDate_month" class="month ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">--}%
+%{--      <option value="">${message(code:'message.select.defaultOption')}</option>--}%
+%{--      <g:each in="${1..12}">--}%
+%{--        <option value="${it}"--}%
+%{--          <g:if test="${adult.birthDate?.month == (it - 1) || (adult?.birthDate == null && params['birthDate_month'] == it.toString())}">--}%
+%{--            selected="selected"--}%
+%{--          </g:if>--}%
+%{--        ><g:message code="month.${it}" /></option>--}%
+%{--      </g:each>--}%
+%{--    </select>--}%
+%{--    <input type="text" id="birthDate_year" name="birthDate_year" maxlength="4" size="3"--}%
+%{--        class="year ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}"--}%
+%{--        value="${adult.birthDate ? adult.birthDate.year + 1900 : params['birthDate_year']}" />--}%
+%{--  </div>--}%
 
-  <label for="birthCity">${message(code:'homeFolder.individual.property.birthCity')}</label>
-  <input type="text" name="birthCity" value="${adult.birthCity}" />
+%{--  <label for="birthCity">${message(code:'homeFolder.individual.property.birthCity')}</label>--}%
+%{--  <input type="text" name="birthCity" value="${adult.birthCity}" />--}%
 
-  <label for="birthPostalCode">${message(code:'homeFolder.individual.property.birthPostalCode')}</label>
-  <input type="text" name="birthPostalCode" value="${adult.birthPostalCode}" />
+%{--  <label for="birthPostalCode">${message(code:'homeFolder.individual.property.birthPostalCode')}</label>--}%
+%{--  <input type="text" name="birthPostalCode" value="${adult.birthPostalCode}" />--}%
 
-  <label for="birthCountry">${message(code:'homeFolder.individual.property.birthCountry')}</label>
-  <input type="text" name="birthCountry" value="${adult.birthCountry}" />
+%{--  <label for="birthCountry">${message(code:'homeFolder.individual.property.birthCountry')}</label>--}%
+%{--  <input type="text" name="birthCountry" value="${adult.birthCountry}" />--}%
 
-  <dt>&nbsp;</dt>
-  <dd>
-    <a href="${createLink(action:'adult', params:['id':adult.id, 'mode':'static'])}#identity">${message(code:'action.cancel')}</a>
-    <input type="hidden" name="mode" value="${mode}" />
-    <input type="hidden" name="id" value="${adult.id}" />
-    <input type="submit" name="submit" value="${message(code:'action.save')}" class="save" />
-  </dd>
+  <g:render template="edit/submit" model="['individual':adult, 'fragment':'identity']" />
 </form>

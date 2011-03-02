@@ -32,3 +32,19 @@
 .homeFolder-action .first { text-align: left; }
 .homeFolder-action p      { padding: .2em 0; }
 .homeFolder-action span span { display: block; font: italic .9em sans-serif; }
+
+
+/* Individual edition : TODO: decouple from request style
+---------------------------------------------------------------*/
+#request .datas .form { border-color: #9ECA27; }
+#request form div p.error { text-align: left; }
+#request .steps li a { padding: .2em 0; text-decoration: underline; }
+#request .steps li.anchor a { color: #095BA6; }
+#request .steps li.back a { color: #E6648D; }
+#request .steps li a:hover { text-decoration: none; }
+
+.individual dl dd.action { margin-top: 1em; text-align: right;border: none; }
+.individual dl dd a.delete { font-size: 1.2em; font-weight: bold; color: #CC2020; }
+.individual dl dd a.delete:hover { color:#fff; background: #CC2020; }
+
+.individual dl.delete { border: 5px solid #CC2020 !important; }

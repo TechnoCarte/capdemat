@@ -66,4 +66,5 @@ public class Child extends Individual {
     public void setSex(SexType sex) {
         this.sex = sex;
     }
+
 }

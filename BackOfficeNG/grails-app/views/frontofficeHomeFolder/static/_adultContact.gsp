@@ -1,3 +1,6 @@
+<a href="${createLink(action:'adult', params:['id':adult.id, 'fragment':'contact'])}#contact">
+  ${message(code:'action.modify')}
+</a>
 <dl>
   <dt>${message(code:'homeFolder.adult.property.email')} : </dt>
   <dd>${adult.email}</dd>

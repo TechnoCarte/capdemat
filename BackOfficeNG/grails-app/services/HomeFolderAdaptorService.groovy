@@ -13,7 +13,7 @@ class HomeFolderAdaptorService {
     ITranslationService translationService
     def instructionService
 
-    public prepareAdultSubjectRoles(adult ) {
+    public prepareAdultSubjectRoles(adult) {
         def adultSubjectRoles = []
         homeFolderService.listBySubjectRole(adult.id, RoleType.TUTOR).each { individual ->
             adultSubjectRoles.add(['fullName': "${individual.firstName} ${individual.lastName}",
