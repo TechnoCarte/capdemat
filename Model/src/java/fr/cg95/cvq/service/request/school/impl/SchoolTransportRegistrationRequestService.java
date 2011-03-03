@@ -22,6 +22,7 @@ import fr.cg95.cvq.business.request.Request;
 import fr.cg95.cvq.business.request.school.SchoolTransportRegistrationRequest;
 import fr.cg95.cvq.business.users.Individual;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
+import fr.cg95.cvq.service.request.condition.EqualityChecker;
 import fr.cg95.cvq.service.request.condition.EqualityListChecker;
 import fr.cg95.cvq.service.request.impl.RequestService;
 import fr.cg95.cvq.service.request.school.ISchoolTransportRegistrationRequestService;
@@ -43,6 +44,7 @@ public class SchoolTransportRegistrationRequestService extends RequestService im
 
     @Override
     public void init() {
+        SchoolTransportRegistrationRequest.conditions.put("estMaternelleElementaireAutorisations", new EqualityChecker("true"));
         SchoolTransportRegistrationRequest.conditions.put("autorisation",
                 new EqualityListChecker(Arrays.asList("autoriseTiers=AvecTiers", "autoriseFrereOuSoeur=AvecFrereSoeur")));
     }

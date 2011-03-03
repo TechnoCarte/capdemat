@@ -332,6 +332,12 @@
     alter table recreation_contact_individual 
         drop constraint FK52B67F65FCCD2304;
 
+    alter table renewal_perischool_activities_request_regime_alimentaire 
+        drop constraint FKD089D14FE35CAE2;
+
+    alter table renewal_perischool_activities_request_regime_alimentaire 
+        drop constraint FKD089D14FA7322BAE;
+
     alter table request 
         drop constraint FK414EF28F85577048;
 
@@ -349,6 +355,9 @@
 
     alter table request_document 
         drop constraint FK712980CBD7FE2713;
+
+    alter table request_external_action_complementary_data 
+        drop constraint FKB088082C294C4979;
 
     alter table request_note 
         drop constraint FK4DABB7A2D7FE2713;
@@ -624,6 +633,10 @@
 
     drop table remote_support_request;
 
+    drop table renewal_perischool_activities_request;
+
+    drop table renewal_perischool_activities_request_regime_alimentaire;
+
     drop table request;
 
     drop table request_action;
@@ -635,6 +648,8 @@
     drop table request_document;
 
     drop table request_external_action;
+
+    drop table request_external_action_complementary_data;
 
     drop table request_form;
 
@@ -730,6 +745,7 @@
         profession varchar(255),
         question varchar(255),
         answer varchar(255),
+        login varchar(255) unique,
         password varchar(255),
         primary key (id)
     );
@@ -860,9 +876,8 @@
 
     create table child (
         id int8 not null,
-        note varchar(255),
-        badge_number varchar(255),
         born bool,
+        sex varchar(8),
         primary key (id)
     );
 
@@ -1788,9 +1803,6 @@
 
     create table individual (
         id int8 not null,
-        version int4 not null,
-        login varchar(255) unique,
-        public_key varchar(50) unique,
         federation_key varchar(64) unique,
         last_name varchar(38),
         first_name varchar(38),
@@ -1800,7 +1812,6 @@
         birth_country varchar(255),
         birth_city varchar(32),
         birth_postal_code varchar(5),
-        sex varchar(8),
         creation_date timestamp,
         last_modification_date timestamp,
         state varchar(16) not null,
@@ -2151,6 +2162,21 @@
         primary key (id)
     );
 
+    create table renewal_perischool_activities_request (
+        id int8 not null,
+        acceptation_reglement_interieur bool,
+        est_restauration bool,
+        est_periscolaire bool,
+        primary key (id)
+    );
+
+    create table renewal_perischool_activities_request_regime_alimentaire (
+        renewal_perischool_activities_request_id int8 not null,
+        regime_alimentaire_id int8 not null,
+        regime_alimentaire_index int4 not null,
+        primary key (renewal_perischool_activities_request_id, regime_alimentaire_index)
+    );
+
     create table request (
         id int8 not null,
         home_folder_id int8,
@@ -2223,8 +2249,14 @@
         message varchar(255),
         name varchar(255),
         status varchar(255),
-        subkey varchar(255),
         primary key (id)
+    );
+
+    create table request_external_action_complementary_data (
+        id int8 not null,
+        value bytea,
+        key varchar(255) not null,
+        primary key (id, key)
     );
 
     create table request_form (
@@ -2337,15 +2369,17 @@
     create table school_transport_registration_request (
         id int8 not null,
         frere_ou_soeur_nom varchar(38),
-        autorisation varchar(255),
-        id_ligne varchar(255),
-        acceptation_reglement_interieur bool,
-        frere_ou_soeur_ecole varchar(255),
         id_arret varchar(255),
-        frere_ou_soeur_prenom varchar(38),
+        frere_ou_soeur_ecole varchar(255),
+        acceptation_reglement_interieur bool,
         label_arret varchar(255),
-        label_ligne varchar(255),
+        frere_ou_soeur_prenom varchar(38),
         frere_ou_soeur_classe varchar(255),
+        est_maternelle_elementaire bool,
+        id_ligne varchar(255),
+        autorisation varchar(255),
+        label_ligne varchar(255),
+        est_maternelle_elementaire_autorisations bool,
         primary key (id)
     );
 
@@ -3115,6 +3149,16 @@
         foreign key (recreation_activity_registration_request_id) 
         references recreation_activity_registration_request;
 
+    alter table renewal_perischool_activities_request_regime_alimentaire 
+        add constraint FKD089D14FE35CAE2 
+        foreign key (renewal_perischool_activities_request_id) 
+        references renewal_perischool_activities_request;
+
+    alter table renewal_perischool_activities_request_regime_alimentaire 
+        add constraint FKD089D14FA7322BAE 
+        foreign key (regime_alimentaire_id) 
+        references local_referential_data;
+
     alter table request 
         add constraint FK414EF28F85577048 
         foreign key (request_season_id) 
@@ -3144,6 +3188,11 @@
         add constraint FK712980CBD7FE2713 
         foreign key (request_id) 
         references request;
+
+    alter table request_external_action_complementary_data 
+        add constraint FKB088082C294C4979 
+        foreign key (id) 
+        references request_external_action;
 
     alter table request_note 
         add constraint FK4DABB7A2D7FE2713 

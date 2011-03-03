@@ -10,6 +10,10 @@ strr.step.reglements.label =
 strr.step.reglements.desc =
 
 
+strr.property.estMaternelleElementaire.help =
+strr.property.estMaternelleElementaire.validationError =
+
+
 strr.property.ligne.help =
 strr.property.ligne.validationError =
 
@@ -32,6 +36,10 @@ strr.property.idArret.validationError =
 
 strr.property.labelArret.help =
 strr.property.labelArret.validationError =
+
+
+strr.property.estMaternelleElementaireAutorisations.help =
+strr.property.estMaternelleElementaireAutorisations.validationError =
 
 
 strr.property.autorisation.help =

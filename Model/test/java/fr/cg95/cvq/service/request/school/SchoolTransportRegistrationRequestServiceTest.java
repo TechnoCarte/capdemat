@@ -54,20 +54,8 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
           
           
             
-              request.setAutorisation(AutorisationType.SEUL);
+               request.setIdArret("IdArret");
             
-          
-        
-          
-          
-            
-               request.setIdLigne("IdLigne");
-            
-          
-        
-          
-          
-               request.setAcceptationReglementInterieur(Boolean.valueOf(true));
           
         
           
@@ -79,8 +67,13 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
         
           
           
+               request.setAcceptationReglementInterieur(Boolean.valueOf(true));
+          
+        
+          
+          
             
-               request.setIdArret("IdArret");
+               request.setLabelArret("LabelArret");
             
           
         
@@ -97,13 +90,26 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
           
           
             
+               request.setFrereOuSoeurClasse("FrereOuSoeurClasse");
+            
+          
+        
+          
+          
+               request.setEstMaternelleElementaire(Boolean.valueOf(true));
+          
+        
+          
+          
+            
+               request.setIdLigne("IdLigne");
             
           
         
           
           
             
-               request.setLabelArret("LabelArret");
+              request.setAutorisation(AutorisationType.SEUL);
             
           
         
@@ -117,8 +123,12 @@ public class SchoolTransportRegistrationRequestServiceTest extends RequestTestCa
           
           
             
-               request.setFrereOuSoeurClasse("FrereOuSoeurClasse");
             
+          
+        
+          
+          
+               request.setEstMaternelleElementaireAutorisations(Boolean.valueOf(true));
           
         
         // Means Of Contact

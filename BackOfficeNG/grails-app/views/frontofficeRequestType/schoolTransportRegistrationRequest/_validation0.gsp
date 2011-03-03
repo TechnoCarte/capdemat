@@ -12,6 +12,15 @@
       
     
       
+      <dl>
+        <dt><g:message code="strr.property.estMaternelleElementaire.label" /></dt>
+          <dd><g:message code="message.${rqt.estMaternelleElementaire ? 'yes' : 'no'}" /></dd>
+          
+
+      </dl>
+      
+    
+      
       <h4><g:message code="strr.property.ligne.label" /></h4>
       <dl>
         
@@ -41,6 +50,15 @@
 
   
     <h3><g:message code="strr.step.autorisations.label" /></h3>
+    
+      
+      <dl>
+        <dt><g:message code="strr.property.estMaternelleElementaireAutorisations.label" /></dt>
+          <dd><g:message code="message.${rqt.estMaternelleElementaireAutorisations ? 'yes' : 'no'}" /></dd>
+          
+
+      </dl>
+      
     
       
       <dl>

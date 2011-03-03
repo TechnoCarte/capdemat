@@ -38,6 +38,10 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
       
         acceptationReglementInterieur = Boolean.valueOf(false);
       
+        estMaternelleElementaire = Boolean.valueOf(false);
+      
+        estMaternelleElementaireAutorisations = Boolean.valueOf(false);
+      
     }
 
     @Override
@@ -52,22 +56,7 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
         
           
             
-        if (autorisation != null)
-            result.setAutorisation(autorisation);
-        else
-            result.setAutorisation(fr.cg95.cvq.business.request.school.AutorisationType.getDefaultAutorisationType());
-      
-          
-        
-          
-            
-        result.setIdLigne(idLigne);
-      
-          
-        
-          
-            
-        result.setAcceptationReglementInterieur(acceptationReglementInterieur);
+        result.setIdArret(idArret);
       
           
         
@@ -79,13 +68,52 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
         
           
             
-        result.setIdArret(idArret);
+        result.setAcceptationReglementInterieur(acceptationReglementInterieur);
+      
+          
+        
+          
+            
+        result.setLabelArret(labelArret);
       
           
         
           
             
         result.setFrereOuSoeurPrenom(frereOuSoeurPrenom);
+      
+          
+        
+          
+            
+        result.setFrereOuSoeurClasse(frereOuSoeurClasse);
+      
+          
+        
+          
+            
+        result.setEstMaternelleElementaire(estMaternelleElementaire);
+      
+          
+        
+          
+            
+        result.setIdLigne(idLigne);
+      
+          
+        
+          
+            
+        if (autorisation != null)
+            result.setAutorisation(autorisation);
+        else
+            result.setAutorisation(fr.cg95.cvq.business.request.school.AutorisationType.getDefaultAutorisationType());
+      
+          
+        
+          
+            
+        result.setLabelLigne(labelLigne);
       
           
         
@@ -101,19 +129,7 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
         
           
             
-        result.setLabelArret(labelArret);
-      
-          
-        
-          
-            
-        result.setLabelLigne(labelLigne);
-      
-          
-        
-          
-            
-        result.setFrereOuSoeurClasse(frereOuSoeurClasse);
+        result.setEstMaternelleElementaireAutorisations(estMaternelleElementaireAutorisations);
       
           
         
@@ -206,82 +222,32 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
       @NotNull(
         
         
-        profiles = {"autorisations"},
-        message = "autorisation"
-      )
-    
-    private fr.cg95.cvq.business.request.school.AutorisationType autorisation;
-
-    public final void setAutorisation(final fr.cg95.cvq.business.request.school.AutorisationType autorisation) {
-        this.autorisation = autorisation;
-    }
-
-    /**
- 
-        * @hibernate.property
-        *  column="autorisation"
-        
-      
-    */
-    public final fr.cg95.cvq.business.request.school.AutorisationType getAutorisation() {
-        return this.autorisation;
-    }
-  
-    
-      @NotNull(
-        
-        
         profiles = {"enfant"},
-        message = "idLigne"
+        message = "idArret"
       )
     
       @NotBlank(
         
         
         profiles = {"enfant"},
-        message = "idLigne"
+        message = "idArret"
       )
     
-    private String idLigne;
+    private String idArret;
 
-    public final void setIdLigne(final String idLigne) {
-        this.idLigne = idLigne;
+    public final void setIdArret(final String idArret) {
+        this.idArret = idArret;
     }
 
     /**
  
         * @hibernate.property
-        *  column="id_ligne"
+        *  column="id_arret"
         
       
     */
-    public final String getIdLigne() {
-        return this.idLigne;
-    }
-  
-    
-      @NotNull(
-        
-        
-        profiles = {"reglements"},
-        message = "acceptationReglementInterieur"
-      )
-    
-    private Boolean acceptationReglementInterieur;
-
-    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
-        this.acceptationReglementInterieur = acceptationReglementInterieur;
-    }
-
-    /**
- 
-        * @hibernate.property
-        *  column="acceptation_reglement_interieur"
-        
-      
-    */
-    public final Boolean getAcceptationReglementInterieur() {
-        return this.acceptationReglementInterieur;
+    public final String getIdArret() {
+        return this.idArret;
     }
   
     
@@ -338,32 +304,57 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
       @NotNull(
         
         
+        profiles = {"reglements"},
+        message = "acceptationReglementInterieur"
+      )
+    
+    private Boolean acceptationReglementInterieur;
+
+    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
+        this.acceptationReglementInterieur = acceptationReglementInterieur;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="acceptation_reglement_interieur"
+        
+      
+    */
+    public final Boolean getAcceptationReglementInterieur() {
+        return this.acceptationReglementInterieur;
+    }
+  
+    
+      @NotNull(
+        
+        
         profiles = {"enfant"},
-        message = "idArret"
+        message = "labelArret"
       )
     
       @NotBlank(
         
         
         profiles = {"enfant"},
-        message = "idArret"
+        message = "labelArret"
       )
     
-    private String idArret;
+    private String labelArret;
 
-    public final void setIdArret(final String idArret) {
-        this.idArret = idArret;
+    public final void setLabelArret(final String labelArret) {
+        this.labelArret = labelArret;
     }
 
     /**
  
         * @hibernate.property
-        *  column="id_arret"
+        *  column="label_arret"
         
       
     */
-    public final String getIdArret() {
-        return this.idArret;
+    public final String getLabelArret() {
+        return this.labelArret;
     }
   
     
@@ -435,6 +426,179 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
     }
   
     
+      @NotNull(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= _this.conditions['autorisation'].test(_this.autorisation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"autorisations"},
+        message = "frereOuSoeurClasse"
+      )
+    
+      @NotBlank(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            
+            "active &= _this.conditions['autorisation'].test(_this.autorisation.toString());" +
+                
+              
+            
+            "return active",
+        
+        profiles = {"autorisations"},
+        message = "frereOuSoeurClasse"
+      )
+    
+    private String frereOuSoeurClasse;
+
+    public final void setFrereOuSoeurClasse(final String frereOuSoeurClasse) {
+        this.frereOuSoeurClasse = frereOuSoeurClasse;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="frere_ou_soeur_classe"
+        
+      
+    */
+    public final String getFrereOuSoeurClasse() {
+        return this.frereOuSoeurClasse;
+    }
+  
+    
+      @NotNull(
+        
+        
+        profiles = {"enfant"},
+        message = "estMaternelleElementaire"
+      )
+    
+    private Boolean estMaternelleElementaire;
+
+    public final void setEstMaternelleElementaire(final Boolean estMaternelleElementaire) {
+        this.estMaternelleElementaire = estMaternelleElementaire;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="est_maternelle_elementaire"
+        
+      
+    */
+    public final Boolean getEstMaternelleElementaire() {
+        return this.estMaternelleElementaire;
+    }
+  
+    
+      @NotNull(
+        
+        
+        profiles = {"enfant"},
+        message = "idLigne"
+      )
+    
+      @NotBlank(
+        
+        
+        profiles = {"enfant"},
+        message = "idLigne"
+      )
+    
+    private String idLigne;
+
+    public final void setIdLigne(final String idLigne) {
+        this.idLigne = idLigne;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="id_ligne"
+        
+      
+    */
+    public final String getIdLigne() {
+        return this.idLigne;
+    }
+  
+    
+      @NotNull(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            "active &= _this.conditions['estMaternelleElementaireAutorisations'].test(_this.estMaternelleElementaireAutorisations.toString());" +
+                
+              
+            
+            
+            "return active",
+        
+        profiles = {"autorisations"},
+        message = "autorisation"
+      )
+    
+    private fr.cg95.cvq.business.request.school.AutorisationType autorisation;
+
+    public final void setAutorisation(final fr.cg95.cvq.business.request.school.AutorisationType autorisation) {
+        this.autorisation = autorisation;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="autorisation"
+        
+      
+    */
+    public final fr.cg95.cvq.business.request.school.AutorisationType getAutorisation() {
+        return this.autorisation;
+    }
+  
+    
+      @NotNull(
+        
+        
+        profiles = {"enfant"},
+        message = "labelLigne"
+      )
+    
+      @NotBlank(
+        
+        
+        profiles = {"enfant"},
+        message = "labelLigne"
+      )
+    
+    private String labelLigne;
+
+    public final void setLabelLigne(final String labelLigne) {
+        this.labelLigne = labelLigne;
+    }
+
+    /**
+ 
+        * @hibernate.property
+        *  column="label_ligne"
+        
+      
+    */
+    public final String getLabelLigne() {
+        return this.labelLigne;
+    }
+  
+    
       @AssertValid(
         
         
@@ -497,114 +661,25 @@ public class SchoolTransportRegistrationRequestData implements Serializable {
       @NotNull(
         
         
-        profiles = {"enfant"},
-        message = "labelArret"
-      )
-    
-      @NotBlank(
-        
-        
-        profiles = {"enfant"},
-        message = "labelArret"
-      )
-    
-    private String labelArret;
-
-    public final void setLabelArret(final String labelArret) {
-        this.labelArret = labelArret;
-    }
-
-    /**
- 
-        * @hibernate.property
-        *  column="label_arret"
-        
-      
-    */
-    public final String getLabelArret() {
-        return this.labelArret;
-    }
-  
-    
-      @NotNull(
-        
-        
-        profiles = {"enfant"},
-        message = "labelLigne"
-      )
-    
-      @NotBlank(
-        
-        
-        profiles = {"enfant"},
-        message = "labelLigne"
-      )
-    
-    private String labelLigne;
-
-    public final void setLabelLigne(final String labelLigne) {
-        this.labelLigne = labelLigne;
-    }
-
-    /**
- 
-        * @hibernate.property
-        *  column="label_ligne"
-        
-      
-    */
-    public final String getLabelLigne() {
-        return this.labelLigne;
-    }
-  
-    
-      @NotNull(
-        
-        
-          when = "groovy:def active = true;" +
-          
-            
-            "active &= _this.conditions['autorisation'].test(_this.autorisation.toString());" +
-                
-              
-            
-            "return active",
-        
         profiles = {"autorisations"},
-        message = "frereOuSoeurClasse"
+        message = "estMaternelleElementaireAutorisations"
       )
     
-      @NotBlank(
-        
-        
-          when = "groovy:def active = true;" +
-          
-            
-            "active &= _this.conditions['autorisation'].test(_this.autorisation.toString());" +
-                
-              
-            
-            "return active",
-        
-        profiles = {"autorisations"},
-        message = "frereOuSoeurClasse"
-      )
-    
-    private String frereOuSoeurClasse;
+    private Boolean estMaternelleElementaireAutorisations;
 
-    public final void setFrereOuSoeurClasse(final String frereOuSoeurClasse) {
-        this.frereOuSoeurClasse = frereOuSoeurClasse;
+    public final void setEstMaternelleElementaireAutorisations(final Boolean estMaternelleElementaireAutorisations) {
+        this.estMaternelleElementaireAutorisations = estMaternelleElementaireAutorisations;
     }
 
     /**
  
         * @hibernate.property
-        *  column="frere_ou_soeur_classe"
+        *  column="est_maternelle_elementaire_autorisations"
         
       
     */
-    public final String getFrereOuSoeurClasse() {
-        return this.frereOuSoeurClasse;
+    public final Boolean getEstMaternelleElementaireAutorisations() {
+        return this.estMaternelleElementaireAutorisations;
     }
   
 }

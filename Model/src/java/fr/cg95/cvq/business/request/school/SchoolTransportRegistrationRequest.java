@@ -119,20 +119,29 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         int i = 0;
           FrereOuSoeurInformationsType frereOuSoeurInformationsTypeFrereOuSoeurAutorise = schoolTransportRegistrationRequest.addNewFrereOuSoeurAutorise();
         frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurNom(getFrereOuSoeurNom());
+        ArretType arretTypeArret = schoolTransportRegistrationRequest.addNewArret();
+        arretTypeArret.setIdArret(getIdArret());
       
-        if (getAutorisation() != null)
-            schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.xml.request.school.AutorisationType.Enum.forString(getAutorisation().toString()));
-        LigneType ligneTypeLigne = schoolTransportRegistrationRequest.addNewLigne();
-        ligneTypeLigne.setIdLigne(getIdLigne());
+        frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurEcole(getFrereOuSoeurEcole());
       
         if (getAcceptationReglementInterieur() != null)
             schoolTransportRegistrationRequest.setAcceptationReglementInterieur(getAcceptationReglementInterieur().booleanValue());
       
-        frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurEcole(getFrereOuSoeurEcole());
-        ArretType arretTypeArret = schoolTransportRegistrationRequest.addNewArret();
-        arretTypeArret.setIdArret(getIdArret());
+        arretTypeArret.setLabelArret(getLabelArret());
       
         frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurPrenom(getFrereOuSoeurPrenom());
+      
+        frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurClasse(getFrereOuSoeurClasse());
+      
+        if (getEstMaternelleElementaire() != null)
+            schoolTransportRegistrationRequest.setEstMaternelleElementaire(getEstMaternelleElementaire().booleanValue());
+        LigneType ligneTypeLigne = schoolTransportRegistrationRequest.addNewLigne();
+        ligneTypeLigne.setIdLigne(getIdLigne());
+      
+        if (getAutorisation() != null)
+            schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.xml.request.school.AutorisationType.Enum.forString(getAutorisation().toString()));
+      
+        ligneTypeLigne.setLabelLigne(getLabelLigne());
       
         i = 0;
         if (getTiersAutorises() != null) {
@@ -143,11 +152,8 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
             schoolTransportRegistrationRequest.setTiersAutorisesArray(tiersAutorisesTypeTab);
         }
       
-        arretTypeArret.setLabelArret(getLabelArret());
-      
-        ligneTypeLigne.setLabelLigne(getLabelLigne());
-      
-        frereOuSoeurInformationsTypeFrereOuSoeurAutorise.setFrereOuSoeurClasse(getFrereOuSoeurClasse());
+        if (getEstMaternelleElementaireAutorisations() != null)
+            schoolTransportRegistrationRequest.setEstMaternelleElementaireAutorisations(getEstMaternelleElementaireAutorisations().booleanValue());
       
         return schoolTransportRegistrationRequestDoc;
     }
@@ -167,20 +173,28 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         
         schoolTransportRegistrationRequest.setFrereOuSoeurNom(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurNom());
       
+        schoolTransportRegistrationRequest.setIdArret(schoolTransportRegistrationRequestXml.getArret().getIdArret());
+      
+        schoolTransportRegistrationRequest.setFrereOuSoeurEcole(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurEcole());
+      
+        schoolTransportRegistrationRequest.setAcceptationReglementInterieur(Boolean.valueOf(schoolTransportRegistrationRequestXml.getAcceptationReglementInterieur()));
+      
+        schoolTransportRegistrationRequest.setLabelArret(schoolTransportRegistrationRequestXml.getArret().getLabelArret());
+      
+        schoolTransportRegistrationRequest.setFrereOuSoeurPrenom(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurPrenom());
+      
+        schoolTransportRegistrationRequest.setFrereOuSoeurClasse(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurClasse());
+      
+        schoolTransportRegistrationRequest.setEstMaternelleElementaire(Boolean.valueOf(schoolTransportRegistrationRequestXml.getEstMaternelleElementaire()));
+      
+        schoolTransportRegistrationRequest.setIdLigne(schoolTransportRegistrationRequestXml.getLigne().getIdLigne());
+      
         if (schoolTransportRegistrationRequestXml.getAutorisation() != null)
             schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.business.request.school.AutorisationType.forString(schoolTransportRegistrationRequestXml.getAutorisation().toString()));
         else
             schoolTransportRegistrationRequest.setAutorisation(fr.cg95.cvq.business.request.school.AutorisationType.getDefaultAutorisationType());
       
-        schoolTransportRegistrationRequest.setIdLigne(schoolTransportRegistrationRequestXml.getLigne().getIdLigne());
-      
-        schoolTransportRegistrationRequest.setAcceptationReglementInterieur(Boolean.valueOf(schoolTransportRegistrationRequestXml.getAcceptationReglementInterieur()));
-      
-        schoolTransportRegistrationRequest.setFrereOuSoeurEcole(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurEcole());
-      
-        schoolTransportRegistrationRequest.setIdArret(schoolTransportRegistrationRequestXml.getArret().getIdArret());
-      
-        schoolTransportRegistrationRequest.setFrereOuSoeurPrenom(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurPrenom());
+        schoolTransportRegistrationRequest.setLabelLigne(schoolTransportRegistrationRequestXml.getLigne().getLabelLigne());
       
         List<fr.cg95.cvq.business.request.school.TiersInformations> tiersAutorisesList = new ArrayList<fr.cg95.cvq.business.request.school.TiersInformations>(schoolTransportRegistrationRequestXml.sizeOfTiersAutorisesArray());
         for (TiersInformationsType object : schoolTransportRegistrationRequestXml.getTiersAutorisesArray()) {
@@ -188,11 +202,7 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         }
         schoolTransportRegistrationRequest.setTiersAutorises(tiersAutorisesList);
       
-        schoolTransportRegistrationRequest.setLabelArret(schoolTransportRegistrationRequestXml.getArret().getLabelArret());
-      
-        schoolTransportRegistrationRequest.setLabelLigne(schoolTransportRegistrationRequestXml.getLigne().getLabelLigne());
-      
-        schoolTransportRegistrationRequest.setFrereOuSoeurClasse(schoolTransportRegistrationRequestXml.getFrereOuSoeurAutorise().getFrereOuSoeurClasse());
+        schoolTransportRegistrationRequest.setEstMaternelleElementaireAutorisations(Boolean.valueOf(schoolTransportRegistrationRequestXml.getEstMaternelleElementaireAutorisations()));
       
         return schoolTransportRegistrationRequest;
     }
@@ -250,31 +260,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         return schoolTransportRegistrationRequestData.getFrereOuSoeurNom();
     }
   
-    public final void setAutorisation(final fr.cg95.cvq.business.request.school.AutorisationType autorisation) {
-        schoolTransportRegistrationRequestData.setAutorisation(autorisation);
+    public final void setIdArret(final String idArret) {
+        schoolTransportRegistrationRequestData.setIdArret(idArret);
     }
 
     
-    public final fr.cg95.cvq.business.request.school.AutorisationType getAutorisation() {
-        return schoolTransportRegistrationRequestData.getAutorisation();
-    }
-  
-    public final void setIdLigne(final String idLigne) {
-        schoolTransportRegistrationRequestData.setIdLigne(idLigne);
-    }
-
-    
-    public final String getIdLigne() {
-        return schoolTransportRegistrationRequestData.getIdLigne();
-    }
-  
-    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
-        schoolTransportRegistrationRequestData.setAcceptationReglementInterieur(acceptationReglementInterieur);
-    }
-
-    @IsRulesAcceptance
-    public final Boolean getAcceptationReglementInterieur() {
-        return schoolTransportRegistrationRequestData.getAcceptationReglementInterieur();
+    public final String getIdArret() {
+        return schoolTransportRegistrationRequestData.getIdArret();
     }
   
     public final void setFrereOuSoeurEcole(final String frereOuSoeurEcole) {
@@ -286,31 +278,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         return schoolTransportRegistrationRequestData.getFrereOuSoeurEcole();
     }
   
-    public final void setIdArret(final String idArret) {
-        schoolTransportRegistrationRequestData.setIdArret(idArret);
+    public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
+        schoolTransportRegistrationRequestData.setAcceptationReglementInterieur(acceptationReglementInterieur);
     }
 
-    
-    public final String getIdArret() {
-        return schoolTransportRegistrationRequestData.getIdArret();
-    }
-  
-    public final void setFrereOuSoeurPrenom(final String frereOuSoeurPrenom) {
-        schoolTransportRegistrationRequestData.setFrereOuSoeurPrenom(frereOuSoeurPrenom);
-    }
-
-    
-    public final String getFrereOuSoeurPrenom() {
-        return schoolTransportRegistrationRequestData.getFrereOuSoeurPrenom();
-    }
-  
-    public final void setTiersAutorises(final List<fr.cg95.cvq.business.request.school.TiersInformations> tiersAutorises) {
-        schoolTransportRegistrationRequestData.setTiersAutorises(tiersAutorises);
-    }
-
-    
-    public final List<fr.cg95.cvq.business.request.school.TiersInformations> getTiersAutorises() {
-        return schoolTransportRegistrationRequestData.getTiersAutorises();
+    @IsRulesAcceptance
+    public final Boolean getAcceptationReglementInterieur() {
+        return schoolTransportRegistrationRequestData.getAcceptationReglementInterieur();
     }
   
     public final void setLabelArret(final String labelArret) {
@@ -322,13 +296,13 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
         return schoolTransportRegistrationRequestData.getLabelArret();
     }
   
-    public final void setLabelLigne(final String labelLigne) {
-        schoolTransportRegistrationRequestData.setLabelLigne(labelLigne);
+    public final void setFrereOuSoeurPrenom(final String frereOuSoeurPrenom) {
+        schoolTransportRegistrationRequestData.setFrereOuSoeurPrenom(frereOuSoeurPrenom);
     }
 
     
-    public final String getLabelLigne() {
-        return schoolTransportRegistrationRequestData.getLabelLigne();
+    public final String getFrereOuSoeurPrenom() {
+        return schoolTransportRegistrationRequestData.getFrereOuSoeurPrenom();
     }
   
     public final void setFrereOuSoeurClasse(final String frereOuSoeurClasse) {
@@ -338,6 +312,60 @@ public class SchoolTransportRegistrationRequest extends Request implements Seria
     
     public final String getFrereOuSoeurClasse() {
         return schoolTransportRegistrationRequestData.getFrereOuSoeurClasse();
+    }
+  
+    public final void setEstMaternelleElementaire(final Boolean estMaternelleElementaire) {
+        schoolTransportRegistrationRequestData.setEstMaternelleElementaire(estMaternelleElementaire);
+    }
+
+    
+    public final Boolean getEstMaternelleElementaire() {
+        return schoolTransportRegistrationRequestData.getEstMaternelleElementaire();
+    }
+  
+    public final void setIdLigne(final String idLigne) {
+        schoolTransportRegistrationRequestData.setIdLigne(idLigne);
+    }
+
+    
+    public final String getIdLigne() {
+        return schoolTransportRegistrationRequestData.getIdLigne();
+    }
+  
+    public final void setAutorisation(final fr.cg95.cvq.business.request.school.AutorisationType autorisation) {
+        schoolTransportRegistrationRequestData.setAutorisation(autorisation);
+    }
+
+    
+    public final fr.cg95.cvq.business.request.school.AutorisationType getAutorisation() {
+        return schoolTransportRegistrationRequestData.getAutorisation();
+    }
+  
+    public final void setLabelLigne(final String labelLigne) {
+        schoolTransportRegistrationRequestData.setLabelLigne(labelLigne);
+    }
+
+    
+    public final String getLabelLigne() {
+        return schoolTransportRegistrationRequestData.getLabelLigne();
+    }
+  
+    public final void setTiersAutorises(final List<fr.cg95.cvq.business.request.school.TiersInformations> tiersAutorises) {
+        schoolTransportRegistrationRequestData.setTiersAutorises(tiersAutorises);
+    }
+
+    
+    public final List<fr.cg95.cvq.business.request.school.TiersInformations> getTiersAutorises() {
+        return schoolTransportRegistrationRequestData.getTiersAutorises();
+    }
+  
+    public final void setEstMaternelleElementaireAutorisations(final Boolean estMaternelleElementaireAutorisations) {
+        schoolTransportRegistrationRequestData.setEstMaternelleElementaireAutorisations(estMaternelleElementaireAutorisations);
+    }
+
+    
+    public final Boolean getEstMaternelleElementaireAutorisations() {
+        return schoolTransportRegistrationRequestData.getEstMaternelleElementaireAutorisations();
     }
   
 }

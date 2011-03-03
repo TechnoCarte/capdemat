@@ -2,8 +2,22 @@
 
 
   
-    <label for="autorisation" class="required"><g:message code="strr.property.autorisation.label" /> *  <span><g:message code="strr.property.autorisation.help" /></span></label>
-            <select id="autorisation" name="autorisation" class="required condition-autoriseTiers-trigger condition-autoriseFrereOuSoeur-trigger  validate-not-first ${rqt.stepStates['autorisations'].invalidFields.contains('autorisation') ? 'validation-failed' : ''}" title="<g:message code="strr.property.autorisation.validationError" />">
+    <label class="required"><g:message code="strr.property.estMaternelleElementaireAutorisations.label" /> *  <span><g:message code="strr.property.estMaternelleElementaireAutorisations.help" /></span></label>
+            <ul class="yes-no required ${rqt.stepStates['autorisations'].invalidFields.contains('estMaternelleElementaireAutorisations') ? 'validation-failed' : ''}">
+              <g:each in="${[true,false]}">
+              <li>
+                <input type="radio" id="estMaternelleElementaireAutorisations_${it ? 'yes' : 'no'}" class="required condition-estMaternelleElementaire-trigger  validate-one-required boolean" title="" value="${it}" name="estMaternelleElementaireAutorisations" ${it == rqt.estMaternelleElementaireAutorisations ? 'checked="checked"': ''} />
+                <label for="estMaternelleElementaireAutorisations_${it ? 'yes' : 'no'}"><g:message code="message.${it ? 'yes' : 'no'}" /></label>
+              </li>
+              </g:each>
+            </ul>
+            
+
+  
+
+  
+    <label for="autorisation" class="required condition-estMaternelleElementaire-filled"><g:message code="strr.property.autorisation.label" /> *  <span><g:message code="strr.property.autorisation.help" /></span></label>
+            <select id="autorisation" name="autorisation" class="required condition-estMaternelleElementaire-filled condition-autoriseTiers-trigger condition-autoriseFrereOuSoeur-trigger  validate-not-first ${rqt.stepStates['autorisations'].invalidFields.contains('autorisation') ? 'validation-failed' : ''}" title="<g:message code="strr.property.autorisation.validationError" />">
               <option value=""><g:message code="message.select.defaultOption" /></option>
               <g:each in="${['Seul','AvecFrereSoeur','AvecTiers']}">
                 <option value="fr.cg95.cvq.business.request.school.AutorisationType_${it}" ${it == rqt.autorisation?.toString() ? 'selected="selected"': ''}><g:capdematEnumToText var="${it}" i18nKeyPrefix="strr.property.autorisation" /></option>

@@ -41,6 +41,12 @@
               
             
               
+              <dl>
+                <dt class="required"><g:message code="strr.property.estMaternelleElementaire.label" /> * : </dt><dd id="estMaternelleElementaire" class="action-editField validate-boolean required-true i18n-strr.property.estMaternelleElementaire" ><span class="value-${rqt?.estMaternelleElementaire}"><g:message code="message.${rqt?.estMaternelleElementaire ? 'yes' : 'no'}" /></span></dd>
+              </dl>
+              
+            
+              
               <h3><g:message code="strr.property.ligne.label" /></h3>
               <dl class="required">
                 
@@ -89,7 +95,13 @@
             
               
               <dl>
-                <dt class="required condition-autoriseTiers-trigger condition-autoriseFrereOuSoeur-trigger"><g:message code="strr.property.autorisation.label" /> * : </dt><dd id="autorisation" class="action-editField validate-capdematEnum required-true i18n-strr.property.autorisation javatype-fr.cg95.cvq.business.request.school.AutorisationType" ><g:capdematEnumToField var="${rqt?.autorisation}" i18nKeyPrefix="strr.property.autorisation" /></dd>
+                <dt class="required condition-estMaternelleElementaire-trigger"><g:message code="strr.property.estMaternelleElementaireAutorisations.label" /> * : </dt><dd id="estMaternelleElementaireAutorisations" class="action-editField validate-boolean required-true i18n-strr.property.estMaternelleElementaireAutorisations" ><span class="value-${rqt?.estMaternelleElementaireAutorisations}"><g:message code="message.${rqt?.estMaternelleElementaireAutorisations ? 'yes' : 'no'}" /></span></dd>
+              </dl>
+              
+            
+              
+              <dl>
+                <dt class="required condition-estMaternelleElementaire-filled condition-autoriseTiers-trigger condition-autoriseFrereOuSoeur-trigger"><g:message code="strr.property.autorisation.label" /> * : </dt><dd id="autorisation" class="action-editField validate-capdematEnum required-true i18n-strr.property.autorisation javatype-fr.cg95.cvq.business.request.school.AutorisationType" ><g:capdematEnumToField var="${rqt?.autorisation}" i18nKeyPrefix="strr.property.autorisation" /></dd>
               </dl>
               
             

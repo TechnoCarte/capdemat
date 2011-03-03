@@ -33,6 +33,20 @@
   
 
   
+    <label class="required"><g:message code="strr.property.estMaternelleElementaire.label" /> *  <span><g:message code="strr.property.estMaternelleElementaire.help" /></span></label>
+            <ul class="yes-no required ${rqt.stepStates['enfant'].invalidFields.contains('estMaternelleElementaire') ? 'validation-failed' : ''}">
+              <g:each in="${[true,false]}">
+              <li>
+                <input type="radio" id="estMaternelleElementaire_${it ? 'yes' : 'no'}" class="required  validate-one-required boolean" title="" value="${it}" name="estMaternelleElementaire" ${it == rqt.estMaternelleElementaire ? 'checked="checked"': ''} />
+                <label for="estMaternelleElementaire_${it ? 'yes' : 'no'}"><g:message code="message.${it ? 'yes' : 'no'}" /></label>
+              </li>
+              </g:each>
+            </ul>
+            
+
+  
+
+  
     <fieldset class="required">
     <legend><g:message code="strr.property.ligne.label" /></legend>
     

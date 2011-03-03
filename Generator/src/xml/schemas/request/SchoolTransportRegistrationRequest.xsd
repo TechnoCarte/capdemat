@@ -28,6 +28,7 @@
             </step>
             <step index="1" name="autorisations">
                 <conditions>
+                    <condition name="estMaternelleElementaire" />
                     <condition name="autoriseTiers" />
                     <condition name="autoriseFrereOuSoeur" />
                 </conditions>
@@ -43,6 +44,24 @@
       <xs:complexContent>
         <xs:extension base="cvq:RequestType">
           <xs:sequence>
+             <xs:element name="EstMaternelleElementaire" type="xs:boolean" default="false">
+              <xs:annotation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
+                  Votre enfant est en école maternelle ou élémentaire
+                </xs:documentation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+                  Votre enfant est en école maternelle ou élémentaire
+                </xs:documentation>
+                <xs:appinfo>
+                  <common>
+                    <step ref="enfant" />
+                  </common>
+                  <fo />
+                  <bo column="1" />
+                  <pdf />
+                </xs:appinfo>
+              </xs:annotation>
+             </xs:element>
              <xs:element name="Ligne" type="strr:LigneType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
@@ -79,6 +98,27 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
+            <xs:element name="EstMaternelleElementaireAutorisations" type="xs:boolean" default="false">
+              <xs:annotation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+                  Votre enfant est en école maternelle ou élémentaire
+                </xs:documentation>
+                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
+                  Votre enfant est en école maternelle ou élémentaire
+                </xs:documentation>
+                <xs:appinfo>
+                  <common>
+                    <step name="autorisations" />
+                    <conditions>
+                        <condition name="estMaternelleElementaire" type="trigger" />
+                    </conditions>
+                  </common>
+                  <fo />
+                  <bo column="1" />
+                  <pdf />
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
             <xs:element name="Autorisation" type="strr:AutorisationType">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
@@ -91,6 +131,7 @@
                   <common>
                     <step name="autorisations" />
                     <conditions>
+                        <condition name="estMaternelleElementaire" type="filled" />
                         <condition name="autoriseTiers" type="trigger" />
                         <condition name="autoriseFrereOuSoeur" type="trigger" />
                     </conditions>

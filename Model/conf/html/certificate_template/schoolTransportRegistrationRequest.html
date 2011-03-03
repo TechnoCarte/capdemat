@@ -63,6 +63,20 @@
     
   
     
+      <p class="label">${i18n.translate('strr.property.estMaternelleElementaire.label')}</p>
+          <div class="response choice">
+            <% [true,false].each { %>
+              <span ${it == rqt.estMaternelleElementaire ? 'class="checked"': ''}>
+                ${i18n.translate('message.' + (it ? 'yes' : 'no'))}
+              </span>
+              ${it ? ' / ' : ''}
+            <% } %>
+          </div>
+          
+
+    
+  
+    
       <h3>${i18n.translate('strr.property.ligne.label')}</h3>
       <div class="complex">
         
@@ -91,6 +105,20 @@
 
   
   <h2>${i18n.translate('strr.step.autorisations.label')}</h2>
+  
+    
+      <p class="label">${i18n.translate('strr.property.estMaternelleElementaireAutorisations.label')}</p>
+          <div class="response choice">
+            <% [true,false].each { %>
+              <span ${it == rqt.estMaternelleElementaireAutorisations ? 'class="checked"': ''}>
+                ${i18n.translate('message.' + (it ? 'yes' : 'no'))}
+              </span>
+              ${it ? ' / ' : ''}
+            <% } %>
+          </div>
+          
+
+    
   
     
       <p class="label">${i18n.translate('strr.property.autorisation.label')}</p>
