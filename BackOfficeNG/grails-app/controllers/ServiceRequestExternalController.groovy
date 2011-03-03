@@ -33,7 +33,7 @@ import fr.cg95.cvq.service.document.IDocumentTypeService
 import fr.cg95.cvq.service.document.IDocumentService
 
 class ServiceRequestExternalController {
-    
+
     IExternalService externalService
     IRequestDocumentService requestDocumentService
     IRequestWorkflowService requestWorkflowService
@@ -49,15 +49,15 @@ class ServiceRequestExternalController {
     def beforeInterceptor = {
         def authorization = request.getHeader("Authorization")
         if (authorization == null) {
-            response.setHeader("WWW-Authenticate", "Basic")
-            render(text: "", status : 401)
+            response.setHeader('WWW-Authenticate', 'Basic')
+            render(text: '', status: 401)
             return false
         }
         def credentials = StringUtils.split(new String(Base64.decodeBase64(authorization.substring(6).bytes), "8859_1"), ":")
         if (credentials == null || credentials.length < 2 
                 || !externalService.authenticate(credentials[0], credentials[1])) {
-            response.setHeader("WWW-Authenticate", "Basic")
-            render(text: "", status : 401)
+            response.setHeader('WWW-Authenticate', 'Basic')
+            render(text: '', status: 401)
             return false
         }
         SecurityContext.setCurrentContext(SecurityContext.EXTERNAL_SERVICE_CONTEXT)
@@ -66,14 +66,13 @@ class ServiceRequestExternalController {
 
     def requestDocuments = {
         try {
-            render(text:requestDocumentService.getAssociatedFullDocuments(params.long('requestId')),
-                contentType:"text/xml",encoding:"UTF-8", status: 200)
+            render(text: requestDocumentService.getAssociatedFullDocuments(params.long('requestId')),
+                contentType: 'text/xml', encoding: 'UTF-8', status: 200)
         } catch (CvqObjectNotFoundException confe) {
             render(text: "", status: 404)
         } catch (PermissionException pe) {
             render(text: "", status: 403)
         }
-
         return false
     }
 
@@ -132,19 +131,20 @@ class ServiceRequestExternalController {
         }
     }
 
-    def requestState = {// handling POST; be careful : non idempotent operation
+    // Handling POST. Be careful: non idempotent operation
+    def requestState = {
         try {
             requestWorkflowService.updateRequestState(params.long('requestId'),
                 RequestState.forString(params.state), params.message)
-            render(text:"request " + params.long('requestId') + "changed to " + params.state, status: 200)
+            render(text: 'request ' + params.long('requestId') + ' changed to ' + params.state, status: 200)
         } catch (CvqObjectNotFoundException confe) {
-            render(text: message(code:confe.getMessage()), status: 404)
+            render(text: message(code: confe.getMessage()), status: 404)
         } catch (CvqInvalidTransitionException cite) {
-            render(text: message(code:cite.getMessage()), status: 403)
+            render(text: message(code: cite.getMessage()), status: 403)
         } catch (PermissionException pe) {
-            render(text: message(code:pe.getMessage()), status: 403)
+            render(text: message(code: pe.getMessage()), status: 403)
         } catch (CvqException ce) {
-            render(text: message(code:ce.getMessage()), status: 500)
+            render(text: message(code: ce.getMessage()), status: 500)
         }
         return false
     }
