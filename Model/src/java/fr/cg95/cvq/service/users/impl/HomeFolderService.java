@@ -146,7 +146,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     @Override
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public final void modify(final HomeFolder homeFolder) {
-        if (SecurityContext.isFrontOfficeContext()) {
+        if (SecurityContext.isFrontOfficeContext() && !UserState.NEW.equals(homeFolder.getState())) {
             homeFolder.setState(UserState.MODIFIED);
         }
         homeFolderDAO.update(homeFolder);
@@ -291,7 +291,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             newRole.setHomeFolderId(target.getId());
             owner.getIndividualRoles().add(newRole);
         }
-        if (SecurityContext.isFrontOfficeContext()) {
+        if (SecurityContext.isFrontOfficeContext() && !UserState.NEW.equals(target.getState())) {
             target.setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
@@ -317,7 +317,7 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             owner.getIndividualRoles().remove(role);
             deleted.add(role.getRole());
         }
-        if (SecurityContext.isFrontOfficeContext()) {
+        if (SecurityContext.isFrontOfficeContext() && !UserState.NEW.equals(target.getState())) {
             target.setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
@@ -348,7 +348,10 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             owner.getIndividualRoles().add(newRole);
         }
         if (SecurityContext.isFrontOfficeContext()) {
-            target.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(target.getState()))
+                target.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(target.getHomeFolder().getState()))
+                target.getHomeFolder().setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();
@@ -374,7 +377,10 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
             deleted.add(role.getRole());
         }
         if (SecurityContext.isFrontOfficeContext()) {
-            target.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(target.getState()))
+                target.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(target.getHomeFolder().getState()))
+                target.getHomeFolder().setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
         JsonObject jsonResponsible = new JsonObject();

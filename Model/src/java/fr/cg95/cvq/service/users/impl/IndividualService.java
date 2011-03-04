@@ -219,7 +219,10 @@ public class IndividualService implements IIndividualService {
         else if (individual.getId() == null)
             throw new CvqException("Cannot modify a transient individual");
         if (SecurityContext.isFrontOfficeContext()) {
-            individual.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(individual.getState()))
+                individual.setState(UserState.MODIFIED);
+            if (!UserState.NEW.equals(individual.getHomeFolder().getState()))
+                individual.getHomeFolder().setState(UserState.MODIFIED);
         }
         JsonObject payload = new JsonObject();
         payload.add("atom", atom);

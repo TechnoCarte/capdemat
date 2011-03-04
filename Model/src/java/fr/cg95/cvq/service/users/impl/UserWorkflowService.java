@@ -92,8 +92,12 @@ public class UserWorkflowService implements IUserWorkflowService, ApplicationEve
                     "user.state." + homeFolder.getState().toString().toLowerCase()),
                 translationService.translate(
                     "user.state." + state.toString().toLowerCase()));
-        for (Individual individual : homeFolder.getIndividuals()) {
-            if (!UserState.VALID.equals(individual.getState())) throw new CvqModelException("");
+        if (UserState.VALID.equals(state)) {
+            for (Individual individual : homeFolder.getIndividuals()) {
+                if (!UserState.VALID.equals(individual.getState())
+                    && !UserState.ARCHIVED.equals(individual.getState()))
+                    throw new CvqModelException("");
+            }
         }
         homeFolder.setState(state);
         JsonObject payload = new JsonObject();
@@ -111,7 +115,7 @@ public class UserWorkflowService implements IUserWorkflowService, ApplicationEve
     @Override
     @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public void changeState(Individual individual, UserState state)
-        throws CvqInvalidTransitionException {
+        throws CvqModelException, CvqInvalidTransitionException {
         if (!isValidTransition(individual.getState(), state))
             throw new CvqInvalidTransitionException(
                 translationService.translate(
@@ -124,6 +128,15 @@ public class UserWorkflowService implements IUserWorkflowService, ApplicationEve
         individual.getHomeFolder().getActions().add(
             new UserAction(UserAction.Type.STATE_CHANGE, individual.getId(), payload));
         homeFolderDAO.update(individual.getHomeFolder());
+        if (UserState.INVALID.equals(state))
+            changeState(individual.getHomeFolder(), UserState.INVALID);
+        else if (UserState.VALID.equals(state) || UserState.ARCHIVED.equals(state)) {
+            boolean allAtSameState = true;
+            for (Individual i : individual.getHomeFolder().getIndividuals()) {
+                allAtSameState &= UserState.ARCHIVED.equals(i.getState()) || state.equals(i.getState());
+            }
+            if (allAtSameState) changeState(individual.getHomeFolder(), state);
+        }
     }
 
     @Override
