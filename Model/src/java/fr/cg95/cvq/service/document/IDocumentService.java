@@ -131,7 +131,7 @@ public interface IDocumentService {
      *                     default value is used
      * @param message a optional message associated with the validation
      */
-    void validate(final Long id, final Date validityDate, final String message)
+    void validate(@IsDocument final Long id, final Date validityDate, final String message) // FIXME message unused
         throws CvqException, CvqObjectNotFoundException,
                CvqInvalidTransitionException;
 
