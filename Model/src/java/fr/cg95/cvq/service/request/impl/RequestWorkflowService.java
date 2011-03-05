@@ -732,7 +732,7 @@ public class RequestWorkflowService implements IRequestWorkflowService, Applicat
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.AGENT, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
     public void updateRequestState(final Long id, final RequestState rs, final String motive)
             throws CvqException, CvqInvalidTransitionException, CvqObjectNotFoundException {
 
