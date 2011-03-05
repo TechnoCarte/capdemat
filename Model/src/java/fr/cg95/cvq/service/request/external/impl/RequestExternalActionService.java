@@ -24,15 +24,12 @@ public class RequestExternalActionService implements IRequestExternalActionServi
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<RequestExternalAction> getTraces(Set<Critere> criteriaSet,
         String sort, String dir, int count, int offset) {
         return requestExternalActionDAO.get(criteriaSet, sort, dir, count, offset, false);
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE},
-            privilege = ContextPrivilege.READ)
     public Long getTracesCount(Set<Critere> criteriaSet) {
         return requestExternalActionDAO.getCount(criteriaSet, false);
     }

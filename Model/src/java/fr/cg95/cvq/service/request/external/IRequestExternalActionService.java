@@ -14,7 +14,7 @@ public interface IRequestExternalActionService {
     List<RequestExternalAction> getTraces(Set<Critere> criteriaSet, String sort,
         String dir, int count, int offset);
 
-    Long getTracesCount(@IsRequest Set<Critere> criteriaSet);
+    Long getTracesCount(Set<Critere> criteriaSet);
 
     List<RequestExternalAction> getLastTraces(Set<Critere> criteriaSet, String sort,
             String dir, int count, int offset);
