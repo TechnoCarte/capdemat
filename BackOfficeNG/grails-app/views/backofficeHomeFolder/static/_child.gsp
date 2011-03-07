@@ -9,6 +9,6 @@
   </dl>
   <h3>${message(code:'homeFolder.individual.header.responsibles')}</h3>
   <dl class="edit child-responsibles collapse">
-    <g:render template="static/responsibles" model="['child':child, 'roleOwners': roleOwners" />
+    <g:render template="static/responsibles" model="['child':child, 'roleOwners': roleOwners]" />
   </dl>
 </div>
