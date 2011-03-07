@@ -169,6 +169,8 @@ class FrontofficeHomeFolderController {
                 redirect(action : 'child', params : ['id' : individual.id])
                 return false
             } catch (CvqValidationException e) {
+                // hack hibernate
+                if (!params.id) individual.id = null
                 flash['invalidFields'] = e.invalidFields
                 session.doRollback = true
             }

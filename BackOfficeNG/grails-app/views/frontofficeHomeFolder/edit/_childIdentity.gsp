@@ -41,7 +41,6 @@
         </option>
       </g:each>
     </select>
-q
     <label class="required">${message(code:'homeFolder.individual.property.birthDate')} *</label>
       <script type="text/javascript">
         var zcf = zenexity.capdemat.fong;

@@ -1,3 +1,7 @@
+<%
+  // hack : this template is use by FrontofficeRequestController
+  if (flash.invalidFields) invalidFields = flash.invalidFields
+%>
 <input type="hidden" name="id" value="${child?.id}" />
   <fieldset>
     <label class="required">
