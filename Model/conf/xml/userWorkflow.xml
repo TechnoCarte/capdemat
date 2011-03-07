@@ -14,6 +14,7 @@
 		<context>backOffice</context>
 	</transition>
 	<transition from="Valid" to="Archived">
+		<context>frontOffice</context>
 		<context>backOffice</context>
 	</transition>
 	<transition from="Modified" to="Invalid">
