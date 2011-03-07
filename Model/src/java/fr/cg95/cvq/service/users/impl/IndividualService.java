@@ -33,6 +33,7 @@ import fr.cg95.cvq.business.users.Child;
 import fr.cg95.cvq.business.users.Individual;
 import fr.cg95.cvq.business.users.UserAction;
 import fr.cg95.cvq.business.users.UserState;
+import fr.cg95.cvq.dao.hibernate.HibernateUtil;
 import fr.cg95.cvq.dao.users.IAdultDAO;
 import fr.cg95.cvq.dao.users.IChildDAO;
 import fr.cg95.cvq.dao.users.IIndividualDAO;
@@ -263,6 +264,8 @@ public class IndividualService implements IIndividualService {
                         login.addProperty("to", adult.getLogin());
                         payload.get("atom").getAsJsonObject().get("fields").getAsJsonObject()
                             .add("login", login);
+                    // hack to refresh security context
+                    HibernateUtil.getSession().flush();
                     }
                 }
                 action.setData(gson.toJson(payload));

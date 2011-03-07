@@ -92,7 +92,6 @@ class FrontofficeHomeFolderController {
                 homeFolderService.create(adult, model["temporary"] && params.boolean("temporary"))
                 securityService.setEcitizenSessionInformation(adult.login, session)
                 if (params.requestTypeLabel) {
-                    flash.precedeByAccountCreation = true
                     redirect(controller : "frontofficeRequestType", action : "start", id : params.requestTypeLabel)
                     return false
                 }
@@ -121,8 +120,14 @@ class FrontofficeHomeFolderController {
         }
         if (request.post) {
             try {
-                if (individual.id) historize(params.fragment, individual)
-                else addAdult(individual)
+                if (individual.id) {
+                    historize(params.fragment, individual)
+                    if (individual.id == currentEcitizen.id && params.fragment == 'identity') {
+                        securityService.setEcitizenSessionInformation(individual.login, session)
+                    }
+                } else {
+                    addAdult(individual)
+                }
                 redirect(action : "adult", params : ["id" : individual.id])
                 return false
             } catch (CvqValidationException e) {
