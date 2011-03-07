@@ -53,7 +53,7 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
       getTarget : function(e) {
         var target = yue.getTarget(e);
         // FIXME : bad
-        if (zct.isIn(target.tagName, ['DT', 'DD','P', 'LI']))
+        if (zct.isIn(target.tagName, ['DT', 'DD','P', 'LI', 'SPAN']))
           target = yud.getAncestorByTagName(target, 'dl');
         if (target.tagName === 'DL' && yud.hasClass(target, 'collapse'))
           return null;
