@@ -47,7 +47,6 @@ class FrontofficeHomeFolderController {
         children.each {
             childResponsibles.put(it.id, homeFolderService.listBySubjectRoles(it.id, RoleType.childRoleTypes))
         }
-
         Individual.metaClass.homeFolderResponsible = {
             def role = null
             delegate.individualRoles.each {
@@ -144,7 +143,6 @@ class FrontofficeHomeFolderController {
 
     def child = {
         def model = [:]
-        model["invalidFields"] = []
         def individual
         if (params.id) {
             individual = individualService.getChildById(Long.valueOf(params.id))
@@ -157,11 +155,10 @@ class FrontofficeHomeFolderController {
         if (request.post) {
             try {
                 if (individual.id && params.roleOwnerId) {
-                    def roles = []
-                    params.roleTypes.each { roles.add(RoleType.forString(it)) }
-                    homeFolderService.link(individualService.getById(Long.valueOf(params.roleOwnerId)), individual, roles)
-                    def invalidFields = individualService.validate(individual)
-                    if (!invalidFields.isEmpty()) throw new CvqValidationException(invalidFields)
+                    if (!params.roleType)
+                        throw new CvqValidationException(['legalResponsibles'])
+                    def owner = individualService.getById(Long.valueOf(params.roleOwnerId))
+                    homeFolderService.link(owner, individual, [RoleType.forString(params.roleType)])
                     redirect(url:createLink(action:'child', params:['id':individual.id, 'fragment':params.fragment]) + '#' + params.fragment)
                     return false
                 } else if (individual.id) {
@@ -172,7 +169,7 @@ class FrontofficeHomeFolderController {
                 redirect(action : 'child', params : ['id' : individual.id])
                 return false
             } catch (CvqValidationException e) {
-                model["invalidFields"] = e.invalidFields
+                flash['invalidFields'] = e.invalidFields
                 session.doRollback = true
             }
         }
@@ -190,9 +187,14 @@ class FrontofficeHomeFolderController {
     }
 
     def unlink = {
-        homeFolderService.unlink(
-            individualService.getById(Long.valueOf(params.roleOwnerId)),
-            individualService.getById(Long.valueOf(params.id)))
+        def child = individualService.getById(Long.valueOf(params.id))
+        def owner = individualService.getById(Long.valueOf(params.roleOwnerId))
+        homeFolderService.unlink(owner, child)
+        def invalidFields = individualService.validate(child)
+        if (!invalidFields.isEmpty()) {
+            flash['invalidFields'] = invalidFields
+            session.doRollback = true
+        }
         redirect(url:createLink(action:'child', params:['id':params.id, 'fragment':params.fragment]) + '#' + params.fragment)
     }
 

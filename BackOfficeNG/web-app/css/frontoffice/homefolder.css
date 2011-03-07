@@ -91,8 +91,11 @@
 
 /* TODO : refactor duplicated form style !!
 ---------------------------------------------------------------*/
+.validation-failed { border: 1px dashed #f33; background-color:#fcc; }
+
 .individual form { padding: 0; }
-.individual legend  { margin: 0 0 .5em; font-size: 1.6em;  color: #e6648d; }
+.individual legend { margin: 0 0 .5em; font-size: 1.6em;  color: #e6648d; }
+.individual form .error { text-align: center; color: #f33; }
 
 .individual form ul       { width: 80%; margin: .2em 0 .5em 0; }
 .individual form ul.yes-no li { display: inline; margin: 0 .5em; }

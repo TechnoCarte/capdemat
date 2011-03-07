@@ -2,7 +2,7 @@
     <label class="required">
     ${message(code:'homeFolder.individual.property.born')} *
     </label>
-    <ul class="yes-no required ${invalidFields?.contains('born') ? 'validation-failed' : ''}">
+    <ul class="yes-no required ${flash.invalidFields?.contains('born') ? 'validation-failed' : ''}">
       <g:each in="${[true,false]}">
         <li>
           <input type="radio" id="born_${it ? 'yes' : 'no'}"
@@ -13,9 +13,25 @@
       </g:each>
     </ul>
 
-    <label for="sex" class="required">${message(code:'homeFolder.child.property.sex')}</label>
+    <label for="lastName" class="required">${message(code:'homeFolder.individual.property.lastName')} *</label>
+    <input type="text" name="lastName" value="${child.lastName}" 
+      class="required validate-lastName ${flash.invalidFields?.contains('lastName') ? 'validation-failed' : ''}" 
+      title="${message(code:'homeFolder.individual.property.lastName.validationError')}" />
+
+    <label for="firstName" class="required">${message(code:'homeFolder.individual.property.firstName')} *</label>
+    <input type="text" name="firstName" value="${child.firstName}" 
+      class="required validate-firstName ${flash.invalidFields?.contains('firstName') ? 'validation-failed' : ''}" 
+      title="${message(code:'homeFolder.individual.property.firstName.validationError')}" />
+
+    <label for="firstName2">${message(code:'homeFolder.individual.property.firstName2')}</label>
+    <input type="text" name="firstName2" value="${child.firstName2}" />
+
+    <label for="firstName3">${message(code:'homeFolder.individual.property.firstName3')}</label>
+    <input type="text" name="firstName3" value="${child.firstName3}" />
+
+   <label for="sex" class="required">${message(code:'homeFolder.child.property.sex')}</label>
     <select id="sex" name="sex"
-      class="required validate-not-first ${invalidFields?.contains('sex') ? 'validation-failed' : ''}"
+      class="required validate-not-first ${flash.invalidFields?.contains('sex') ? 'validation-failed' : ''}"
       title="${message(code:'homeFolder.child.property.sex.validationError')}">
       <option value="">${message(code:'message.select.defaultOption')}</option>
       <g:each in="${fr.cg95.cvq.business.users.SexType.allSexTypes}">
@@ -25,23 +41,7 @@
         </option>
       </g:each>
     </select>
-
-    <label for="lastName" class="required">${message(code:'homeFolder.individual.property.lastName')} *</label>
-    <input type="text" name="lastName" value="${child.lastName}" 
-      class="required validate-lastName ${invalidFields?.contains('lastName') ? 'validation-failed' : ''}" 
-      title="${message(code:'homeFolder.individual.property.lastName.validationError')}" />
-
-    <label for="firstName" class="required">${message(code:'homeFolder.individual.property.firstName')} *</label>
-    <input type="text" name="firstName" value="${child.firstName}" 
-      class="required validate-firstName ${invalidFields?.contains('firstName') ? 'validation-failed' : ''}" 
-      title="${message(code:'homeFolder.individual.property.firstName.validationError')}" />
-
-    <label for="firstName2">${message(code:'homeFolder.individual.property.firstName2')}</label>
-    <input type="text" name="firstName2" value="${child.firstName2}" />
-
-    <label for="firstName3">${message(code:'homeFolder.individual.property.firstName3')}</label>
-    <input type="text" name="firstName3" value="${child.firstName3}" />
-
+q
     <label class="required">${message(code:'homeFolder.individual.property.birthDate')} *</label>
       <script type="text/javascript">
         var zcf = zenexity.capdemat.fong;
@@ -50,7 +50,7 @@
         zcf.i18n['child.birthDate'] = "${message(code:'homeFolder.individual.property.birthDate')}";
       </script>
       <div class="date required validate-date">
-        <select id="birthDate_day" name="birthDate_day" class="day ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
+        <select id="birthDate_day" name="birthDate_day" class="day ${flash.invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
           <option value="">${message(code:'message.select.defaultOption')}</option>
           <g:each in="${1..31}">
             <option value="${it}"
@@ -62,7 +62,7 @@
             </option>
           </g:each>
         </select>
-        <select id="birthDate_month" name="birthDate_month" class="month ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
+        <select id="birthDate_month" name="birthDate_month" class="month ${flash.invalidFields?.contains('birthDate') ? 'validation-failed' : ''}">
           <option value="">${message(code:'message.select.defaultOption')}</option>
           <g:each in="${1..12}">
             <option value="${it}"
@@ -75,7 +75,7 @@
           </g:each>
         </select>
         <input type="text" id="birthDate_year" name="birthDate_year" maxlength="4" size="3"
-          class="year ${invalidFields?.contains('birthDate') ? 'validation-failed' : ''}"
+          class="year ${flash.invalidFields?.contains('birthDate') ? 'validation-failed' : ''}"
           value="${child?.birthDate ? child?.birthDate.year + 1900 : params['birthDate_year']}" />
       </div>
 

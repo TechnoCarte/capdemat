@@ -16,7 +16,7 @@
           ${message(code:'homeFolder.header.createChild')}
         </g:else>
       </h2>
-      <div class="main ${invalidFields && !invalidFields.isEmpty() ? 'Invalid' : 'Modified'}">
+      <div class="main ${flash.invalidFields ? 'Invalid' : 'Modified'}">
         <g:if test="${child.id != null}">
           <h3 id="generalInformations">${message(code:'homeFolder.individual.header.general')}</h3>
           <g:render template="${child.fragmentMode('general')}" />

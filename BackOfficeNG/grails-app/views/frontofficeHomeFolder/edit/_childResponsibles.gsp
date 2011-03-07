@@ -9,7 +9,7 @@
   ${message(code:'action.cancel')}
 </a>
 <form id="childResponsibles_${child.id}" method="post" action="${g.createLink(action:'child')}">
-  <g:if test="${!invalidFields.isEmpty()}">
+  <g:if test="${flash.invalidFields}">
     <p class="error">${message(code:'homeFolder.child.property.legalResponsibles.help')}<p>
   </g:if>
   <g:each var="roleOwner" in="${roleOwners}">
@@ -24,7 +24,7 @@
       </label>
       <g:if test="${roleOwner.adult.id == currentRoleOwnerId}">
         <g:each var="role" in="${fr.cg95.cvq.business.users.RoleType.childRoleTypes}">
-          <input type="checkbox" name="roleTypes" value="${role}" ${roleOwner.roles.contains(role) ? 'checked="checked"' : ''} />
+          <input type="radio" name="roleType" value="${role}" ${roleOwner.roles.contains(role) ? 'checked="checked"' : ''} />
           ${g.capdematEnumToFlag(var:role, i18nKeyPrefix:'homeFolder.role')}
         </g:each>
         <input type="hidden" name="roleOwnerId" value="${roleOwner.adult.id}">
