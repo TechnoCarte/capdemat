@@ -8,6 +8,7 @@ import fr.cg95.cvq.business.request.RequestState
 import fr.cg95.cvq.business.users.Adult
 import fr.cg95.cvq.business.users.Child
 import fr.cg95.cvq.exception.CvqException
+import fr.cg95.cvq.exception.CvqValidationException
 import fr.cg95.cvq.security.SecurityContext
 import fr.cg95.cvq.service.authority.ILocalAuthorityRegistry
 import fr.cg95.cvq.service.request.IAutofillService
@@ -118,14 +119,9 @@ class FrontofficeRequestController {
         }
         Request rqt
         if (params.renewedId) {
-            rqt = requestWorkflowService.getRequestClone(Long.valueOf(params.renewedId),
-                params.long("requestSeasonId"))
+            rqt = requestWorkflowService.getRequestClone(Long.valueOf(params.renewedId), params.long("requestSeasonId"))
         } else {
-            rqt = requestWorkflowService.getSkeletonRequest(params.label,
-                params.long("requestSeasonId"))
-            //FIXME: CG77 hack to manage vcr and hfmr in request edition context 
-            rqt.stepStates.values().iterator().next()['precedeByAccountCreation'] =
-                flash.precedeByAccountCreation ? true : false
+            rqt = requestWorkflowService.getSkeletonRequest(params.label, params.long("requestSeasonId"))
         }
         redirect(action : "edit", id : rqt.id)
     }
@@ -351,36 +347,40 @@ class FrontofficeRequestController {
             "currentUser" : SecurityContext.currentEcitizen
         ]
         if (request.post) {
-            bind(individual)
-            // hack : set homeFolder to allow roles on child validation by OVal
-            individual.homeFolder = SecurityContext.currentEcitizen.homeFolder
-            params.roles.each {
-                if (it.value instanceof GrailsParameterMap && it.value.owner != '' && it.value.type != '') {
-                    homeFolderService.addRole(individualService.getById(Long.valueOf(it.value.owner)),
-                        individual, SecurityContext.currentEcitizen.homeFolder.id,
-                        RoleType.forString(it.value.type))
-                }
-            }
-            def invalidFields
-            if (params.type == "adult") {
-                invalidFields = individualService.validate(individual, false)
-            } else {
-                invalidFields = individualService.validate(individual)
-            }
-            if (invalidFields.isEmpty()) {
-                if (rqt.stepStates.values().iterator().next().precedeByAccountCreation) {
-                    individualService.create(individual, SecurityContext.currentEcitizen.homeFolder, individual.address, true)
-                } else {
-                    requestWorkflowService.createAccountModificationRequest(individual)
-                }
+            try {
+                if (params.type == "adult") addAdult(individual)
+                else if (params.type == "child") addChild(individual)
                 rqt.subjectId = individual.id
                 redirect(action : "edit", id : id)
-            } else {
+            } catch (CvqValidationException e) {
                 rqt.stepStates[currentStep + '-' + params.type].state = "invalid"
-                rqt.stepStates[currentStep + '-' + params.type].invalidFields = invalidFields
+                rqt.stepStates[currentStep + '-' + params.type].invalidFields = e.invalidFields
+                session.doRollback = true
             }
         }
         render(view : viewPath, model : model)
+    }
+
+    private addAdult(individual) throws CvqValidationException {
+        DataBindingUtils.initBind(individual, params)
+        bind(individual)
+        def invalidFields = individualService.validate(individual)
+        if (!invalidFields.isEmpty())
+            throw new CvqValidationException(invalidFields)
+        homeFolderService.addAdult(SecurityContext.currentEcitizen.homeFolder, individual, false)
+    }
+
+    // FIXME : Special server side validation to enable legal responsibles checking
+    private addChild(individual) throws CvqValidationException {
+        bind(individual)
+        individual.homeFolder = SecurityContext.currentEcitizen.homeFolder
+        if (params.roleType.isEmpty())
+            throw new CvqValidationException(individualService.validate(individual))
+        homeFolderService.addChild(SecurityContext.currentEcitizen.homeFolder, individual)
+        homeFolderService.link(SecurityContext.currentEcitizen, individual, [RoleType.forString(params.roleType)])
+        def invalidFields = individualService.validate(individual)
+        if (!invalidFields.isEmpty())
+            throw new CvqValidationException(invalidFields)
     }
 
     def condition = {
