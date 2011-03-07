@@ -39,7 +39,7 @@
               <div class="yui-u">
                 <h3>${message(code:'homeFolder.individual.header.address')}</h3>
                 <dl class="edit adult-address reponsible collapse">
-                  <g:render template="static/address" model="['adult':homeFolderResponsible, 'isResponsible':true]" />
+                  <g:render template="static/address" model="['user' : homeFolderResponsible]" />
                 </dl>
                 <h3>${message(code:'homeFolder.individual.header.contact')}</h3>
                 <dl class="edit adult-contact reponsible collapse">
