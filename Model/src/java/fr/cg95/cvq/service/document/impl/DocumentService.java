@@ -196,8 +196,7 @@ public class DocumentService implements IDocumentService, ApplicationListener<Us
         }
     }
 
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.UNAUTH_ECITIZEN,
-            ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.UNAUTH_ECITIZEN, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
     public Long create(Document document)
         throws CvqException, CvqObjectNotFoundException {
 
@@ -232,7 +231,7 @@ public class DocumentService implements IDocumentService, ApplicationListener<Us
         documentDAO.update(document);
     }
 
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.UNAUTH_ECITIZEN}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.UNAUTH_ECITIZEN, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
     public void delete(final Long id)
     throws CvqException, CvqObjectNotFoundException {
 

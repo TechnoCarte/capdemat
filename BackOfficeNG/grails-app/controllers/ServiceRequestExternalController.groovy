@@ -1,5 +1,7 @@
 import java.text.SimpleDateFormat
 
+import java.lang.Exception
+
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.lang.StringUtils
 
@@ -16,7 +18,6 @@ import fr.cg95.cvq.business.document.ContentType
 
 import fr.cg95.cvq.exception.CvqObjectNotFoundException
 import fr.cg95.cvq.exception.CvqInvalidTransitionException
-import fr.cg95.cvq.exception.CvqException
 
 import fr.cg95.cvq.security.PermissionException
 import fr.cg95.cvq.security.SecurityContext
@@ -32,6 +33,8 @@ import fr.cg95.cvq.service.users.IMeansOfContactService
 import fr.cg95.cvq.service.document.IDocumentTypeService
 import fr.cg95.cvq.service.document.IDocumentService
 
+import fr.cg95.cvq.util.translation.ITranslationService
+
 class ServiceRequestExternalController {
 
     IExternalService externalService
@@ -43,6 +46,7 @@ class ServiceRequestExternalController {
     IDocumentService documentService
     IRequestActionService requestActionService
     IMeansOfContactService meansOfContactService
+    ITranslationService translationService
 
     // C/C from Provisioning
     // TODO : mutualize, if possible, authentication infrastructure between both after branches merge
@@ -79,43 +83,60 @@ class ServiceRequestExternalController {
     def requestDocument = {
         switch(request.method){
             case 'POST':
-                Request rqt = requestSearchService.getById(params.long('requestId'), false)
-                Adult requester = (Adult) individualService.getById(rqt.requesterId)
+                Long documentId
+                try {
+                    Request rqt = requestSearchService.getById(params.long('requestId'), false)
+                    Adult requester = (Adult) individualService.getById(rqt.requesterId)
 
-                DocumentType documentType = 
-                    documentTypeService.getDocumentTypeByType(params.int('documentTypeId'))
-                Document document = new Document(rqt.homeFolderId, null, documentType, 
-                    DocumentState.PENDING)
-                document.individualId = rqt.subjectId
-                document.depositOrigin = DepositOrigin.AGENT
-                if (params.endValidityDate != null)
-                    document.endValidityDate = new SimpleDateFormat('yyyy-MM-dd').parse(params.endValidityDate)
+                    DocumentType documentType =
+                        documentTypeService.getDocumentTypeByType(params.int('documentTypeId'))
+                    Document document = new Document(rqt.homeFolderId, null, documentType,
+                        DocumentState.PENDING)
+                    document.individualId = rqt.subjectId
+                    document.depositOrigin = DepositOrigin.AGENT
+                    if (params.endValidityDate != null)
+                        document.endValidityDate = new SimpleDateFormat('yyyy-MM-dd').parse(params.endValidityDate)
 
-                Long documentId = documentService.create(document)
-                documentService.addPage(documentId, Base64.decodeBase64(params.data.bytes))
-                documentService.validate(documentId, document.endValidityDate, '') // message unused btw
-                document = documentService.getById(documentId)
+                    documentId = documentService.create(document)
+                    documentService.addPage(documentId, Base64.decodeBase64(params.data.bytes))
+                    documentService.validate(documentId, document.endValidityDate, '') // message unused btw
+                    document = documentService.getById(documentId)
 
-                requestActionService.addAction(
-                    params.long('requestId'),
-                    RequestActionType.CONTACT_CITIZEN,
-                    '',
-                    '',
-                    document.getDatas().get(0).getData(),
-                    documentType.name + '.pdf'
-                ) // TODO fod Translate filename
+                    String filename = translationService.translateDocumentTypeName(documentType.name)
 
-                meansOfContactService.notifyByEmail(
-                    rqt.requestType.category.primaryEmail,
-                    requester.email,
-                    message(code: 'mail.ecitizenContact.subject'),
-                    message(code: 'mail.ecitizenContact.body'),
-                    document.getDatas().get(0).getData(),
-                    documentType.name + '.pdf'
-                ) // TODO fod Translate filename
+                    meansOfContactService.notifyByEmail(
+                        rqt.requestType.category.primaryEmail,
+                        requester.email,
+                        message(code: 'mail.ecitizenContact.subject'),
+                        message(code: 'mail.ecitizenContact.body'),
+                        document.getDatas().get(0).getData(),
+                        filename + '.pdf'
+                    )
 
-                // TODO fod Catch exceptions!
-                render(text: 'Certificate has been added', status: 200)
+                    requestActionService.addAction(
+                        params.long('requestId'),
+                        RequestActionType.CONTACT_CITIZEN,
+                        '',
+                        message(code: 'mail.sentToUserBy') + ' ' + SecurityContext.getCurrentExternalService(),
+                        document.getDatas().get(0).getData(),
+                        filename + '.pdf'
+                    )
+
+                    render(text: filename + '.pdf has been attached to request ' + params.long('requestId'), status: 200)
+                } catch (CvqObjectNotFoundException confe) {
+                    render(text: message(code: confe.message), status: 404)
+                    if (documentId != null)
+                        documentService.delete(documentId)
+                } catch (PermissionException pe) {
+                    // pe is more likely to be a confe converted by an aspect, so we use 404 instead of 403
+                    render(text: message(code: pe.message), status: 404)
+                    if (documentId != null)
+                        documentService.delete(documentId)
+                } catch (Exception e) {
+                    render(text: message(code: e.message), status: 500)
+                    if (documentId != null)
+                        documentService.delete(documentId)
+                }
                 return false
             case 'GET':
                 try {
@@ -136,15 +157,16 @@ class ServiceRequestExternalController {
         try {
             requestWorkflowService.updateRequestState(params.long('requestId'),
                 RequestState.forString(params.state), params.message)
-            render(text: 'request ' + params.long('requestId') + ' changed to ' + params.state, status: 200)
-        } catch (CvqObjectNotFoundException confe) {
-            render(text: message(code: confe.getMessage()), status: 404)
+            render(text: 'Request ' + params.long('requestId') + ' changed to ' + params.state, status: 200)
+//        } catch (CvqObjectNotFoundException confe) {
+//            render(text: message(code: confe.message), status: 404)
         } catch (CvqInvalidTransitionException cite) {
-            render(text: message(code: cite.getMessage()), status: 403)
+            render(text: message(code: cite.message), status: 403)
         } catch (PermissionException pe) {
-            render(text: message(code: pe.getMessage()), status: 403)
-        } catch (CvqException ce) {
-            render(text: message(code: ce.getMessage()), status: 500)
+            // pe is more likely to be a confe converted by the aspect, so we use 404 instead of 403
+            render(text: message(code: pe.message), status: 404)
+        } catch (Exception e) {
+            render(text: message(code: ce.message), status: 500)
         }
         return false
     }
