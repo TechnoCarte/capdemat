@@ -771,6 +771,15 @@ public class RequestWorkflowService implements IRequestWorkflowService, Applicat
 
             requestActionService.addWorfklowAction(request.getId(), note, date,
                 RequestState.COMPLETE, null);
+            
+            List<String> externalCheckErrors = requestExternalService.checkExternalReferential(request);
+            if (!externalCheckErrors.isEmpty()) {
+                throw new CvqException(StringUtils.join(externalCheckErrors.iterator(), '\n'));
+            }
+
+            // send request data to interested external services
+            // TODO DECOUPLING
+            requestExternalService.sendRequest(request);
 
         } else {
             throw new CvqInvalidTransitionException();
@@ -842,11 +851,6 @@ public class RequestWorkflowService implements IRequestWorkflowService, Applicat
         IRequestService requestService = requestServiceRegistry.getRequestService(request.getId());
         requestService.onRequestValidated(request);
 
-        List<String> externalCheckErrors = requestExternalService.checkExternalReferential(request);
-        if (!externalCheckErrors.isEmpty()) {
-            throw new CvqException(StringUtils.join(externalCheckErrors.iterator(), '\n'));
-        }
-
         // TODO Decoupling
         byte[] pdfData = requestPdfService.generateCertificate(request);
         if (requestServiceRegistry.getRequestService(request).isArchiveDocuments()) {
@@ -870,10 +874,6 @@ public class RequestWorkflowService implements IRequestWorkflowService, Applicat
         // those two request types are special ones
         if (homeFolder.isTemporary())
             userWorkflowService.changeState(homeFolder, UserState.VALID);
-
-		// send request data to interested external services
-        // TODO DECOUPLING
-		requestExternalService.sendRequest(request);
 
         RequestEvent requestEvent = 
             new RequestEvent(this, EVENT_TYPE.REQUEST_VALIDATED, request);
