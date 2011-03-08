@@ -1,61 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LocalReferential xmlns="http://www.cg95.fr/cvq/schema/referential">
     <request>LeisureCenterRegistrationRequest</request>
-    <data name="MotifsDerogation">
+    <data name="MotifsDerogationCentreLoisirs">
         <label lang="fr">Motifs</label>
-        <entries supportPriority="false" supportPrecision="false" supportMultiple="true">
-            <entry key="Grand-parents-re-sidant-a--Pessac">
-                <label lang="fr">Grand-parents résidant à Pessac</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Parent-travaillant-a--Pessac">
-                <label lang="fr">Parent travaillant à Pessac</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Autre">
-                <label lang="fr">Autre</label>
-                <message lang="fr"/>
-            </entry>
-        </entries>
-    </data>
-    <data name="Arret">
-        <label lang="fr">Choisissez votre arrêt de montée et descente</label>
         <entries supportPriority="false" supportPrecision="false" supportMultiple="false">
-            <entry key="Arre-t-1">
-                <label lang="fr">Arrêt 1</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Arre-t-2">
-                <label lang="fr">Arrêt 2</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Arre-t-3">
-                <label lang="fr">Arrêt 3</label>
+            <entry key="Aucun">
+                <label lang="fr">Aucun</label>
                 <message lang="fr"/>
             </entry>
         </entries>
     </data>
     <data name="ModeAccueil">
         <label lang="fr">Mode d'accueil</label>
-        <entries supportPriority="false" supportPrecision="false" supportMultiple="true">
+        <entries supportPriority="false" supportPrecision="false" supportMultiple="false">
             <entry key="Matin">
                 <label lang="fr">Matin</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Apre-s-midi">
-                <label lang="fr">Après-midi</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Temps---matin">
-                <label lang="fr">Temps Plus matin</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Temps---soir">
-                <label lang="fr">Temps Plus soir</label>
-                <message lang="fr"/>
-            </entry>
-            <entry key="Repas">
-                <label lang="fr">Repas</label>
                 <message lang="fr"/>
             </entry>
         </entries>

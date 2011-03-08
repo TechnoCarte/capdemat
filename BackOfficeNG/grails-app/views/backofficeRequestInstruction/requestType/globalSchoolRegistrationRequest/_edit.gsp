@@ -63,18 +63,12 @@
             
               
               <dl>
-                <dt class="required condition-estDerogation-filled condition-estMotifAutre-trigger"><g:message code="gsrr.property.motifsDerogation.label" /> * : </dt><dd id="motifsDerogation" class="action-editField validate-localReferentialData required-true i18n-gsrr.property.motifsDerogation data-localReferentialData" >
+                <dt class="required condition-estDerogation-filled"><g:message code="gsrr.property.motifsDerogationEcole.label" /> * : </dt><dd id="motifsDerogationEcole" class="action-editField validate-localReferentialData required-true i18n-gsrr.property.motifsDerogationEcole data-localReferentialData" >
            <g:render template="/backofficeRequestInstruction/widget/localReferentialDataStatic" 
-                     model="['javaName':'motifsDerogation', 'lrEntries': lrTypes.motifsDerogation?.entries, 
-                             'rqt':rqt, 'isMultiple':lrTypes.motifsDerogation?.entriesSupportMultiple, 'depth':0]" />
+                     model="['javaName':'motifsDerogationEcole', 'lrEntries': lrTypes.motifsDerogationEcole?.entries, 
+                             'rqt':rqt, 'isMultiple':lrTypes.motifsDerogationEcole?.entriesSupportMultiple, 'depth':0]" />
  
           </dd>
-              </dl>
-              
-            
-              
-              <dl>
-                <dt class="required condition-estMotifAutre-filled"><g:message code="gsrr.property.motifAutrePrecision.label" /> * : </dt><dd id="motifAutrePrecision" class="action-editField validate-string required-true i18n-gsrr.property.motifAutrePrecision" ><span>${rqt?.motifAutrePrecision}</span></dd>
               </dl>
               
             

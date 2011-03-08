@@ -29,12 +29,8 @@ gsrr.property.labelEcoleDerog.help =
 gsrr.property.labelEcoleDerog.validationError =
 
 
-gsrr.property.motifsDerogation.help =
-gsrr.property.motifsDerogation.validationError =
-
-
-gsrr.property.motifAutrePrecision.help =
-gsrr.property.motifAutrePrecision.validationError =
+gsrr.property.motifsDerogationEcole.help =
+gsrr.property.motifsDerogationEcole.validationError =
 
 
 gsrr.property.informationsComplementairesDerogation.help =

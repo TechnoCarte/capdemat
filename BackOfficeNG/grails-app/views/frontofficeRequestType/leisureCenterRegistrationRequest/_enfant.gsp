@@ -47,11 +47,11 @@
   
 
   
-    <label class="required condition-estDerogation-filled"><g:message code="lcrr.property.motifsDerogation.label" /> *  <span><g:message code="lcrr.property.motifsDerogation.help" /></span></label>
-            <g:set var="motifsDerogationIndex" value="${0}" scope="flash" />
+    <label class="required condition-estDerogation-filled"><g:message code="lcrr.property.motifsDerogationCentreLoisirs.label" /> *  <span><g:message code="lcrr.property.motifsDerogationCentreLoisirs.help" /></span></label>
+            <g:set var="motifsDerogationCentreLoisirsIndex" value="${0}" scope="flash" />
             <g:render template="/frontofficeRequestType/widget/localReferentialData" 
-                      model="['javaName':'motifsDerogation', 'i18nPrefixCode':'lcrr.property.motifsDerogation', 'htmlClass':'required condition-estDerogation-filled  ', 
-                              'lrEntries': lrTypes.motifsDerogation.entries, 'depth':0]" />
+                      model="['javaName':'motifsDerogationCentreLoisirs', 'i18nPrefixCode':'lcrr.property.motifsDerogationCentreLoisirs', 'htmlClass':'required condition-estDerogation-filled  ', 
+                              'lrEntries': lrTypes.motifsDerogationCentreLoisirs.entries, 'depth':0]" />
             
 
   

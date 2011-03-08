@@ -72,10 +72,10 @@
             
               
               <dl>
-                <dt class="required condition-estDerogation-filled"><g:message code="lcrr.property.motifsDerogation.label" /> * : </dt><dd id="motifsDerogation" class="action-editField validate-localReferentialData required-true i18n-lcrr.property.motifsDerogation data-localReferentialData" >
+                <dt class="required condition-estDerogation-filled"><g:message code="lcrr.property.motifsDerogationCentreLoisirs.label" /> * : </dt><dd id="motifsDerogationCentreLoisirs" class="action-editField validate-localReferentialData required-true i18n-lcrr.property.motifsDerogationCentreLoisirs data-localReferentialData" >
            <g:render template="/backofficeRequestInstruction/widget/localReferentialDataStatic" 
-                     model="['javaName':'motifsDerogation', 'lrEntries': lrTypes.motifsDerogation?.entries, 
-                             'rqt':rqt, 'isMultiple':lrTypes.motifsDerogation?.entriesSupportMultiple, 'depth':0]" />
+                     model="['javaName':'motifsDerogationCentreLoisirs', 'lrEntries': lrTypes.motifsDerogationCentreLoisirs?.entries, 
+                             'rqt':rqt, 'isMultiple':lrTypes.motifsDerogationCentreLoisirs?.entriesSupportMultiple, 'depth':0]" />
  
           </dd>
               </dl>

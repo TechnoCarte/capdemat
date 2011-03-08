@@ -11,8 +11,8 @@ lcrr.property.estDerogation.help =
 lcrr.property.estDerogation.validationError =
 
 
-lcrr.property.motifsDerogation.help =
-lcrr.property.motifsDerogation.validationError =
+lcrr.property.motifsDerogationCentreLoisirs.help =
+lcrr.property.motifsDerogationCentreLoisirs.validationError =
 
 
 lcrr.property.centresLoisirs.help =

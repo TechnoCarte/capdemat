@@ -44,10 +44,10 @@
             
               
               <dl>
-                <dt class="required condition-estRestauration-filled"><g:message code="rpar.property.regimeAlimentaire.label" /> * : </dt><dd id="regimeAlimentaire" class="action-editField validate-localReferentialData required-true i18n-rpar.property.regimeAlimentaire data-localReferentialData" >
+                <dt class="required condition-estRestauration-filled"><g:message code="rpar.property.regimeAlimentaireRenouvellement.label" /> * : </dt><dd id="regimeAlimentaireRenouvellement" class="action-editField validate-localReferentialData required-true i18n-rpar.property.regimeAlimentaireRenouvellement data-localReferentialData" >
            <g:render template="/backofficeRequestInstruction/widget/localReferentialDataStatic" 
-                     model="['javaName':'regimeAlimentaire', 'lrEntries': lrTypes.regimeAlimentaire?.entries, 
-                             'rqt':rqt, 'isMultiple':lrTypes.regimeAlimentaire?.entriesSupportMultiple, 'depth':0]" />
+                     model="['javaName':'regimeAlimentaireRenouvellement', 'lrEntries': lrTypes.regimeAlimentaireRenouvellement?.entries, 
+                             'rqt':rqt, 'isMultiple':lrTypes.regimeAlimentaireRenouvellement?.entriesSupportMultiple, 'depth':0]" />
  
           </dd>
               </dl>

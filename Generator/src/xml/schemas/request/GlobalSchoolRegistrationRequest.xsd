@@ -27,7 +27,6 @@
               </widgets>
               <conditions>
                 <condition name="estDerogation" />
-                <condition name="estMotifAutre" />
               </conditions>
             </step>
             <step index="1" name="restauration">
@@ -90,7 +89,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="MotifsDerogation" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="MotifsDerogationEcole" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
                   Le ou les motif(s) de votre demande de dérogation
@@ -104,33 +103,11 @@
                     <step name="enfant" />
                     <conditions>
                         <condition name="estDerogation" type="filled" />
-                        <condition name="estMotifAutre" type="trigger" />
                     </conditions>
                   </common>
                   <fo />
                   <bo column="1" />
                   <pdf />
-                </xs:appinfo>
-              </xs:annotation>
-            </xs:element>
-            <xs:element name="MotifAutrePrecision" type="xs:string">
-              <xs:annotation>
-                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
-                  Précisez
-                </xs:documentation>
-                <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/shortdesc">
-                  Précisez
-                </xs:documentation>
-                <xs:appinfo>
-                  <common>
-                    <step name="enfant" />
-                    <conditions>
-                      <condition name="estMotifAutre" type="filled" />
-                    </conditions>
-                  </common>
-                  <pdf />
-                  <fo />
-                  <bo column="1" />
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>

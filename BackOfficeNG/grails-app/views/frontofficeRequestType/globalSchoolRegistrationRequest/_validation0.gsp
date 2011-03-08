@@ -35,19 +35,12 @@
     
       
       <dl>
-        <dt><g:message code="gsrr.property.motifsDerogation.label" /></dt>
+        <dt><g:message code="gsrr.property.motifsDerogationEcole.label" /></dt>
           <dd>
           <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'motifsDerogation', 'lrEntries': lrTypes.motifsDerogation.entries, 'depth':0]" />
+                    model="['javaName':'motifsDerogationEcole', 'lrEntries': lrTypes.motifsDerogationEcole.entries, 'depth':0]" />
           </dd>
           
-
-      </dl>
-      
-    
-      
-      <dl>
-        <dt><g:message code="gsrr.property.motifAutrePrecision.label" /></dt><dd>${rqt.motifAutrePrecision?.toString()}</dd>
 
       </dl>
       

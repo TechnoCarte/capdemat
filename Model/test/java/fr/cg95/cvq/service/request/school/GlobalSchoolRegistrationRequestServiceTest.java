@@ -58,20 +58,7 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
           
             
-               request.setMotifAutrePrecision("MotifAutrePrecision");
-            
-          
-        
-          
-          
-            
                request.setIdEcoleDerog("IdEcoleDerog");
-            
-          
-        
-          
-          
-            
             
           
         
@@ -89,6 +76,12 @@ public class GlobalSchoolRegistrationRequestServiceTest extends RequestTestCase 
           
             
                request.setLabelEcoleSecteur("LabelEcoleSecteur");
+            
+          
+        
+          
+          
+            
             
           
         

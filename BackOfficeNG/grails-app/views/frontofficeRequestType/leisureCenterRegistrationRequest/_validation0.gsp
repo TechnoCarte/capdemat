@@ -22,10 +22,10 @@
     
       
       <dl>
-        <dt><g:message code="lcrr.property.motifsDerogation.label" /></dt>
+        <dt><g:message code="lcrr.property.motifsDerogationCentreLoisirs.label" /></dt>
           <dd>
           <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'motifsDerogation', 'lrEntries': lrTypes.motifsDerogation.entries, 'depth':0]" />
+                    model="['javaName':'motifsDerogationCentreLoisirs', 'lrEntries': lrTypes.motifsDerogationCentreLoisirs.entries, 'depth':0]" />
           </dd>
           
 

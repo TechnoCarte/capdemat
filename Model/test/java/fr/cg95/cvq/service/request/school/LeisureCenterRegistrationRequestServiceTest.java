@@ -50,12 +50,6 @@ public class LeisureCenterRegistrationRequestServiceTest extends RequestTestCase
         
           
           
-            
-            
-          
-        
-          
-          
                request.setAcceptationReglementInterieur(Boolean.valueOf(true));
           
         
@@ -101,6 +95,12 @@ public class LeisureCenterRegistrationRequestServiceTest extends RequestTestCase
           
             
                request.setLabelCentreLoisirs("LabelCentreLoisirs");
+            
+          
+        
+          
+          
+            
             
           
         

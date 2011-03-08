@@ -66,19 +66,11 @@
   
 
   
-    <label class="required condition-estDerogation-filled"><g:message code="gsrr.property.motifsDerogation.label" /> *  <span><g:message code="gsrr.property.motifsDerogation.help" /></span></label>
-            <g:set var="motifsDerogationIndex" value="${0}" scope="flash" />
+    <label class="required condition-estDerogation-filled"><g:message code="gsrr.property.motifsDerogationEcole.label" /> *  <span><g:message code="gsrr.property.motifsDerogationEcole.help" /></span></label>
+            <g:set var="motifsDerogationEcoleIndex" value="${0}" scope="flash" />
             <g:render template="/frontofficeRequestType/widget/localReferentialData" 
-                      model="['javaName':'motifsDerogation', 'i18nPrefixCode':'gsrr.property.motifsDerogation', 'htmlClass':'required condition-estDerogation-filled condition-estMotifAutre-trigger  ', 
-                              'lrEntries': lrTypes.motifsDerogation.entries, 'depth':0]" />
-            
-
-  
-
-  
-    <label for="motifAutrePrecision" class="required condition-estMotifAutre-filled"><g:message code="gsrr.property.motifAutrePrecision.label" /> *  <span><g:message code="gsrr.property.motifAutrePrecision.help" /></span></label>
-            <input type="text" id="motifAutrePrecision" name="motifAutrePrecision" value="${rqt.motifAutrePrecision?.toString()}" 
-                    class="required condition-estMotifAutre-filled  validate-string ${rqt.stepStates['enfant'].invalidFields.contains('motifAutrePrecision') ? 'validation-failed' : ''}" title="<g:message code="gsrr.property.motifAutrePrecision.validationError" />"   />
+                      model="['javaName':'motifsDerogationEcole', 'i18nPrefixCode':'gsrr.property.motifsDerogationEcole', 'htmlClass':'required condition-estDerogation-filled  ', 
+                              'lrEntries': lrTypes.motifsDerogationEcole.entries, 'depth':0]" />
             
 
   

@@ -113,15 +113,6 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
           TransportsType transportsTypeTransports = leisureCenterRegistrationRequest.addNewTransports();
         transportsTypeTransports.setIdLigne(getIdLigne());
       
-        i = 0;
-        if (getMotifsDerogation() != null) {
-            fr.cg95.cvq.xml.common.LocalReferentialDataType[] motifsDerogationTypeTab = new fr.cg95.cvq.xml.common.LocalReferentialDataType[getMotifsDerogation().size()];
-            for (LocalReferentialData object : getMotifsDerogation()) {
-              motifsDerogationTypeTab[i++] = LocalReferentialData.modelToXml(object);
-            }
-            leisureCenterRegistrationRequest.setMotifsDerogationArray(motifsDerogationTypeTab);
-        }
-      
         if (getAcceptationReglementInterieur() != null)
             leisureCenterRegistrationRequest.setAcceptationReglementInterieur(getAcceptationReglementInterieur().booleanValue());
       
@@ -140,6 +131,15 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
             leisureCenterRegistrationRequest.setEstTransport(getEstTransport().booleanValue());
       
         centreLoisirsTypeCentresLoisirs.setLabelCentreLoisirs(getLabelCentreLoisirs());
+      
+        i = 0;
+        if (getMotifsDerogationCentreLoisirs() != null) {
+            fr.cg95.cvq.xml.common.LocalReferentialDataType[] motifsDerogationCentreLoisirsTypeTab = new fr.cg95.cvq.xml.common.LocalReferentialDataType[getMotifsDerogationCentreLoisirs().size()];
+            for (LocalReferentialData object : getMotifsDerogationCentreLoisirs()) {
+              motifsDerogationCentreLoisirsTypeTab[i++] = LocalReferentialData.modelToXml(object);
+            }
+            leisureCenterRegistrationRequest.setMotifsDerogationCentreLoisirsArray(motifsDerogationCentreLoisirsTypeTab);
+        }
       
         i = 0;
         if (getModeAccueil() != null) {
@@ -168,12 +168,6 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
         
         leisureCenterRegistrationRequest.setIdLigne(leisureCenterRegistrationRequestXml.getTransports().getIdLigne());
       
-        List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>(leisureCenterRegistrationRequestXml.sizeOfMotifsDerogationArray());
-        for (LocalReferentialDataType object : leisureCenterRegistrationRequestXml.getMotifsDerogationArray()) {
-            motifsDerogationList.add(fr.cg95.cvq.business.request.LocalReferentialData.xmlToModel(object));
-        }
-        leisureCenterRegistrationRequest.setMotifsDerogation(motifsDerogationList);
-      
         leisureCenterRegistrationRequest.setAcceptationReglementInterieur(Boolean.valueOf(leisureCenterRegistrationRequestXml.getAcceptationReglementInterieur()));
       
         leisureCenterRegistrationRequest.setIdArret(leisureCenterRegistrationRequestXml.getTransports().getIdArret());
@@ -189,6 +183,12 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
         leisureCenterRegistrationRequest.setEstTransport(Boolean.valueOf(leisureCenterRegistrationRequestXml.getEstTransport()));
       
         leisureCenterRegistrationRequest.setLabelCentreLoisirs(leisureCenterRegistrationRequestXml.getCentresLoisirs().getLabelCentreLoisirs());
+      
+        List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationCentreLoisirsList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>(leisureCenterRegistrationRequestXml.sizeOfMotifsDerogationCentreLoisirsArray());
+        for (LocalReferentialDataType object : leisureCenterRegistrationRequestXml.getMotifsDerogationCentreLoisirsArray()) {
+            motifsDerogationCentreLoisirsList.add(fr.cg95.cvq.business.request.LocalReferentialData.xmlToModel(object));
+        }
+        leisureCenterRegistrationRequest.setMotifsDerogationCentreLoisirs(motifsDerogationCentreLoisirsList);
       
         List<fr.cg95.cvq.business.request.LocalReferentialData> modeAccueilList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>(leisureCenterRegistrationRequestXml.sizeOfModeAccueilArray());
         for (LocalReferentialDataType object : leisureCenterRegistrationRequestXml.getModeAccueilArray()) {
@@ -243,15 +243,6 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
     
     public final String getIdLigne() {
         return leisureCenterRegistrationRequestData.getIdLigne();
-    }
-  
-    public final void setMotifsDerogation(final List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogation) {
-        leisureCenterRegistrationRequestData.setMotifsDerogation(motifsDerogation);
-    }
-
-    
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getMotifsDerogation() {
-        return leisureCenterRegistrationRequestData.getMotifsDerogation();
     }
   
     public final void setAcceptationReglementInterieur(final Boolean acceptationReglementInterieur) {
@@ -324,6 +315,15 @@ public class LeisureCenterRegistrationRequest extends Request implements Seriali
     
     public final String getLabelCentreLoisirs() {
         return leisureCenterRegistrationRequestData.getLabelCentreLoisirs();
+    }
+  
+    public final void setMotifsDerogationCentreLoisirs(final List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationCentreLoisirs) {
+        leisureCenterRegistrationRequestData.setMotifsDerogationCentreLoisirs(motifsDerogationCentreLoisirs);
+    }
+
+    
+    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getMotifsDerogationCentreLoisirs() {
+        return leisureCenterRegistrationRequestData.getMotifsDerogationCentreLoisirs();
     }
   
     public final void setModeAccueil(final List<fr.cg95.cvq.business.request.LocalReferentialData> modeAccueil) {

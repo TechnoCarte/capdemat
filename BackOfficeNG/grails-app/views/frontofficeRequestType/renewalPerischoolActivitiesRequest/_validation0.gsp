@@ -22,10 +22,10 @@
     
       
       <dl>
-        <dt><g:message code="rpar.property.regimeAlimentaire.label" /></dt>
+        <dt><g:message code="rpar.property.regimeAlimentaireRenouvellement.label" /></dt>
           <dd>
           <g:render template="/frontofficeRequestType/widget/localReferentialDataSummary" 
-                    model="['javaName':'regimeAlimentaire', 'lrEntries': lrTypes.regimeAlimentaire.entries, 'depth':0]" />
+                    model="['javaName':'regimeAlimentaireRenouvellement', 'lrEntries': lrTypes.regimeAlimentaireRenouvellement.entries, 'depth':0]" />
           </dd>
           
 

@@ -119,11 +119,11 @@
     alter table forms 
         drop constraint FK5D18C2FD06E9C28;
 
-    alter table global_school_registration_request_motifs_derogation 
-        drop constraint FK2AEE7D4011E068CC;
+    alter table global_school_registration_request_motifs_derogation_ecole 
+        drop constraint FKCC5E50B85DE12C2;
 
-    alter table global_school_registration_request_motifs_derogation 
-        drop constraint FK2AEE7D4085DE12C2;
+    alter table global_school_registration_request_motifs_derogation_ecole 
+        drop constraint FKCC5E50B315EEA61;
 
     alter table global_school_registration_request_regime_alimentaire 
         drop constraint FK261E5D0CA7322BAE;
@@ -269,11 +269,11 @@
     alter table leisure_center_registration_request_mode_accueil 
         drop constraint FKA9077FE835B7D7B;
 
-    alter table leisure_center_registration_request_motifs_derogation 
-        drop constraint FKE41AD04111E068CC;
+    alter table leisure_center_registration_request_motifs_derogation_centre_loisirs 
+        drop constraint FK6899CCB79D930190;
 
-    alter table leisure_center_registration_request_motifs_derogation 
-        drop constraint FKE41AD0419D930190;
+    alter table leisure_center_registration_request_motifs_derogation_centre_loisirs 
+        drop constraint FK6899CCB75852F322;
 
     alter table library_registration_request_subscription 
         drop constraint FK56C4BE0FD7ED8C0C;
@@ -344,11 +344,11 @@
     alter table recreation_contact_individual 
         drop constraint FK52B67F65FCCD2304;
 
-    alter table renewal_perischool_activities_request_regime_alimentaire 
-        drop constraint FKD089D14FE35CAE2;
+    alter table renewal_perischool_activities_request_regime_alimentaire_renouvellement 
+        drop constraint FK8AFF2E83E35CAE2;
 
-    alter table renewal_perischool_activities_request_regime_alimentaire 
-        drop constraint FKD089D14FA7322BAE;
+    alter table renewal_perischool_activities_request_regime_alimentaire_renouvellement 
+        drop constraint FK8AFF2E837F587126;
 
     alter table request 
         drop constraint FK414EF28F85577048;
@@ -461,6 +461,9 @@
     alter table tiers_informations 
         drop constraint FK58C18B7589395924;
 
+    alter table user_action 
+        drop constraint FKD768C52A8BD77771;
+
     drop table address;
 
     drop table adult;
@@ -537,7 +540,7 @@
 
     drop table global_school_registration_request;
 
-    drop table global_school_registration_request_motifs_derogation;
+    drop table global_school_registration_request_motifs_derogation_ecole;
 
     drop table global_school_registration_request_regime_alimentaire;
 
@@ -605,7 +608,7 @@
 
     drop table leisure_center_registration_request_mode_accueil;
 
-    drop table leisure_center_registration_request_motifs_derogation;
+    drop table leisure_center_registration_request_motifs_derogation_centre_loisirs;
 
     drop table library_registration_request;
 
@@ -655,7 +658,7 @@
 
     drop table renewal_perischool_activities_request;
 
-    drop table renewal_perischool_activities_request_regime_alimentaire;
+    drop table renewal_perischool_activities_request_regime_alimentaire_renouvellement;
 
     drop table request;
 
@@ -730,6 +733,8 @@
     drop table user_action;
 
     drop table tiers_informations;
+
+    drop table user_action;
 
     drop table vo_card_request;
 
@@ -1250,7 +1255,6 @@
         id int8 not null,
         label_ecole_derog varchar(255),
         id_ecole_secteur varchar(255),
-        motif_autre_precision varchar(255),
         id_ecole_derog varchar(255),
         acceptation_reglement_interieur bool,
         est_derogation bool,
@@ -1261,11 +1265,11 @@
         primary key (id)
     );
 
-    create table global_school_registration_request_motifs_derogation (
+    create table global_school_registration_request_motifs_derogation_ecole (
         global_school_registration_request_id int8 not null,
-        motifs_derogation_id int8 not null,
-        motifs_derogation_index int4 not null,
-        primary key (global_school_registration_request_id, motifs_derogation_index)
+        motifs_derogation_ecole_id int8 not null,
+        motifs_derogation_ecole_index int4 not null,
+        primary key (global_school_registration_request_id, motifs_derogation_ecole_index)
     );
 
     create table global_school_registration_request_regime_alimentaire (
@@ -1778,7 +1782,6 @@
         label_centre_sejours varchar(255),
         id_centre_sejours varchar(255),
         acceptation_reglement_interieur bool,
-        est_accompte bool,
         primary key (id)
     );
 
@@ -1884,12 +1887,14 @@
 
     create table leisure_center_registration_request (
         id int8 not null,
+        id_ligne varchar(255),
         acceptation_reglement_interieur bool,
+        id_arret varchar(255),
         est_derogation bool,
+        label_arret varchar(255),
+        label_ligne varchar(255),
         id_centre_loisirs varchar(255),
         est_transport bool,
-        arret varchar(255),
-        ligne varchar(255),
         label_centre_loisirs varchar(255),
         primary key (id)
     );
@@ -1901,11 +1906,11 @@
         primary key (leisure_center_registration_request_id, mode_accueil_index)
     );
 
-    create table leisure_center_registration_request_motifs_derogation (
+    create table leisure_center_registration_request_motifs_derogation_centre_loisirs (
         leisure_center_registration_request_id int8 not null,
-        motifs_derogation_id int8 not null,
-        motifs_derogation_index int4 not null,
-        primary key (leisure_center_registration_request_id, motifs_derogation_index)
+        motifs_derogation_centre_loisirs_id int8 not null,
+        motifs_derogation_centre_loisirs_index int4 not null,
+        primary key (leisure_center_registration_request_id, motifs_derogation_centre_loisirs_index)
     );
 
     create table library_registration_request (
@@ -2225,11 +2230,11 @@
         primary key (id)
     );
 
-    create table renewal_perischool_activities_request_regime_alimentaire (
+    create table renewal_perischool_activities_request_regime_alimentaire_renouvellement (
         renewal_perischool_activities_request_id int8 not null,
-        regime_alimentaire_id int8 not null,
-        regime_alimentaire_index int4 not null,
-        primary key (renewal_perischool_activities_request_id, regime_alimentaire_index)
+        regime_alimentaire_renouvellement_id int8 not null,
+        regime_alimentaire_renouvellement_index int4 not null,
+        primary key (renewal_perischool_activities_request_id, regime_alimentaire_renouvellement_index)
     );
 
     create table request (
@@ -2644,6 +2649,19 @@
         primary key (id)
     );
 
+    create table user_action (
+        id int8 not null,
+        date timestamp not null,
+        type varchar(255) not null,
+        note varchar(255),
+        data text,
+        user_id int8 not null,
+        target_id int8 not null,
+        home_folder_id int8,
+        home_folder_index int4,
+        primary key (id)
+    );
+
     create table vo_card_request (
         id int8 not null,
         primary key (id)
@@ -2849,15 +2867,15 @@
         foreign key (request_form_id) 
         references request_form;
 
-    alter table global_school_registration_request_motifs_derogation 
-        add constraint FK2AEE7D4011E068CC 
-        foreign key (motifs_derogation_id) 
-        references local_referential_data;
-
-    alter table global_school_registration_request_motifs_derogation 
-        add constraint FK2AEE7D4085DE12C2 
+    alter table global_school_registration_request_motifs_derogation_ecole 
+        add constraint FKCC5E50B85DE12C2 
         foreign key (global_school_registration_request_id) 
         references global_school_registration_request;
+
+    alter table global_school_registration_request_motifs_derogation_ecole 
+        add constraint FKCC5E50B315EEA61 
+        foreign key (motifs_derogation_ecole_id) 
+        references local_referential_data;
 
     alter table global_school_registration_request_regime_alimentaire 
         add constraint FK261E5D0CA7322BAE 
@@ -3099,15 +3117,15 @@
         foreign key (mode_accueil_id) 
         references local_referential_data;
 
-    alter table leisure_center_registration_request_motifs_derogation 
-        add constraint FKE41AD04111E068CC 
-        foreign key (motifs_derogation_id) 
-        references local_referential_data;
-
-    alter table leisure_center_registration_request_motifs_derogation 
-        add constraint FKE41AD0419D930190 
+    alter table leisure_center_registration_request_motifs_derogation_centre_loisirs 
+        add constraint FK6899CCB79D930190 
         foreign key (leisure_center_registration_request_id) 
         references leisure_center_registration_request;
+
+    alter table leisure_center_registration_request_motifs_derogation_centre_loisirs 
+        add constraint FK6899CCB75852F322 
+        foreign key (motifs_derogation_centre_loisirs_id) 
+        references local_referential_data;
 
     alter table library_registration_request_subscription 
         add constraint FK56C4BE0FD7ED8C0C 
@@ -3224,14 +3242,14 @@
         foreign key (recreation_activity_registration_request_id) 
         references recreation_activity_registration_request;
 
-    alter table renewal_perischool_activities_request_regime_alimentaire 
-        add constraint FKD089D14FE35CAE2 
+    alter table renewal_perischool_activities_request_regime_alimentaire_renouvellement 
+        add constraint FK8AFF2E83E35CAE2 
         foreign key (renewal_perischool_activities_request_id) 
         references renewal_perischool_activities_request;
 
-    alter table renewal_perischool_activities_request_regime_alimentaire 
-        add constraint FKD089D14FA7322BAE 
-        foreign key (regime_alimentaire_id) 
+    alter table renewal_perischool_activities_request_regime_alimentaire_renouvellement 
+        add constraint FK8AFF2E837F587126 
+        foreign key (regime_alimentaire_renouvellement_id) 
         references local_referential_data;
 
     alter table request 
@@ -3418,5 +3436,10 @@
         add constraint FK58C18B7589395924 
         foreign key (school_transport_registration_request_id) 
         references school_transport_registration_request;
+
+    alter table user_action 
+        add constraint FKD768C52A8BD77771 
+        foreign key (home_folder_id) 
+        references home_folder;
 
     create sequence hibernate_sequence;

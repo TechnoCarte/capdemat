@@ -56,16 +56,6 @@ public class LeisureCenterRegistrationRequestData implements Serializable {
         
           
             
-        List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : motifsDerogation) {
-            motifsDerogationList.add(object.clone());
-        }
-        result.setMotifsDerogation(motifsDerogationList);
-      
-          
-        
-          
-            
         result.setAcceptationReglementInterieur(acceptationReglementInterieur);
       
           
@@ -109,6 +99,16 @@ public class LeisureCenterRegistrationRequestData implements Serializable {
           
             
         result.setLabelCentreLoisirs(labelCentreLoisirs);
+      
+          
+        
+          
+            
+        List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationCentreLoisirsList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
+        for (LocalReferentialData object : motifsDerogationCentreLoisirs) {
+            motifsDerogationCentreLoisirsList.add(object.clone());
+        }
+        result.setMotifsDerogationCentreLoisirs(motifsDerogationCentreLoisirsList);
       
           
         
@@ -187,67 +187,6 @@ public class LeisureCenterRegistrationRequestData implements Serializable {
     */
     public final String getIdLigne() {
         return this.idLigne;
-    }
-  
-    
-      @LocalReferential(
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "motifsDerogation"
-      )
-    
-      @MinSize(
-        
-          value = 1,
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "motifsDerogation"
-      )
-    
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogation;
-
-    public final void setMotifsDerogation(final List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogation) {
-        this.motifsDerogation = motifsDerogation;
-    }
-
-    /**
- 
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="leisure_center_registration_request_motifs_derogation"
-        * @hibernate.key
-        *  column="leisure_center_registration_request_id"
-        * @hibernate.list-index
-        *  column="motifs_derogation_index"
-        * @hibernate.many-to-many
-        *  column="motifs_derogation_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
-      
-    */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getMotifsDerogation() {
-        return this.motifsDerogation;
     }
   
     
@@ -537,6 +476,67 @@ public class LeisureCenterRegistrationRequestData implements Serializable {
     */
     public final String getLabelCentreLoisirs() {
         return this.labelCentreLoisirs;
+    }
+  
+    
+      @LocalReferential(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "motifsDerogationCentreLoisirs"
+      )
+    
+      @MinSize(
+        
+          value = 1,
+        
+        
+          when = "groovy:def active = true;" +
+          
+            "active &= _this.conditions['estDerogation'].test(_this.estDerogation.toString());" +
+                
+              
+            
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "motifsDerogationCentreLoisirs"
+      )
+    
+    private List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationCentreLoisirs;
+
+    public final void setMotifsDerogationCentreLoisirs(final List<fr.cg95.cvq.business.request.LocalReferentialData> motifsDerogationCentreLoisirs) {
+        this.motifsDerogationCentreLoisirs = motifsDerogationCentreLoisirs;
+    }
+
+    /**
+ 
+        * @hibernate.list
+        *  inverse="false"
+        *  lazy="false"
+        *  cascade="all"
+        *  table="leisure_center_registration_request_motifs_derogation_centre_loisirs"
+        * @hibernate.key
+        *  column="leisure_center_registration_request_id"
+        * @hibernate.list-index
+        *  column="motifs_derogation_centre_loisirs_index"
+        * @hibernate.many-to-many
+        *  column="motifs_derogation_centre_loisirs_id"
+        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
+      
+    */
+    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getMotifsDerogationCentreLoisirs() {
+        return this.motifsDerogationCentreLoisirs;
     }
   
     

@@ -63,7 +63,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="MotifsDerogation" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="MotifsDerogationCentreLoisirs" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
                   Motifs

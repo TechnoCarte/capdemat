@@ -62,7 +62,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="RegimeAlimentaire" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
+            <xs:element name="RegimeAlimentaireRenouvellement" type="cvq:LocalReferentialDataType" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:documentation xml:lang="fr" source="http://www.cg95.fr/cvq/schema/longdesc">
                   Régime alimentaire de votre enfant

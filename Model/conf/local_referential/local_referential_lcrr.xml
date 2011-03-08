@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LocalReferential xmlns="http://www.cg95.fr/cvq/schema/referential">
     <request>LeisureCenterRegistrationRequest</request>
-    <data name="MotifsDerogation">
+    <data name="MotifsDerogationCentreLoisirs">
         <label lang="fr">Motifs</label>
     </data>
     <data name="ModeAccueil">

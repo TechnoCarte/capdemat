@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LocalReferential xmlns="http://www.cg95.fr/cvq/schema/referential">
     <request>RenewalPerischoolActivitiesRequest</request>
-    <data name="RegimeAlimentaire">
+    <data name="RegimeAlimentaireRenouvellement">
         <label lang="fr">Régime alimentaire de votre enfant</label>
     </data>
 </LocalReferential>

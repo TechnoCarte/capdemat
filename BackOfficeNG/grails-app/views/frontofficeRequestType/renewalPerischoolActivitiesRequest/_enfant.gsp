@@ -47,11 +47,11 @@
   
 
   
-    <label class="required condition-estRestauration-filled"><g:message code="rpar.property.regimeAlimentaire.label" /> *  <span><g:message code="rpar.property.regimeAlimentaire.help" /></span></label>
-            <g:set var="regimeAlimentaireIndex" value="${0}" scope="flash" />
+    <label class="required condition-estRestauration-filled"><g:message code="rpar.property.regimeAlimentaireRenouvellement.label" /> *  <span><g:message code="rpar.property.regimeAlimentaireRenouvellement.help" /></span></label>
+            <g:set var="regimeAlimentaireRenouvellementIndex" value="${0}" scope="flash" />
             <g:render template="/frontofficeRequestType/widget/localReferentialData" 
-                      model="['javaName':'regimeAlimentaire', 'i18nPrefixCode':'rpar.property.regimeAlimentaire', 'htmlClass':'required condition-estRestauration-filled  ', 
-                              'lrEntries': lrTypes.regimeAlimentaire.entries, 'depth':0]" />
+                      model="['javaName':'regimeAlimentaireRenouvellement', 'i18nPrefixCode':'rpar.property.regimeAlimentaireRenouvellement', 'htmlClass':'required condition-estRestauration-filled  ', 
+                              'lrEntries': lrTypes.regimeAlimentaireRenouvellement.entries, 'depth':0]" />
             
 
   

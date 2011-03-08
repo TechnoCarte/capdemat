@@ -56,6 +56,16 @@ public class RenewalPerischoolActivitiesRequestData implements Serializable {
         
           
             
+        List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaireRenouvellementList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
+        for (LocalReferentialData object : regimeAlimentaireRenouvellement) {
+            regimeAlimentaireRenouvellementList.add(object.clone());
+        }
+        result.setRegimeAlimentaireRenouvellement(regimeAlimentaireRenouvellementList);
+      
+          
+        
+          
+            
         result.setEstRestauration(estRestauration);
       
           
@@ -63,16 +73,6 @@ public class RenewalPerischoolActivitiesRequestData implements Serializable {
           
             
         result.setEstPeriscolaire(estPeriscolaire);
-      
-          
-        
-          
-            
-        List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaireList = new ArrayList<fr.cg95.cvq.business.request.LocalReferentialData>();
-        for (LocalReferentialData object : regimeAlimentaire) {
-            regimeAlimentaireList.add(object.clone());
-        }
-        result.setRegimeAlimentaire(regimeAlimentaireList);
       
           
         
@@ -116,6 +116,67 @@ public class RenewalPerischoolActivitiesRequestData implements Serializable {
     */
     public final Boolean getAcceptationReglementInterieur() {
         return this.acceptationReglementInterieur;
+    }
+  
+    
+      @LocalReferential(
+        
+        
+          when = "groovy:def active = true;" +
+          
+            "active &= _this.conditions['estRestauration'].test(_this.estRestauration.toString());" +
+                
+              
+            
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "regimeAlimentaireRenouvellement"
+      )
+    
+      @MinSize(
+        
+          value = 1,
+        
+        
+          when = "groovy:def active = true;" +
+          
+            "active &= _this.conditions['estRestauration'].test(_this.estRestauration.toString());" +
+                
+              
+            
+            
+            "return active",
+        
+        profiles = {"enfant"},
+        message = "regimeAlimentaireRenouvellement"
+      )
+    
+    private List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaireRenouvellement;
+
+    public final void setRegimeAlimentaireRenouvellement(final List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaireRenouvellement) {
+        this.regimeAlimentaireRenouvellement = regimeAlimentaireRenouvellement;
+    }
+
+    /**
+ 
+        * @hibernate.list
+        *  inverse="false"
+        *  lazy="false"
+        *  cascade="all"
+        *  table="renewal_perischool_activities_request_regime_alimentaire_renouvellement"
+        * @hibernate.key
+        *  column="renewal_perischool_activities_request_id"
+        * @hibernate.list-index
+        *  column="regime_alimentaire_renouvellement_index"
+        * @hibernate.many-to-many
+        *  column="regime_alimentaire_renouvellement_id"
+        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
+      
+    */
+    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getRegimeAlimentaireRenouvellement() {
+        return this.regimeAlimentaireRenouvellement;
     }
   
     
@@ -166,67 +227,6 @@ public class RenewalPerischoolActivitiesRequestData implements Serializable {
     */
     public final Boolean getEstPeriscolaire() {
         return this.estPeriscolaire;
-    }
-  
-    
-      @LocalReferential(
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estRestauration'].test(_this.estRestauration.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "regimeAlimentaire"
-      )
-    
-      @MinSize(
-        
-          value = 1,
-        
-        
-          when = "groovy:def active = true;" +
-          
-            "active &= _this.conditions['estRestauration'].test(_this.estRestauration.toString());" +
-                
-              
-            
-            
-            "return active",
-        
-        profiles = {"enfant"},
-        message = "regimeAlimentaire"
-      )
-    
-    private List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaire;
-
-    public final void setRegimeAlimentaire(final List<fr.cg95.cvq.business.request.LocalReferentialData> regimeAlimentaire) {
-        this.regimeAlimentaire = regimeAlimentaire;
-    }
-
-    /**
- 
-        * @hibernate.list
-        *  inverse="false"
-        *  lazy="false"
-        *  cascade="all"
-        *  table="renewal_perischool_activities_request_regime_alimentaire"
-        * @hibernate.key
-        *  column="renewal_perischool_activities_request_id"
-        * @hibernate.list-index
-        *  column="regime_alimentaire_index"
-        * @hibernate.many-to-many
-        *  column="regime_alimentaire_id"
-        *  class="fr.cg95.cvq.business.request.LocalReferentialData"
-      
-    */
-    public final List<fr.cg95.cvq.business.request.LocalReferentialData> getRegimeAlimentaire() {
-        return this.regimeAlimentaire;
     }
   
 }

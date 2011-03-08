@@ -48,18 +48,18 @@ public class RenewalPerischoolActivitiesRequestServiceTest extends RequestTestCa
         
           
           
+            
+            
+          
+        
+          
+          
                request.setEstRestauration(Boolean.valueOf(true));
           
         
           
           
                request.setEstPeriscolaire(Boolean.valueOf(true));
-          
-        
-          
-          
-            
-            
           
         
         // Means Of Contact
