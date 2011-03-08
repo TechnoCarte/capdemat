@@ -102,7 +102,7 @@ public class TechnocarteService implements IExternalProviderService {
     
         RequestType request = (RequestType) requestXml;
         Vector parameters = new Vector();
-        String la = "Connexion au serveur echoué";
+        String la = "La connexion au serveur a echouÃ©";
         parameters.addElement(new Parameter("var", String.class, requestXml, null));
         parameters.addElement(new Parameter("code_appli", String.class, "Capdemat", null));
         try {
@@ -127,13 +127,13 @@ public class TechnocarteService implements IExternalProviderService {
 	            } else if(s.equals("2")){
 	            	la= "La demande n'est pas pris en charge par Technocarte";
 	            } else if(s.equals("3")){
-	            	la= "La famille est créée";
+	            	la= "La famille est crÃ©Ã©e";
 	            } else if(s.equals("4")){
-	            	la= "La famille et l'inscription sont créées";
+	            	la= "La famille et l'inscription sont crÃ©Ã©es";
 	            } else if(s.equals("5")){
-	            	la= "L'inscription est validée";
+	            	la= "L'inscription est validÃ©e";
 	            } else if(s.equals("6")){
-	            	la= "Inscription Refusée";
+	            	la= "Inscription RefusÃ©e";
 	            } else if(s.equals("7")){
 	            	la= "L'inscription est en attente de validation dans le BackOffice Technocarte";
 	            } else if(s.equals("8")){
