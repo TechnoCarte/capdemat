@@ -96,40 +96,56 @@ public class TechnocarteService implements IExternalProviderService {
     	}
     }
 
-    public String sendRequest(XmlObject requestXml) throws  CvqException {
+    public String sendRequest(XmlObject requestXml) throws CvqException {
     	String Method = "ReceptionCapdemat";
     	String Params[][]  = new String[2][2]; 
     
         RequestType request = (RequestType) requestXml;
         Vector parameters = new Vector();
-        
+        String la = "Connexion au serveur echoué";
         parameters.addElement(new Parameter("var", String.class, requestXml, null));
-        parameters.addElement(new Parameter("code_appli", String.class, "Capdemat", null));    	
-    	try {
-            Call call = new Call();
-            String encodingStyleURI = org.apache.soap.Constants.NS_URI_SOAP_ENC;
-            call.setEncodingStyleURI(encodingStyleURI);
-            call.setTargetObjectURI ("urn:WSPocketTechno2" );
-            call.setMethodName(Method);
-            call.setParams(parameters);
-            Response soap_response = call.invoke(new java.net.URL(urlkiosque), "" );
-                 
-            if ( soap_response.generatedFault() ) {
-                     
-                Fault fault = soap_response.getFault ();
-                logger.debug("The call failed: " );
-                logger.debug("Fault Code   = " + fault.getFaultCode());
-                logger.debug("Fault Entrie   = " + fault.getFaultEntries());
-                logger.debug("Fault String = " + fault.getFaultString());
-                logger.debug("Detail Entrie   = " + fault.getDetailEntries());
-                logger.debug("Fault Actor URI   = " + fault.getFaultActorURI());
-            } else {
-                Parameter soap_result = soap_response.getReturnValue();
-            }
-    	} catch (Exception e) {
-    	    e.printStackTrace();
-    	    throw new CvqException();
-    	}
+        parameters.addElement(new Parameter("code_appli", String.class, "Capdemat", null));
+        try {
+	        Call call = new Call();
+	        String encodingStyleURI = org.apache.soap.Constants.NS_URI_SOAP_ENC;
+	        call.setEncodingStyleURI(encodingStyleURI);
+	        call.setTargetObjectURI ("urn:WSPocketTechno2" );
+	        call.setMethodName(Method);
+	        call.setParams(parameters);
+	        Response soap_response = call.invoke(new java.net.URL(urlkiosque), "" );
+	        if ( soap_response.generatedFault() ) {
+	            Fault fault = soap_response.getFault ();
+	            logger.debug("The call failed: " );
+	        } else {
+	            Parameter soap_result = soap_response.getReturnValue();
+	            Object value = soap_result.getValue();
+	            String s = getValue(value);   
+	            if(s.equals("0")){
+	            	la= "La famille n existe pas";
+	            } else if(s.equals("1")){
+	            	la= "La modification est valide";
+	            } else if(s.equals("2")){
+	            	la= "La demande n'est pas pris en charge par Technocarte";
+	            } else if(s.equals("3")){
+	            	la= "La famille est créée";
+	            } else if(s.equals("4")){
+	            	la= "La famille et l'inscription sont créées";
+	            } else if(s.equals("5")){
+	            	la= "L'inscription est validée";
+	            } else if(s.equals("6")){
+	            	la= "Inscription Refusée";
+	            } else if(s.equals("7")){
+	            	la= "L'inscription est en attente de validation dans le BackOffice Technocarte";
+	            } else if(s.equals("8")){
+	            	la= "Service non connu par Technocarte";
+	            } else {
+	            	la= "Code erreur inconnu";
+	            }
+	            TestRetourTechnocarte(s);
+	        }
+        } catch (Exception e){
+        	 throw new CvqException(la);
+        }
     	return null;
     }
 
@@ -487,4 +503,18 @@ public class TechnocarteService implements IExternalProviderService {
     public void setUrlKiosque(String url) {
         this.urlkiosque = url;
     }    
+    public void TestRetourTechnocarte(String s) throws CvqException {
+	 	if(s.equals("0")){
+	 		throw new CvqException("");
+	 	} else if (s.equals("6")) {
+	 		throw new CvqException("");
+	 	} else if (s.equals("8")) {
+	 		throw new CvqException("");
+	 	} else if (s.equals("1") || s.equals("2") || s.equals("3") || s.equals("4") || s.equals("5") || s.equals("7")){
+	 		//nothing;
+	 	} else {
+	 		throw new CvqException("");
+	 	}
+    }
+
 }
