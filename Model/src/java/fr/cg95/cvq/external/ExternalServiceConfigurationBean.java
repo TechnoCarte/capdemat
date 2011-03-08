@@ -16,25 +16,13 @@ import fr.cg95.cvq.service.authority.LocalAuthorityConfigurationBean;
  */
 public class ExternalServiceConfigurationBean {
 
-    private static Logger logger = Logger.getLogger(LocalAuthorityConfigurationBean.class);
-
-    private String name;
+    private static Logger logger = Logger.getLogger(ExternalServiceConfigurationBean.class);
 
     private Map<IExternalProviderService, ExternalServiceBean> externalProviderServices;
 
     public ExternalServiceConfigurationBean() {
         externalProviderServices =
             new HashMap<IExternalProviderService, ExternalServiceBean>();
-    }
-
-    public void init() throws CvqConfigurationException {
-        // FIXME : this should be done by the external service
-        if (externalProviderServices != null && externalProviderServices.size() > 0) {
-            for (IExternalProviderService service : externalProviderServices.keySet()) {
-                logger.debug("init() Looking at " + service.getClass());
-                service.checkConfiguration(externalProviderServices.get(service), name);
-            }
-        }
     }
 
     public boolean supportsActivitiesTab() {
@@ -49,26 +37,27 @@ public class ExternalServiceConfigurationBean {
         return false;
     }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+    public void setExternalServices(final Map<IExternalProviderService, ExternalServiceBean> externalProviderServices,
+            String localAuthorityName) 
+        throws CvqConfigurationException {
 
-    public String getName() {
-        return name;
-    }
-
-    public void setExternalServices(final Map<IExternalProviderService, ExternalServiceBean> externalProviderServices) {
         this.externalProviderServices = externalProviderServices;
+        
+        for (IExternalProviderService service : externalProviderServices.keySet()) {
+            logger.debug("setExternalServices() Looking at " + service.getClass());
+            service.checkConfiguration(externalProviderServices.get(service), localAuthorityName);
+        }
     }
 
     public Map<IExternalProviderService, ExternalServiceBean> getExternalServices() {
         return externalProviderServices;
     }
 
-    public void registerExternalService(IExternalProviderService service, ExternalServiceBean esb)
+    public void registerExternalService(IExternalProviderService service, ExternalServiceBean esb,
+            String localAuthorityName)
         throws CvqConfigurationException {
 
-        service.checkConfiguration(esb, name);
+        service.checkConfiguration(esb, localAuthorityName);
         externalProviderServices.put(service, esb);
     }
 
@@ -84,6 +73,19 @@ public class ExternalServiceConfigurationBean {
                     return externalProviderServices.get(service);
             }
         }
+        return null;
+    }
+    
+    public IExternalProviderService getExternalServiceByLabel(final String externalServiceLabel) {
+
+        if (externalProviderServices == null || externalProviderServices.isEmpty())
+            return null;
+
+        for (IExternalProviderService service : externalProviderServices.keySet()) {
+            if (service.getLabel().equals(externalServiceLabel))
+                return service;
+        }
+
         return null;
     }
 }

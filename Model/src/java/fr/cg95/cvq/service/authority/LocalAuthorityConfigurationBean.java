@@ -27,6 +27,7 @@ public final class LocalAuthorityConfigurationBean {
 
     private static Logger logger = Logger.getLogger(LocalAuthorityConfigurationBean.class);
 
+    private String name;
     private String defaultServerName;
     
     private SessionFactory sessionFactory;
@@ -219,11 +220,11 @@ public final class LocalAuthorityConfigurationBean {
     }
 
     public void setName(final String name) {
-        escb.setName(name);
+        this.name = name;
     }
 
     public String getName() {
-        return escb.getName();
+        return name;
     }
 
     public String getDefaultServerName() {
@@ -250,17 +251,22 @@ public final class LocalAuthorityConfigurationBean {
         return paymentServices;
     }
 
-    public void setExternalServices(final Map<IExternalProviderService, ExternalServiceBean> externalProviderServices) {
-        escb.setExternalServices(externalProviderServices);
+    public void setExternalServices(final Map<IExternalProviderService, ExternalServiceBean> externalProviderServices) 
+        throws CvqConfigurationException {
+        escb.setExternalServices(externalProviderServices, name);
     }
 
     public Map<IExternalProviderService, ExternalServiceBean> getExternalServices() {
         return escb.getExternalServices();
     }
     
+    public ExternalServiceConfigurationBean getExternalServiceConfigurationBean() {
+        return escb;
+    }
+
     public void registerExternalService(IExternalProviderService service, ExternalServiceBean esb) 
         throws CvqConfigurationException {
-        escb.registerExternalService(service, esb);
+        escb.registerExternalService(service, esb, name);
     }
 
     public ExternalServiceBean getBeanForExternalService(String externalServiceLabel) {
