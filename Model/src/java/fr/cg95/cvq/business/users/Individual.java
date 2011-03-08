@@ -15,6 +15,8 @@ import net.sf.oval.constraint.NotNull;
 import net.sf.oval.constraint.Past;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import fr.cg95.cvq.business.Historizable;
 import fr.cg95.cvq.xml.common.BirthPlaceType;
@@ -230,7 +232,8 @@ public abstract class Individual implements Historizable, Serializable {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+
+        this.lastName = StringUtils.upperCase(lastName);
     }
 
     /**
@@ -243,7 +246,7 @@ public abstract class Individual implements Historizable, Serializable {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = WordUtils.capitalizeFully(firstName, new char[]{' ','-','\''});
     }
 
     /**

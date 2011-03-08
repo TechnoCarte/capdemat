@@ -161,27 +161,6 @@
       previousStep : function(e) { validateAndSubmit(e); },
       collectionSave : function(e) { validateAndSubmit(e); },
 
-      formatField : function(e) {
-        var targetEl = yue.getTarget(e);
-        if (!zct.nodeName(targetEl,'input') || targetEl.type != 'text')
-          return;
-        
-        var fieldType = /validate-(\w+)/i.exec(targetEl.className);
-        if (fieldType) {
-          if (fieldType[1] === 'lastName') targetEl.value = targetEl.value.toUpperCase();
-          else if (fieldType[1] === 'city') targetEl.value = targetEl.value.toUpperCase();
-          else if (fieldType[1] === 'firstName') targetEl.value = zct.capitalize(targetEl.value);
-          else if (fieldType[1] === 'phone') zcf.RequestCreation.formatPhone(e);
-          else if (fieldType[1] === 'mobilePhone') zcf.RequestCreation.formatPhone(e);
-        }
-      },
-      formatPhone : function(e) {
-        var targetEl = yue.getTarget(e);
-        targetEl.value = targetEl.value.replace(/[^\d]/g, "");
-      },
-      dateChange : function(e) {
-        adaptDateDays(yud.getAncestorByTagName(yue.getTarget(e), "div"));
-      },
       resizeDatasBloc : function () {
         var steps = yus.query("#request div.steps")[0];
         var datas = yus.query("#request div.form")[0];

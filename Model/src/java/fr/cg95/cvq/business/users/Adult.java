@@ -2,6 +2,7 @@ package fr.cg95.cvq.business.users;
 
 import net.sf.oval.constraint.Email;
 import net.sf.oval.constraint.EqualToField;
+import net.sf.oval.constraint.MatchPattern;
 import net.sf.oval.constraint.MinLength;
 import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
@@ -34,14 +35,17 @@ public class Adult extends Individual {
 
     @NotNull(message = "adultPhones", when = "groovy:_this.mobilePhone == null && _this.officePhone == null")
     @NotEmpty(message = "homePhone")
+    @MatchPattern(pattern = "^0[1-9][0-9]{8}$", message = "homePhone")
     private String homePhone;
 
     @NotNull(message = "adultPhones", when = "groovy:_this.homePhone == null && _this.officePhone == null")
     @NotEmpty(message = "mobilePhone")
+    @MatchPattern(pattern = "^0[67][0-9]{8}$", message = "mobilePhone")
     private String mobilePhone;
 
     @NotNull(message = "adultPhones", when = "groovy:_this.homePhone == null && _this.mobilePhone == null")
     @NotEmpty(message = "officePhone")
+    @MatchPattern(pattern = "^0[1-9][0-9]{8}$", message = "officePhone")
     private String officePhone;
 
     @NotNull(message = "email")
