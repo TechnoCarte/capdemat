@@ -403,17 +403,8 @@ class BackofficeHomeFolderController {
     }
 
     protected List doSearch(state) {
-        def result = []
-        def individuals = individualService.get(this.prepareCriterias(state),
-            this.prepareSort(state),this.defaultMax,
+        return individualService.get(prepareCriterias(state), prepareSort(state), defaultMax,
             params.currentOffset ? Integer.parseInt(params.currentOffset) : 0)
-        
-        for(Individual indv : individuals) {
-            def entry = prepareRecordForView(indv)
-            if(!result.contains(entry)) result.add(entry)
-        }
-        
-        return result
     }
     
     protected Set<Critere> prepareCriterias(state) {
@@ -467,35 +458,14 @@ class BackofficeHomeFolderController {
         return result;
     }
 
-    protected def prepareRecordForView(Individual indv) {
-        return [
-            'id' : indv.id,
-            'state' : indv.homeFolder?.state,
-            'status' : indv.homeFolder?.enabled,
-            'lastName' : indv.lastName,
-            'firstName' : indv.firstName,
-            'homeFolderId' : indv.homeFolder?.id,
-            'streetName' : indv.address.streetName,
-            'streetNumber' : indv.address.streetNumber,
-            'postalCode': indv.address.postalCode,
-            'city' : indv.address.city,
-            'birthDate': indv instanceof Child ? indv.birthDate : null,
-            'birthCity': indv instanceof Child ? indv.birthCity : null
-        ]
-    }
-
     def searchLates = {
         def individuals = individualService.findLateTasks(0)
-        def result = []
-        individuals[1].each {
-            result.add(prepareRecordForView(it))
-        }
         def state = [:]
 
         // TODO deal with pagination
         render(view : 'search', model: [
             'state': state,
-            'records': result,
+            'records': individuals[1],
             'count' : individuals[0],
             'max': 100,
             'homeFolderStates': buildHomeFolderStateFilter(),
@@ -508,16 +478,12 @@ class BackofficeHomeFolderController {
 
     def searchUrgents = {
         def individuals = individualService.findUrgentTasks(0)
-        def result = []
-        individuals[1].each {
-            result.add(prepareRecordForView(it))
-        }
         def state = [:]
 
         // TODO deal with pagination
         render(view : 'search', model: [
             'state': state,
-            'records': result,
+            'records': individuals[1],
             'count' : individuals[0],
             'max': 100,
             'homeFolderStates': buildHomeFolderStateFilter(),
@@ -530,16 +496,12 @@ class BackofficeHomeFolderController {
 
     def searchUsuals = {
         def individuals = individualService.findUsualTasks(0)
-        def result = []
-        individuals[1].each {
-            result.add(prepareRecordForView(it))
-        }
         def state = [:]
 
         // TODO deal with pagination
         render(view : 'search', model: [
             'state': state,
-            'records': result,
+            'records': individuals[1],
             'count' : individuals[0],
             'max': 100,
             'homeFolderStates': buildHomeFolderStateFilter(),
