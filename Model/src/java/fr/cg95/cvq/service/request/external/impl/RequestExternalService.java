@@ -167,7 +167,7 @@ public class RequestExternalService extends ExternalService implements IRequestE
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.AGENT, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.READ)
     public List<String> checkExternalReferential(Request request) throws CvqException {
 
         if (!hasMatchingExternalService(request.getRequestType().getLabel()))
@@ -184,7 +184,7 @@ public class RequestExternalService extends ExternalService implements IRequestE
     }
 
     @Override
-    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.AGENT, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.WRITE)
     public void sendRequest(Request request) throws CvqException {
 
         if (!request.getState().equals(RequestState.VALIDATED))
