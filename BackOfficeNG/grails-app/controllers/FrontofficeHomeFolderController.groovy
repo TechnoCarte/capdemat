@@ -257,6 +257,10 @@ class FrontofficeHomeFolderController {
             dto = new Adult()
             fields = ["email", "homePhone", "mobilePhone", "officePhone"]
         }
+        if (fragment == "connexion") {
+            dto = new Adult()
+            fields = ["question", "answer"]
+        }
         if (fragment == 'address') {
             dto = new Address()
             fields = ["additionalDeliveryInformation", "additionalGeographicalInformation", "city", "cityInseeCode", "countryName", "placeNameOrService", "postalCode", "streetMatriculation", "streetName", "streetNumber", "streetRivoliCode"]
@@ -358,9 +362,7 @@ class FrontofficeHomeFolderController {
                     flash.errorMessage = message("code":"homeFolder.adult.property.answer.validationError")
                     return model
                 }
-                currentEcitizen.question = params.question
-                currentEcitizen.answer = params.answer
-                individualService.modify(currentEcitizen)
+                historize("connexion", currentEcitizen)
                 flash.successMessage = message("code":"homeFolder.adult.property.question.changeSuccess")
             }
             redirect(controller : "frontofficeHomeFolder")
