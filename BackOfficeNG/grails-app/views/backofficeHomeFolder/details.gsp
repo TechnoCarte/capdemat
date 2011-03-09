@@ -73,18 +73,13 @@
               </g:each>
             </div>
             <div class="yui-u">
-              <g:if test="${!children.isEmpty()}">
-                <h2>
-                  ${message(code:'homeFolder.property.children')}
-                  <a class="add child" style="font-size:.7em;">${message(code:'action.add')}</a>
-                </h2>
-                <g:each var="child" in="${children}">
-                  <g:render template="static/child" model="['child':child, 'roleOwners': responsibles[child.id]]" />
-                </g:each>
-              </g:if>
-              <g:else>
-                ${message(code:'homeFolder.label.noChild')}
-              </g:else>
+              <h2>
+                ${message(code:'homeFolder.property.children')}
+                <a class="add child" style="font-size:.7em;">${message(code:'action.add')}</a>
+              </h2>
+              <g:each var="child" in="${children}">
+                <g:render template="static/child" model="['child':child, 'roleOwners': responsibles[child.id]]" />
+              </g:each>
             </div>
           </div>
 
