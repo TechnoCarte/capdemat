@@ -25,6 +25,7 @@ public class UserAction {
         public static final Type CREATION = new Type("Creation");
         public static final Type MODIFICATION = new Type("Modification");
         public static final Type STATE_CHANGE = new Type("StateChange");
+        public static final Type CONTACT = new Type("Contact");
         public static final Type DELETION = new Type("Deletion");
         public Type() { /* empty constructor for Hibernate */ }
         private Type(String type) { super(type); }
