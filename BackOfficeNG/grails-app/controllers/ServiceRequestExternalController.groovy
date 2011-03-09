@@ -155,8 +155,12 @@ class ServiceRequestExternalController {
     // Handling POST. Be careful: non idempotent operation
     def requestState = {
         try {
+            String note = message(code: 'request.message.stateChangedBy') + ' ' +
+                SecurityContext.getCurrentExternalService() + '.'
+            if (params.message != null)
+                note += ' ' + message(code: 'request.message.changeReason') + ' ' + params.message
             requestWorkflowService.updateRequestState(params.long('requestId'),
-                RequestState.forString(params.state), params.message)
+                RequestState.forString(params.state), note)
             render(text: 'Request ' + params.long('requestId') + ' changed to ' + params.state, status: 200)
 //        } catch (CvqObjectNotFoundException confe) {
 //            render(text: message(code: confe.message), status: 404)
