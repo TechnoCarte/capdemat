@@ -5,7 +5,7 @@
 <input type="hidden" name="id" value="${child?.id}" />
   <fieldset>
     <label class="required">
-   <g:message code="homeFolder.individual.property.born" /> *
+      <g:message code="homeFolder.individual.property.born" /> *
     </label>
     <ul class="yes-no required ${stepStates != null && stepStates['children']?.invalidFields?.contains('born') ? 'validation-failed' : ''}">
       <g:each in="${[true,false]}">

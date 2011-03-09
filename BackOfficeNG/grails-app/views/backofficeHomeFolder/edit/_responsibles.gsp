@@ -1,4 +1,4 @@
-<form id="responsibles_${child.id}" method="post" action="${g.createLink(action:'individualResponsibles')}" style="padding-top: .5em; text-align:center;">
+<form id="responsibles_${child.id}" method="post" action="${g.createLink(action:'responsibles')}" style="padding-top: .5em; text-align:center;">
   <g:set var="roleCount" value="${0}" />
   <g:each var="roleOwner" in="${roleOwners}">
     <g:each var="individualRole" in="${roleOwner.getIndividualRoles(child.id)}">
@@ -50,8 +50,8 @@
   </g:if>
 
   <p style="padding-top: .5em;">
-    <input type="hidden" name="template" value="childResponsibles" />
     <input type="hidden" name="id" value="${child.id}" />
+    <input type="hidden" name="mode" value="modify" />
     <input type="submit" name="cancel" value="${message(code:'action.cancel')}" class="cancel" />
     <input type="submit" name="submit" value="${message(code:'action.save')}" class="save" />
   </p>

@@ -68,6 +68,7 @@ class IndividualAdaptorService {
                 bean[it] = dto[it]
             }
         }
+
         def invalidFields = individualService.validate(individual)
         if (!invalidFields.isEmpty()) throw new CvqValidationException(invalidFields)
         if (diff.entrySet().size() > 0) individualService.modify(individual, atom)

@@ -205,6 +205,7 @@ class FrontofficeHomeFolderController {
         redirect(url:createLink(action:'child', params:['id':params.id, 'fragment':params.fragment]) + '#' + params.fragment)
     }
 
+    // TODO: simplify
     private List<Map<Individual,RoleType>> roleOwners(subjectId) {
         def roleOwners = []
         def owners = homeFolderService.listBySubjectRoles(subjectId, RoleType.childRoleTypes)

@@ -105,7 +105,9 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
         var target = yue.getTarget(e);
         var dl = yud.getAncestorByTagName(target, 'dl');
         zct.doAjaxFormSubmitCall(target.form.getAttribute('id'), [], function(o) {
-          if (!!target.form.id.value) {
+          if (!zcbh.Details.isValid(o, target.form)) return;
+
+          if (target.form['mode'].value === 'modify') {
             dl.innerHTML = o.responseText;
           }
           else {
@@ -114,7 +116,24 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
             div.removeChild(individual);
             div.innerHTML += o.responseText;
           }
-          zct.each(zcbh.Details.bottomTabView.get("tabs"), function() {
+          zcbh.Details.refreshActions();
+        });
+      },
+
+      isValid : function(o, form) {
+        // hack : if response type is JSON, some fields are invalid
+        if (!ylj.isValid(o.responseText)) return true;
+        zct.each(form.elements, function(){
+          yud.removeClass(this,'validation-failed');
+        });
+        zct.each(ylj.parse(o.responseText).invalidFields, function(){
+          yud.addClass(form[this], 'validation-failed');
+        });
+        return false;
+      },
+
+      refreshActions : function() {
+        zct.each(zcbh.Details.bottomTabView.get("tabs"), function() {
             if (this.get("label") == "Journal") {
               var cacheData = this.get("cacheData");
               var contentVisible = this.get("contentVisible");
@@ -125,7 +144,6 @@ zenexity.capdemat.tools.namespace('zenexity.capdemat.backoffice.homeFolder');
               this.set("cacheData", cacheData);
             }
           }, null);
-        });
       },
 
       add : function(e) {

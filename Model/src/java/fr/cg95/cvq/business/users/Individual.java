@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.oval.constraint.AssertValid;
+import net.sf.oval.constraint.DateRange;
 import net.sf.oval.constraint.Future;
 import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
@@ -95,7 +96,6 @@ public abstract class Individual implements Historizable, Serializable {
     @AssertValid(message = "address", when = "groovy:_this instanceof fr.cg95.cvq.business.users.Adult")
     private Address address;
 
-    @AssertValid(message = "homeFolder")
     private HomeFolder homeFolder;
 
     private Set<IndividualRole> individualRoles;
