@@ -15,8 +15,8 @@
   <dl class="edit adult-contact collapse">
     <g:render template="static/contact" model="['adult':adult]" />
   </dl>
-  <h3>${message(code:'homeFolder.individual.header.auth')}</h3>
+  <h3>${message(code:'homeFolder.individual.header.connexion')}</h3>
   <dl class="collapse">
-    <g:render template="static/auth" model="['adult':adult]" />
+    <g:render template="static/connexion" model="['adult':adult]" />
   </dl>
 </div>
