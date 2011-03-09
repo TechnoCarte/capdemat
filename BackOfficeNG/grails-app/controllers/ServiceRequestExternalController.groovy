@@ -166,7 +166,7 @@ class ServiceRequestExternalController {
             // pe is more likely to be a confe converted by the aspect, so we use 404 instead of 403
             render(text: message(code: pe.message), status: 404)
         } catch (Exception e) {
-            render(text: message(code: ce.message), status: 500)
+            render(text: message(code: e.message), status: 500)
         }
         return false
     }
