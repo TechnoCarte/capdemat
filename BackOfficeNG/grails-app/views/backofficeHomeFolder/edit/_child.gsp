@@ -38,7 +38,7 @@
         <input type="text" name="birthDate" value="${g.formatDate(formatName:'format.date', date: child.birthDate)}" />
       </dd>
     </dl>
-    <h3>${message(code:'homeFolder.property.legalResponsibles')}</h3>
+    <h3>${message(code:'homeFolder.individual.header.responsibles')}</h3>
     <dl>
       <dt class="required">${responsible.fullName}</dt>
       <dd class="required">

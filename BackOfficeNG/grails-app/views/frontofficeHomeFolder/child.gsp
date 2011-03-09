@@ -22,7 +22,7 @@
           <g:render template="${child.fragmentMode('general')}" />
           <h3 id="identity">${message(code:'homeFolder.individual.header.identity')}</h3>
           <g:render template="${child.fragmentMode('identity')}" />
-          <h3 id="responsibles">${message(code:'homeFolder.property.legalResponsibles')}</h3>
+          <h3 id="responsibles">${message(code:'homeFolder.individual.header.responsibles')}</h3>
           <g:render template="${child.fragmentMode('responsibles')}" />
         </g:if>
         <g:else>
@@ -37,7 +37,7 @@
           <div class="action">
             <a href="#generalInformations">${message(code:'homeFolder.individual.header.general')}</a>
             <a href="#identity">${message(code:'homeFolder.individual.header.identity')}</a>
-            <a href="#responsibles">${message(code:'homeFolder.property.legalResponsibles')}</a>
+            <a href="#responsibles">${message(code:'homeFolder.individual.header.responsibles')}</a>
           </div>
         </g:if>
         <div class="back">

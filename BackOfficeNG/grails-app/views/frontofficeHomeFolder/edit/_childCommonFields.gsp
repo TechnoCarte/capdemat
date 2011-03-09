@@ -82,7 +82,7 @@
       </div>
     </fieldset>
   <fieldset>
-    <legend><g:message code="homeFolder.property.legalResponsibles" /></legend>
+    <legend><g:message code="homeFolder.individual.header.responsibles" /></legend>
     <strong style="font-size: 1.2em;">${message(code:'homeFolder.role.message.YouAre')}</strong>
     <select name="roleType" style="width : auto; display : inline;" class="${invalidFields?.contains('legalResponsibles') ? 'validation-failed' : ''}">
       <option value="">${message(code:'message.select.defaultOption')}</option>
