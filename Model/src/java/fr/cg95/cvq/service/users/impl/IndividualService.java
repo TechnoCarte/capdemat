@@ -43,6 +43,9 @@ import fr.cg95.cvq.exception.CvqDisabledAccountException;
 import fr.cg95.cvq.exception.CvqException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
 import fr.cg95.cvq.security.SecurityContext;
+import fr.cg95.cvq.security.annotation.Context;
+import fr.cg95.cvq.security.annotation.ContextPrivilege;
+import fr.cg95.cvq.security.annotation.ContextType;
 import fr.cg95.cvq.service.users.IIndividualService;
 import fr.cg95.cvq.util.Critere;
 import fr.cg95.cvq.util.ValidationUtils;
@@ -86,18 +89,21 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Individual getById(final Long id)
         throws CvqObjectNotFoundException {
         return (Individual) individualDAO.findById(Individual.class, id);
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Adult getAdultById(final Long id)
         throws CvqObjectNotFoundException {
         return (Adult) adultDAO.findById(Adult.class, id);
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public Child getChildById(final Long id)
         throws CvqObjectNotFoundException {
         return (Child) childDAO.findById(Child.class, id);
@@ -114,6 +120,7 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN}, privilege = ContextPrivilege.WRITE)
     public void modifyPassword(final Adult adult, final String oldPassword, 
             final String newPassword)
         throws CvqException, CvqBadPasswordException {
@@ -186,6 +193,7 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public Long create(Adult adult, boolean assignLogin)
         throws CvqException {
         if (assignLogin) {
@@ -198,6 +206,7 @@ public class IndividualService implements IIndividualService {
 
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public Long create(Child child) {
         return create((Individual)child);
     }
@@ -212,6 +221,7 @@ public class IndividualService implements IIndividualService {
     }
 
     @Override
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public void modify(final Individual individual, JsonObject atom)
         throws CvqException {
 
@@ -335,14 +345,20 @@ public class IndividualService implements IIndividualService {
         return invalidFields.get("") != null ? invalidFields.get("") : Collections.<String>emptyList();
     }
 
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Object> findLateTasks(int max) {
         return individualDAO.findLateTasks(max);
     }
 
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Object> findUrgentTasks(int max) {
         return individualDAO.findUrgentTasks(max);
     }
 
+    @Override
+    @Context(types = {ContextType.AGENT}, privilege = ContextPrivilege.READ)
     public List<Object> findUsualTasks(int max) {
         return individualDAO.findUsualTasks(max);
     }
