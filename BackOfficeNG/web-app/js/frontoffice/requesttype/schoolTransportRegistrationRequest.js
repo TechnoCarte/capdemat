@@ -85,8 +85,8 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
         if (subject == undefined)
           return;
 
-        var linesCallUrlPrefix = zenexity.capdemat.contextPath + '/frontoffice/schoolTransportRegistration/transportLines';
-        var stopsCallUrlPrefix = zenexity.capdemat.contextPath + '/frontoffice/schoolTransportRegistration/stops';
+        var linesCallUrlPrefix = zenexity.capdemat.contextPath + '/frontofficeSchoolTransportRegistration/transportLines';
+        var stopsCallUrlPrefix = zenexity.capdemat.contextPath + '/frontofficeSchoolTransportRegistration/stops';
 
         changeLayout();
 
