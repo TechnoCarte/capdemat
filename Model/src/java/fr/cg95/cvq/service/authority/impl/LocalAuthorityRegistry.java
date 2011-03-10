@@ -735,7 +735,7 @@ public class LocalAuthorityRegistry
                     SecurityContext.setCurrentEcitizen(homeFolderResponsible);
                     Adult other = BusinessObjectsFactory.gimmeAdult(TitleType.MISTER, "Durand",
                         "Jacques", address, FamilyStatusType.SINGLE);
-                    homeFolderService.addAdult(homeFolder, other, true);
+                    homeFolderService.addAdult(homeFolder, other, false);
                     Child child = BusinessObjectsFactory.gimmeChild("Moreau", "Émilie");
                     homeFolderService.addChild(homeFolder, child);
                     homeFolderService.link(homeFolderResponsible, child, Collections.singleton(RoleType.CLR_FATHER));
