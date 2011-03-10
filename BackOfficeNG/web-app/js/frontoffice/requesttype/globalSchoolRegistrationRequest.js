@@ -42,7 +42,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
     };
 
     var replaceInput = function(id) {
-      var select = yud.get(id)
+      var select = yud.get(id);
       var input = yud.get(id.replace('id', 'label'));
       var newNode = document.createElement('input');
       newNode.className = input.className;
@@ -57,7 +57,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
       if (!yud.hasClass(select, 'unactive')
           && select.options.length < 2
           && yud.get('subjectId').value !== '') {
-        yud.get('stepForm-error').innerHTML = zcfr.GlobalSchoolRegistrationRequest.errorMessage
+        yud.get('stepForm-error').innerHTML = zcfr.GlobalSchoolRegistrationRequest.errorMessage;
         yud.addClass(yus.query("#request div.form")[0], 'invalid');
         yud.addClass(yus.query("#request div.steps li.current")[0], 'invalid');
       } else {
