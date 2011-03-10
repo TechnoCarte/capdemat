@@ -1,5 +1,5 @@
 <dt class="required">${message(code:'homeFolder.individual.property.isBorn')}</dt>
-<dd class="required">${message(code:'message.' + (individual.born ? 'yes' : 'no'))}<dd>
+<dd class="required">${message(code:'message.' + (individual.born ? 'yes' : 'no'))}</dd>
 <dt class="required">${message(code:'homeFolder.individual.property.lastName')}'</dt> 
 <dd class="required">${individual.lastName}</dd>
 <dt class="required">${message(code:'homeFolder.individual.property.firstName')}</dt>
