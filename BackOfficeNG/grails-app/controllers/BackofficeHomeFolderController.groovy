@@ -232,13 +232,13 @@ class BackofficeHomeFolderController {
         def mode = request.get ? params.mode : "static"
         if (request.post) {
             try {
-                def temp = new Adult()
+                def temp = individual instanceof Adult ? new Adult() : new Child()
                 bind(temp)
                 individualAdaptorService.historize(
                     individual, individual, temp, "contact",
                     individual instanceof Adult ?
                         ["title", "familyStatus", "lastName", "maidenName", "nameOfUse", "firstName", "firstName2", "firstName3", "profession"] :
-                        ["lastName", "firstName", "firstName2", "firstName3", "birthDate", "birthPostalCode", "birthCity", "birthCountry"])
+                        ["born", "lastName", "firstName", "firstName2", "firstName3", "sex", "birthDate", "birthPostalCode", "birthCity", "birthCountry"])
             } catch (CvqValidationException e) {
                 session.doRollback = true 
                 render (['invalidFields': e.invalidFields] as JSON)
