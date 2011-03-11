@@ -87,7 +87,7 @@
     <select name="roleType" style="width : auto; display : inline;" class="${invalidFields?.contains('legalResponsibles') ? 'validation-failed' : ''}">
       <option value="">${message(code:'message.select.defaultOption')}</option>
       <g:each var="roleType" in="${fr.cg95.cvq.business.users.RoleType.childRoleTypes}">
-        <option value="${roleType}">
+        <option value="${roleType}" ${params.roleType == roleType.toString() ? "selected='selected'" : ""}>
           ${g.capdematEnumToText(var:roleType, i18nKeyPrefix:'homeFolder.role.withParticle')}
         </option>
       </g:each>
