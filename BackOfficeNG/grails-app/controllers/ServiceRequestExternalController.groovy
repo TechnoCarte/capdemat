@@ -1,3 +1,9 @@
+import fr.capwebct.modules.payment.schema.rts.RequestTypeSeasonResponseDocument;
+import fr.capwebct.modules.payment.schema.rts.RequestTypeSeasonResponseDocument.RequestTypeSeasonResponse;
+import fr.cg95.cvq.business.request.RequestSeason;
+
+import java.util.Set;
+
 import java.text.SimpleDateFormat
 
 import java.lang.Exception
@@ -9,6 +15,7 @@ import fr.cg95.cvq.business.users.Adult
 import fr.cg95.cvq.business.request.Request;
 import fr.cg95.cvq.business.request.RequestActionType
 import fr.cg95.cvq.business.request.RequestState
+import fr.cg95.cvq.business.request.RequestType;
 import fr.cg95.cvq.business.document.DepositOrigin;
 import fr.cg95.cvq.business.document.Document
 import fr.cg95.cvq.business.document.DocumentState;
@@ -25,6 +32,7 @@ import fr.cg95.cvq.security.SecurityContext
 import fr.cg95.cvq.external.IExternalService
 
 import fr.cg95.cvq.service.request.IRequestDocumentService
+import fr.cg95.cvq.service.request.IRequestTypeService;
 import fr.cg95.cvq.service.request.IRequestWorkflowService
 import fr.cg95.cvq.service.request.IRequestSearchService
 import fr.cg95.cvq.service.request.IRequestActionService
@@ -34,6 +42,7 @@ import fr.cg95.cvq.service.document.IDocumentTypeService
 import fr.cg95.cvq.service.document.IDocumentService
 
 import fr.cg95.cvq.util.translation.ITranslationService
+import fr.cg95.cvq.xml.common.RequestSeasonType;
 
 class ServiceRequestExternalController {
 
@@ -47,6 +56,7 @@ class ServiceRequestExternalController {
     IRequestActionService requestActionService
     IMeansOfContactService meansOfContactService
     ITranslationService translationService
+    IRequestTypeService requestTypeService
 
     // C/C from Provisioning
     // TODO : mutualize, if possible, authentication infrastructure between both after branches merge
@@ -173,5 +183,31 @@ class ServiceRequestExternalController {
             render(text: message(code: e.message), status: 500)
         }
         return false
+    }
+    
+    def requestTypeSeason = {
+            try {
+                RequestType requestType = requestTypeService.getRequestTypeByLabel(params.requestTypeLabel)
+                Set<RequestSeason> openSeasons = requestTypeService.getOpenSeasons(requestType)
+                RequestTypeSeasonResponseDocument rtsrDocument =
+                    RequestTypeSeasonResponseDocument.Factory.newInstance();
+                RequestTypeSeasonResponse rtsr = rtsrDocument.addNewRequestTypeSeasonResponse();
+                RequestSeasonType[] xmlRequestSeasons = new RequestSeasonType[openSeasons.size()]
+                int i = 0
+                for (RequestSeason requestSeason : openSeasons) {
+                    RequestSeasonType xmlRequestSeason = RequestSeason.modelToXml(requestSeason)
+                    xmlRequestSeasons[i] = xmlRequestSeason
+                    i++
+                }
+                rtsr.setSeasonArray(xmlRequestSeasons)
+                render(text:rtsrDocument.xmlText(), status:200)
+            } catch (CvqObjectNotFoundException confe) {
+                render(text: message(code: confe.message), status: 404)
+            } catch (PermissionException pe) {
+                render(text: message(code: pe.message), status: 403)
+            } catch (Exception e) {
+                render(text: message(code: e.message), status: 500)
+            }
+            return false
     }
 }
