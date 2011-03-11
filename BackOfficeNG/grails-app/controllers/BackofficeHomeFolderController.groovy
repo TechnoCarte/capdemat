@@ -74,6 +74,7 @@ class BackofficeHomeFolderController {
     
     def details = {
         def result = [responsibles:[:],adults:[],children:[]]
+
         HomeFolder homeFolder = this.homeFolderService.getById(Long.parseLong(params.id))
         Adult adult = homeFolderService.getHomeFolderResponsible(homeFolder.id)
         
@@ -98,6 +99,25 @@ class BackofficeHomeFolderController {
                 ] }
             ] }
         return result
+    }
+
+    def create = {
+        if (request.post) {
+            def adult = new Adult()
+            DataBindingUtils.initBind(adult, params)
+            bind(adult)
+            def invalidFields = individualService.validate(adult, true)
+            if (!invalidFields.isEmpty()) {
+                session.doRollback = true
+                render (['invalidFields': invalidFields] as JSON)
+                return false
+            }
+            homeFolderService.create(adult, false)
+            userWorkflowService.changeState(adult, UserState.VALID)
+            render (['id' : adult.homeFolder.id] as JSON)
+            return false
+        }
+        return []
     }
 
     def adult = { 

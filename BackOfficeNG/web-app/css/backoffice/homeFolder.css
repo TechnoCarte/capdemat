@@ -55,6 +55,7 @@
 #homeFolder form { padding: 0; }
 #homeFolder input,
 #homeFolder select { margin: 0; }
+#homeFolder select { width: 85%; }
 
 /* FIXME: hack for address */
 #homeFolder form label {

@@ -91,11 +91,12 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
     private ITranslationService translationService;
 
     @Override
-    @Context(types = {ContextType.UNAUTH_ECITIZEN}, privilege = ContextPrivilege.WRITE)
+    @Context(types = {ContextType.UNAUTH_ECITIZEN,ContextType.AGENT}, privilege = ContextPrivilege.WRITE)
     public HomeFolder create(final Adult adult, boolean temporary)
         throws CvqException {
         // FIXME bypass all access checks while we're setting everything up
-        SecurityContext.setCurrentContext(SecurityContext.ADMIN_CONTEXT);
+        if (SecurityContext.isFrontOfficeContext())
+            SecurityContext.setCurrentContext(SecurityContext.ADMIN_CONTEXT);
         HomeFolder homeFolder = new HomeFolder();
         homeFolder.setAddress(adult.getAddress());
         homeFolder.setEnabled(Boolean.TRUE);
@@ -119,7 +120,8 @@ public class HomeFolderService implements IHomeFolderService, ApplicationContext
         }
         homeFolderDAO.update(homeFolder);
         // FIXME restore correct context
-        SecurityContext.setCurrentContext(SecurityContext.FRONT_OFFICE_CONTEXT);
+        if (SecurityContext.isAdminContext())
+            SecurityContext.setCurrentContext(SecurityContext.FRONT_OFFICE_CONTEXT);
         return homeFolder;
     }
 
