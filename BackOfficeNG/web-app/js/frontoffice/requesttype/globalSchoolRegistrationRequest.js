@@ -99,11 +99,11 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
 
         var childId = yud.get('subjectId').value;
         if (childId !== '') {
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeGlobalSchoolRegistration/schoolSectors/?childId=' + childId, null, function(o){
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/globalSchoolRegistration/schoolSectors/?childId=' + childId, null, function(o){
             schoolSector.innerHTML = o.responseText;
             schoolSector.select(schoolSector.previousValue);
           }, true);
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeGlobalSchoolRegistration/schoolDerogs/?childId=' + childId, null, function(o){
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/globalSchoolRegistration/schoolDerogs/?childId=' + childId, null, function(o){
             schoolDerog.innerHTML = o.responseText;
             schoolDerog.select(schoolDerog.previousValue);
           }, true);

@@ -81,7 +81,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
 
         var childId = yud.get('subjectId').value;
         if (childId !== '') {
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeLeisureCenterRegistration/leisureCenters/?childId=' + childId, null, function(o){
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/leisureCenterRegistration/leisureCenters/?childId=' + childId, null, function(o){
             centers.innerHTML = o.responseText;
             centers.select(centers.previousValue);
           }, true);
@@ -95,7 +95,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
 
         var childId = yud.get('subjectId').value;
         if (childId !== '') {
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeLeisureCenterRegistration/lines/?childId=' + childId, null, function(o){
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/leisureCenterRegistration/lines/?childId=' + childId, null, function(o){
             lines.innerHTML = o.responseText;
             lines.select(lines.previousValue);
           }, true);
@@ -110,7 +110,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
         var childId = yud.get('subjectId').value;
         var lineId = yud.get('idLigne').value;
         if (childId !== '') {
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeLeisureCenterRegistration/stops/?childId=' + childId
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/leisureCenterRegistration/stops/?childId=' + childId
                   + '&lineId=' + lineId, null, function(o){
             stops.innerHTML = o.responseText;
             stops.select(stops.previousValue);

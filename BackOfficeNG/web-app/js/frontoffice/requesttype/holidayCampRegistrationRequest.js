@@ -78,7 +78,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
 
         var childId = yud.get('subjectId').value;
         if (childId !== '') {
-          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontofficeHolidayCampRegistration/holidayCamps/?childId=' + childId, null, function(o){
+          zct.doAjaxCall(zenexity.capdemat.contextPath + '/frontoffice/holidayCampRegistration/holidayCamps/?childId=' + childId, null, function(o){
             camps.innerHTML = o.responseText;
             camps.select(camps.previousValue);
           }, true);
