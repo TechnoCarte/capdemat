@@ -38,6 +38,7 @@ import fr.cg95.cvq.service.request.IRequestSearchService
 import fr.cg95.cvq.service.request.IRequestActionService
 import fr.cg95.cvq.service.users.IIndividualService
 import fr.cg95.cvq.service.users.IMeansOfContactService
+import fr.cg95.cvq.service.users.IUserNotificationService;
 import fr.cg95.cvq.service.document.IDocumentTypeService
 import fr.cg95.cvq.service.document.IDocumentService
 
@@ -54,7 +55,7 @@ class ServiceRequestExternalController {
     IDocumentTypeService documentTypeService
     IDocumentService documentService
     IRequestActionService requestActionService
-    IMeansOfContactService meansOfContactService
+    IUserNotificationService userNotificationService
     ITranslationService translationService
     IRequestTypeService requestTypeService
 
@@ -114,7 +115,7 @@ class ServiceRequestExternalController {
 
                     String filename = translationService.translateDocumentTypeName(documentType.name)
 
-                    meansOfContactService.notifyByEmail(
+                    userNotificationService.notifyByEmail(
                         rqt.requestType.category.primaryEmail,
                         requester.email,
                         message(code: 'mail.ecitizenContact.subject'),
