@@ -72,6 +72,7 @@ zenexity.capdemat.tools.namespace("zenexity.capdemat.fong.requesttype");
         zcfr.LeisureCenterRegistrationRequest.initLines();
         zcfr.LeisureCenterRegistrationRequest.initCenters();
         yue.on('subjectId','change', zcfr.LeisureCenterRegistrationRequest.initCenters);
+        yue.on('estTransport_yes', 'click', zcfr.LeisureCenterRegistrationRequest.initLines);
         yue.on('estTransport_yes', 'click', zcfr.LeisureCenterRegistrationRequest.initStops);
         yue.on('idLigne', 'change', zcfr.LeisureCenterRegistrationRequest.initStops);
       },
