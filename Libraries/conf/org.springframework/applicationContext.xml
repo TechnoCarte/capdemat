@@ -250,6 +250,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
     <property name="requestSearchService" ref="requestSearchService" />
     <property name="requestExternalActionService" ref="requestExternalActionService" />
     <property name="requestTypeService" ref="requestTypeService" />
+    <property name="individualDAO" ref="individualDAO" />
   </bean>
 
   <bean id="requestExternalActionService" class="fr.cg95.cvq.service.request.external.impl.RequestExternalActionService">

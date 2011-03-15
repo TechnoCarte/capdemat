@@ -20,7 +20,10 @@ import org.springframework.scheduling.annotation.Async;
 import fr.cg95.cvq.business.request.Request;
 import fr.cg95.cvq.business.request.RequestState;
 import fr.cg95.cvq.business.request.external.RequestExternalAction;
+import fr.cg95.cvq.business.users.Adult;
 import fr.cg95.cvq.business.users.HomeFolder;
+import fr.cg95.cvq.business.users.Individual;
+import fr.cg95.cvq.business.users.RoleType;
 import fr.cg95.cvq.business.users.UserAction;
 import fr.cg95.cvq.business.users.UserState;
 import fr.cg95.cvq.business.users.UserEvent;
@@ -28,6 +31,7 @@ import fr.cg95.cvq.business.users.external.HomeFolderMapping;
 import fr.cg95.cvq.business.users.external.IndividualMapping;
 import fr.cg95.cvq.dao.hibernate.HibernateUtil;
 import fr.cg95.cvq.dao.request.IRequestDAO;
+import fr.cg95.cvq.dao.users.IIndividualDAO;
 import fr.cg95.cvq.exception.CvqException;
 import fr.cg95.cvq.exception.CvqModelException;
 import fr.cg95.cvq.exception.CvqObjectNotFoundException;
@@ -65,6 +69,8 @@ public class RequestExternalService extends ExternalService implements IRequestE
     private static Logger logger = Logger.getLogger(RequestExternalService.class);
 
     private IRequestDAO requestDAO;
+    private IIndividualDAO individualDAO;
+    
     private IRequestExternalActionService requestExternalActionService;
 
     private IRequestExportService requestExportService;
@@ -444,7 +450,8 @@ public class RequestExternalService extends ExternalService implements IRequestE
             || UserAction.Type.STATE_CHANGE.equals(event.getAction().getType())) {
             HomeFolder homeFolder;
             try {
-                homeFolder = homeFolderService.getById(event.getAction().getTargetId());
+//                homeFolder = homeFolderService.getById(event.getAction().getTargetId());
+                homeFolder = (HomeFolder) requestDAO.findById(HomeFolder.class, event.getAction().getTargetId());
             } catch (CvqObjectNotFoundException e1) {
                 try {
                     homeFolder = individualService.getById(event.getAction().getTargetId()).getHomeFolder();
@@ -463,6 +470,11 @@ public class RequestExternalService extends ExternalService implements IRequestE
                         HomeFolderModificationRequest xmlRequest =
                             doc.addNewHomeFolderModificationRequest();
                         xmlRequest.addNewHomeFolder().set(homeFolder.modelToXml());
+                        List<Individual> individuals = 
+                            individualDAO.listByHomeFolderRole(homeFolder.getId(), RoleType.HOME_FOLDER_RESPONSIBLE);
+                        // here we can make the assumption that we properly enforced the role
+                        Adult responsible = (Adult) individuals.get(0);
+                        xmlRequest.addNewRequester().set(responsible.modelToXml());
                         String externalServiceLabel = mapping.getExternalServiceLabel();
                         IExternalProviderService externalProviderService =
                             getExternalServiceByLabel(externalServiceLabel);
@@ -484,6 +496,10 @@ public class RequestExternalService extends ExternalService implements IRequestE
 
     public void setRequestDAO(IRequestDAO requestDAO) {
         this.requestDAO = requestDAO;
+    }
+
+    public void setIndividualDAO(IIndividualDAO individualDAO) {
+        this.individualDAO = individualDAO;
     }
 
     public void setRequestExportService(IRequestExportService requestExportService) {
