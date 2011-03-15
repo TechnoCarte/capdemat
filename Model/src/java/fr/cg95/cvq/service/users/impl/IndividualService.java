@@ -96,7 +96,7 @@ public class IndividualService implements IIndividualService, ApplicationEventPu
     }
 
     @Override
-    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT}, privilege = ContextPrivilege.READ)
+    @Context(types = {ContextType.ECITIZEN, ContextType.AGENT, ContextType.EXTERNAL_SERVICE}, privilege = ContextPrivilege.READ)
     public Adult getAdultById(final Long id)
         throws CvqObjectNotFoundException {
         return (Adult) adultDAO.findById(Adult.class, id);
