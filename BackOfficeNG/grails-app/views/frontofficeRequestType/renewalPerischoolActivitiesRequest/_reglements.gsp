@@ -6,7 +6,7 @@
               <label class="required">
                 <g:message code="rpar.property.acceptationReglementInterieur.label" /> *
                 <g:if test="${availableRules.contains('acceptationReglementInterieur')}">
-                  <p><a target="_blank" href="${createLink(controller:'localAuthorityResource', action:'rule', params:['requestTypeLabel':requestTypeLabel, 'filename':'acceptationReglementInterieur']).encodeAsXML()}"><span><g:message code="request.action.consult.rules" /></span></a></p>
+                  <p><a target="_blank" href="${createLink(controller:'localAuthorityResource', action:'rule', params:['requestTypeLabel':rqt.requestType.label, 'filename':'acceptationReglementInterieur']).encodeAsXML()}"><span><g:message code="request.action.consult.rules" /></span></a></p>
                 </g:if>
                 <span><g:message code="rpar.property.acceptationReglementInterieur.help" /></span>
               </label>
